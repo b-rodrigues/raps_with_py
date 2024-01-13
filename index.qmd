@@ -1,6 +1,8 @@
 # Welcome! {.unnumbered}
 ## How using a few ideas from software engineering can help data scientists, analysts and researchers write reliable code
 
+Need to update the links below
+
 ::: {.content-hidden when-format="pdf"}
 <figure>
   <a href = "https://leanpub.com/raps-with-python">  
@@ -9,19 +11,18 @@
 </figure>
 :::
 
-Need to update these links
-
 The book can be read for free on
-[https://raps-with-r.dev](https://raps-with-r.dev) and you can buy a DRM-free
-Epub or PDF on
-[Leanpub](https://leanpub.com/raps-with-r/)^[https://leanpub.com/raps-with-r/].
+[https://b-rodrigues.github.io/raps_with_py/](https://b-rodrigues.github.io/raps_with_py/)
+and you'll be able buy a DRM-free Epub or PDF on
+[Leanpub](https://leanpub.com/)^[https://leanpub.com/] once there's more content.
 
 ::: {.content-hidden when-format="pdf"}
-You can also buy a physical copy of the book on [Amazon](https://www.amazon.com/dp/B0C87H6MGF/).
+You'll also be able to buy a physical copy of the book on Amazon once it's done. In the
+meantime, you could buy the [R edition](https://www.amazon.com/dp/B0C87H6MGF/).
 
 If you find this book useful, don’t hesitate to let me know or leave a rating on
 Amazon!
 :::
 
 You can submit issues, PRs and ask questions on the book’s
-[Github repository](https://github.com/b-rodrigues/rap4all)^[https://github.com/b-rodrigues/rap4all].
+[Github repository](https://github.com/b-rodrigues/raps_with_py)^[https://github.com/b-rodrigues/raps_with_py].
