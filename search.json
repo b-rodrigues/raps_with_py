@@ -11,13 +11,13 @@
     "href": "index.html#how-using-a-few-ideas-from-software-engineering-can-help-data-scientists-analysts-and-researchers-write-reliable-code",
     "title": "Building reproducible analytical pipelines with Python",
     "section": "How using a few ideas from software engineering can help data scientists, analysts and researchers write reliable code",
-    "text": "How using a few ideas from software engineering can help data scientists, analysts and researchers write reliable code\n\n\n \n\nNeed to update these links\nThe book can be read for free on https://raps-with-r.dev and you can buy a DRM-free Epub or PDF on Leanpub1.\nYou can also buy a physical copy of the book on Amazon.\nIf you find this book useful, don’t hesitate to let me know or leave a rating on Amazon!\nYou can submit issues, PRs and ask questions on the book’s Github repository2."
+    "text": "How using a few ideas from software engineering can help data scientists, analysts and researchers write reliable code\nNeed to update the links below\n\n\n \n\nThe book can be read for free on https://b-rodrigues.github.io/raps_with_py/ and you’ll be able buy a DRM-free Epub or PDF on Leanpub1 once there’s more content.\nYou’ll also be able to buy a physical copy of the book on Amazon once it’s done. In the meantime, you could buy the R edition.\nIf you find this book useful, don’t hesitate to let me know or leave a rating on Amazon!\nYou can submit issues, PRs and ask questions on the book’s Github repository2."
   },
   {
     "objectID": "index.html#footnotes",
     "href": "index.html#footnotes",
     "title": "Building reproducible analytical pipelines with Python",
     "section": "",
-    "text": "https://leanpub.com/raps-with-r/↩︎\nhttps://github.com/b-rodrigues/rap4all↩︎"
+    "text": "https://leanpub.com/↩︎\nhttps://github.com/b-rodrigues/raps_with_py↩︎"
   }
 ]
