@@ -1,0 +1,58 @@
+project:
+  type: book
+
+book:
+  title: "Building reproducible analytical pipelines with Python"
+  author: "Bruno Rodrigues"
+  date: "2024-01-13"
+  search: true
+  repo-url: "https://github.com/b-rodrigues/raps_with_py"
+  repo-actions: [edit, issue]
+  repo-branch: "master"
+  issue-url: "https://github.com/b-rodrigues/raps_with_py/issues"
+  sharing: [twitter, facebook]
+  downloads: [pdf, epub]
+  chapters:
+    - index.qmd
+    - references.qmd
+  page-navigation: true
+
+bibliography: references.bib
+
+format:
+  epub:
+    toc:
+      true
+    lang:
+      en-GB
+    date:
+      "2024-01-13"
+    css:
+      epub.css
+  html:
+    include-in-header:
+      file: header.html
+    theme:
+      light: flatly
+      dark: solar
+    css:
+      epub.css
+  pdf:
+    keep-tex: true
+    documentclass: scrbook
+    classoption: [paper=6in:9in,pagesize=pdftex,headinclude=on,footinclude=on,12pt]
+    include-in-header:
+      text: |
+        \usepackage{fvextra}
+        \DefineVerbatimEnvironment{Highlighting}{Verbatim}{breaklines,commandchars=\\\{\}}
+        \areaset[0.50in]{4.5in}{8in}
+    include-before-body:
+      text: |
+        \RecustomVerbatimEnvironment{verbatim}{Verbatim}{
+           showspaces = false,
+           showtabs = false,
+           breaksymbolleft={},
+           breaklines
+           % Note: setting commandchars=\\\{\} here will cause an error 
+        }  
+    fig-pos: 'H'
