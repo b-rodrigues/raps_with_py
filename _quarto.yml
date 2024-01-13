@@ -14,6 +14,7 @@ book:
   downloads: [pdf, epub]
   chapters:
     - index.qmd
+    - preface.qmd
     - references.qmd
   page-navigation: true
 
