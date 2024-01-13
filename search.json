@@ -1,0 +1,23 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Building reproducible analytical pipelines with Python",
+    "section": "",
+    "text": "Welcome!"
+  },
+  {
+    "objectID": "index.html#how-using-a-few-ideas-from-software-engineering-can-help-data-scientists-analysts-and-researchers-write-reliable-code",
+    "href": "index.html#how-using-a-few-ideas-from-software-engineering-can-help-data-scientists-analysts-and-researchers-write-reliable-code",
+    "title": "Building reproducible analytical pipelines with Python",
+    "section": "How using a few ideas from software engineering can help data scientists, analysts and researchers write reliable code",
+    "text": "How using a few ideas from software engineering can help data scientists, analysts and researchers write reliable code\n\n\n \n\nNeed to update these links\nThe book can be read for free on https://raps-with-r.dev and you can buy a DRM-free Epub or PDF on Leanpub1.\nYou can also buy a physical copy of the book on Amazon.\nIf you find this book useful, don’t hesitate to let me know or leave a rating on Amazon!\nYou can submit issues, PRs and ask questions on the book’s Github repository2."
+  },
+  {
+    "objectID": "index.html#footnotes",
+    "href": "index.html#footnotes",
+    "title": "Building reproducible analytical pipelines with Python",
+    "section": "",
+    "text": "https://leanpub.com/raps-with-r/↩︎\nhttps://github.com/b-rodrigues/rap4all↩︎"
+  }
+]
