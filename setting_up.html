@@ -6,10 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Bruno Rodrigues">
-<meta name="dcterms.date" content="2024-01-13">
 
-<title>Building reproducible analytical pipelines with Python</title>
+<title>Building reproducible analytical pipelines with Python - 1&nbsp; Setting up a development environment</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -32,7 +30,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./preface.html" rel="next">
+<link href="./project_start.html" rel="next">
+<link href="./preface.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -81,7 +80,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Welcome!</a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./setting_up.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Setting up a development environment</span></a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -146,7 +145,7 @@ ul.task-list li input[type="checkbox"] {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link active">
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Welcome!</span></a>
   </div>
 </li>
@@ -158,7 +157,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./setting_up.html" class="sidebar-item-text sidebar-link">
+  <a href="./setting_up.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Setting up a development environment</span></span></a>
   </div>
 </li>
@@ -180,42 +179,21 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">Table of contents</h2>
-   
-  <ul>
-  <li><a href="#welcome" id="toc-welcome" class="nav-link active" data-scroll-target="#welcome">Welcome!</a>
-  <ul class="collapse">
-  <li><a href="#how-using-a-few-ideas-from-software-engineering-can-help-data-scientists-analysts-and-researchers-write-reliable-code" id="toc-how-using-a-few-ideas-from-software-engineering-can-help-data-scientists-analysts-and-researchers-write-reliable-code" class="nav-link" data-scroll-target="#how-using-a-few-ideas-from-software-engineering-can-help-data-scientists-analysts-and-researchers-write-reliable-code">How using a few ideas from software engineering can help data scientists, analysts and researchers write reliable code</a></li>
-  </ul></li>
-  </ul>
-<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/b-rodrigues/raps_with_py/edit/master/index.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/b-rodrigues/raps_with_py/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
+        
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Building reproducible analytical pipelines with Python</h1>
+<h1 class="title"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Setting up a development environment</span></h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>Bruno Rodrigues </p>
-          </div>
-  </div>
     
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">January 13, 2024</p>
-    </div>
-  </div>
   
     
   </div>
@@ -223,51 +201,9 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
-<section id="welcome" class="level1 unnumbered">
-<h1 class="unnumbered">Welcome!</h1>
-<section id="how-using-a-few-ideas-from-software-engineering-can-help-data-scientists-analysts-and-researchers-write-reliable-code" class="level2">
-<h2 class="anchored" data-anchor-id="how-using-a-few-ideas-from-software-engineering-can-help-data-scientists-analysts-and-researchers-write-reliable-code">How using a few ideas from software engineering can help data scientists, analysts and researchers write reliable code</h2>
-<p><em>This is the Python edition of the book “Building reproducible analytical pipelines”, and it’s a work-in-progress. If you’re looking for the R version, visit <a href="https://www.raps-with-r.dev">this link</a>.</em></p>
-<figure class="figure">
-<a href="https://leanpub.com/raps-with-python"><br>
-<img style="float: right; clear: right" height="200" src="https://d2sofvawe08yqg.cloudfront.net/raps-with-r/s_hero2x?1676902653" alt="You can buy a copy on Leanpub." class="figure-img"> </a>
-</figure>
-<p>Data scientists, statisticians, analysts, researchers, and many other professionals write a lot of code.</p>
-<p>Not only do they write a lot of code, but they must also read and review a lot of code as well. They either work in teams and need to review each other’s code, or need to be able to reproduce results from past projects, be it for peer review or auditing purposes. And yet, they never, or very rarely, get taught the tools and techniques that would make the process of writing, collaborating, reviewing and reproducing projects possible.</p>
-<p>Which is truly unfortunate because software engineers face the same challenges and solved them decades ago.</p>
-<p>The aim of this book is to teach you how to use some of the best practices from software engineering and DevOps to make your projects robust, reliable and reproducible. It doesn’t matter if you work alone, in a small or in a big team. It doesn’t matter if your work gets (peer-)reviewed or audited: the techniques presented in this book will make your projects more reliable and save you a lot of frustration!</p>
-<p>As someone whose primary job is analysing data, you might think that you are not a developer. It seems as if developers are these genius types that write extremely high-quality code and create these super useful packages. The truth is that you are a developer as well. It’s just that your focus is on writing code for your purposes to get your analyses going instead of writing code for others. Or at least, that’s what you think. Because in others, your team-mates are included. Reviewers and auditors are included. Any people that will read your code are included, and there will be people that will read your code. At the very least future you will read your code. By learning how to set up projects and write code in a way that future you will understand and not want to murder you, you will actually work towards improving the quality of your work, naturally.</p>
-<p>The book can be read for free on <a href="https://b-rodrigues.github.io/raps_with_py/">https://b-rodrigues.github.io/raps_with_py/</a> and you’ll be able buy a DRM-free Epub or PDF on <a href="https://leanpub.com/">Leanpub</a><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> once there’s more content.</p>
-<p>This is the <em>Python edition</em> of my book titled <a href="https://raps-with-r.dev">Building reproducible analytical pipelines with R</a><a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>. This means that a lot of text is copied over, but the all of the code and concepts are completely adapted to the Python programming language. This book is also shorter than the R version. Here’s the topics that I will cover:</p>
-<ul>
-<li>Dependency management with <code>pipenv</code>;</li>
-<li>Some thoughts on functional programming with Python;</li>
-<li>Unit and assertive testing;</li>
-<li>Build automation with <code>ploomber</code>;</li>
-<li>Literate programming with Quarto;</li>
-<li>Reproducible environments with Docker;</li>
-<li>Continuous integration and delivery.</li>
-</ul>
-<p>While this is not a book for beginners (you really should be familiar with Python before reading this), I will not assume that you have any knowledge of the tools discussed. But be warned, this book will require you to take the time to read it, and then type on your computer. Type <em>a lot</em>.</p>
-<p>I hope that you will enjoy reading this book and applying the ideas in your day-to-day, ideas which hopefully should improve the reliability, traceability and reproducibility of your code. You can read this book for free on TO UPDATE</p>
-<p>You can also buy a physical copy of the book on <a href="https://www.amazon.com/dp/B0C87H6MGF/">Amazon</a>.</p>
-<p>If you want to get to know me better, read my <a href="https://www.brodrigues.co/about/me/">bio</a><a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>.</p>
-<p>You’ll also be able to buy a physical copy of the book on Amazon once it’s done. In the meantime, you could buy the <a href="https://www.amazon.com/dp/B0C87H6MGF/">R edition</a>.</p>
-<p>If you find this book useful, don’t hesitate to let me know or leave a rating on Amazon!</p>
-<p>You can submit issues, PRs and ask questions on the book’s <a href="https://github.com/b-rodrigues/raps_with_py">Github repository</a><a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>.</p>
+<p>I have to start with on of the hardest chapters of the book, how to set up a development environment for Python.</p>
 
 
-</section>
-</section>
-<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
-<hr>
-<ol>
-<li id="fn1"><p>https://leanpub.com/<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn2"><p>https://raps-with-r.dev<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn3"><p>https://www.brodrigues.co/about/me/<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn4"><p>https://github.com/b-rodrigues/raps_with_py<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-</ol>
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -620,10 +556,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
+      <a href="./preface.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Preface</span>
+      </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./preface.html" class="pagination-link">
-        <span class="nav-page-text">Preface</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./project_start.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Project start</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -631,4 +570,4 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
-</body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/b-rodrigues/raps_with_py/edit/master/setting_up.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/b-rodrigues/raps_with_py/issues/new" class="toc-action">Report an issue</a></p></div></div></div></div></footer></body></html>
