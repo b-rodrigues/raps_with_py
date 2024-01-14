@@ -6,7 +6,7 @@ analyzing data. That being said, Python is currently the most popular general
 purpose programming language, and also the most popular language to analyze
 data, especially in machine learning and AI. As such, it is a good idea to at
 least know your way around it even if, like me, you prefer using the R
-programming language to analyze data.
+programming language.
 
 I state that I don't like Python because I want to make something very clear,
 right from the start. I am not an expert in Python. I know enough to get things
@@ -17,7 +17,7 @@ Well, in truth, this is not a book about Python.
 This book is about building reproducible pipelines. And in order to build
 reproducible pipelines, you need to apply certain general ideas. This book will
 discuss these ideas, and illustrate them using the Python programming language.
-wrote such a book already: you can read it
+I wrote such a book already: you can read it
 [here](www.raps-with-r.dev)^[www.raps-with-r.dev]. The book was well received:
 lots of people contacted me to thank me for having written it, I was invited to
 give talks several times on the book already, give some workshops and some
@@ -31,17 +31,17 @@ language, and if it would be possible to reproduce the way I work with R.
 There are currently some interesting packages available for Python that are
 quite close to some available for R. But R and Python have some very fundamental
 differences in their design that make using Python feel awkward if you're used
-to R, and especially if take full advantage of R's functional programming
-features. But it's not just these design choices that differentiate both
-languages, there are also differences in culture, in how people use them. For
-example, notebooks are very popular in the Python world, but it's quite rare to
-see someone share R code through a notebook. In general, R users tend to write
-code as plain-text scripts or in Markdown using Rmarkdown or Quarto. Throughout
-this book, I will be writing Python with a heavy R accent, mainly for two
-reasons: first, because I'm fluent in R, but not in Python, as I've stated
-above. Second, because I also think that some of R's quirks actually make it it
-more readable than equivalent Python code, and thus we can make Python more
-readable if we make it look more to R.
+to R, especially if take full advantage of R's functional programming features.
+But it's not just these design choices that differentiate both languages, there
+are also differences in culture, in how people use them. For example, notebooks
+are very popular in the Python world, but it's quite rare to see someone share R
+code through a notebook. In general, R users tend to write code as plain-text
+scripts or in Markdown using Rmarkdown or Quarto. Throughout this book, I will
+be writing Python with a heavy R accent, mainly for two reasons: first, because
+I'm fluent in R, but not in Python, as I've stated above. Second, because I also
+think that some of R's idioms actually make it more readable than equivalent
+Python code, and thus we can make Python more readable if we make it look more
+like R.
 
 If the previous sentence didn't scare you into continuing and you are actually
 curious to see what I mean, then read on, you're in the perfect state of mind to
@@ -54,7 +54,7 @@ interested in teaching a course for the Data Science Master degree at the
 University of Luxembourg. Long story short, I've decide to teach students how to
 set up data science projects in a way that they're reproducible. I wrote my
 course notes into a [freely available bookdown](https://rap4mads.eu/) that I
-used for teaching. When I started compiling my notes, I discovered the concept
+used for teaching. When I started compiling my notes, I discovered the concept of
 *Reproducible Analytical Pipelines* as developed by the [Office for National
 Statistics](https://analysisfunction.civilservice.gov.uk/support/reproducible-analytical-pipelines/)
 (henceforth ONS). I found the name "Reproducible Analytical Pipeline"
@@ -73,38 +73,6 @@ The bottom line is: the ideas I’m presenting here are nothing new. It’s just
 that I took some time to compile them and make them accessible and interesting
 (at least I hope so) to users of the Python programming language, even if I'm
 not one.
-
-This Python edition is shorter than the R version.
-
-
-- Dependency management with `{renv}`;
-- Package development with `{fusen}`;
-- Unit and assertive testing;
-- Build automation with `{targets}`;
-- Reproducible environments with Docker;
-  - Continuous integration and delivery.
-
-While this is not a book for beginners (you really should be familiar with R
-before reading this), I will not assume that you have any knowledge of the tools
-presented in part 2. In fact, even if you’re already familiar with Git, Github,
-functional programming and literate programming, I think that you will still
-learn something useful from reading part 1. But be warned, this book will
-require you to take the time to read it, and then type on your computer. Type *a
-lot*.
-
-I hope that you will enjoy reading this book and applying the ideas in your
-day-to-day, ideas which hopefully should improve the reliability, traceability
-and reproducibility of your code. You can read this book for free on
-[https://raps-with-r.dev/](https://raps-with-r.dev/), or if you want you can buy
-a DRM-free PDF or Epub over at
-[https://leanpub.com/raps-with-r](https://leanpub.com/raps-with-r). 
-
-::: {.content-hidden when-format="pdf"}
-You can also buy a physical copy of the book on [Amazon](https://www.amazon.com/dp/B0C87H6MGF/).
-:::
-
-If you want to get to know me better, read my
-[bio](https://www.brodrigues.co/about/me/)^[https://www.brodrigues.co/about/me/].
 
 If you have feedback, drop me an email at bruno [at] brodrigues [dot] co.
 

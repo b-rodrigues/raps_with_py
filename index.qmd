@@ -52,6 +52,34 @@ and you'll be able buy a DRM-free Epub or PDF on
 [Leanpub](https://leanpub.com/)^[https://leanpub.com/] once there's more
 content.
 
+This Python edition is shorter than the R version. Here's the topics that
+I will cover:
+
+- Dependency management with `pipenv`;
+- Some thoughts on functional programming;
+- Unit and assertive testing;
+- Build automation with `ploomber`;
+- Literate programming with Quarto;
+- Reproducible environments with Docker;
+- Continuous integration and delivery.
+
+While this is not a book for beginners (you really should be familiar with
+Python before reading this), I will not assume that you have any knowledge of
+the tools discussed. But be warned, this book will require you to take the time
+to read it, and then type on your computer. Type *a lot*.
+
+I hope that you will enjoy reading this book and applying the ideas in your
+day-to-day, ideas which hopefully should improve the reliability, traceability
+and reproducibility of your code. You can read this book for free on
+TO UPDATE
+
+::: {.content-hidden when-format="pdf"}
+You can also buy a physical copy of the book on [Amazon](https://www.amazon.com/dp/B0C87H6MGF/).
+:::
+
+If you want to get to know me better, read my
+[bio](https://www.brodrigues.co/about/me/)^[https://www.brodrigues.co/about/me/].
+
 ::: {.content-hidden when-format="pdf"}
 You'll also be able to buy a physical copy of the book on Amazon once it's done. In the
 meantime, you could buy the [R edition](https://www.amazon.com/dp/B0C87H6MGF/).
