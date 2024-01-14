@@ -42,8 +42,8 @@ jobs:
       - name: Instal pipenv
         run: pip install pipenv
 
-      - name: Instal packages
-        run: pipenv install
+      - name: Install packages globally
+        run: pipenv install --system
 
 
       - name: Publish to GitHub Pages (and render)
