@@ -1,0 +1,4 @@
+# Setting up a development environment
+
+I have to start with on of the hardest chapters of the book,
+how to set up a development environment for Python.

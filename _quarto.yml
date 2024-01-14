@@ -15,6 +15,8 @@ book:
   chapters:
     - index.qmd
     - preface.qmd
+    - setting_up.qmd
+    - project_start.qmd
     - references.qmd
   page-navigation: true
 

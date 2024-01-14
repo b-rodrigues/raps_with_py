@@ -52,11 +52,14 @@ and you'll be able buy a DRM-free Epub or PDF on
 [Leanpub](https://leanpub.com/)^[https://leanpub.com/] once there's more
 content.
 
-This Python edition is shorter than the R version. Here's the topics that
-I will cover:
+This is the *Python edition* of my book titled [Building reproducible analytical
+pipelines with R](https://raps-with-r.dev)^[https://raps-with-r.dev]. This means
+that a lot of text is copied over, but the all of the code and concepts are
+completely adapted to the Python programming language. This book is also
+shorter than the R version. Here's the topics that I will cover:
 
 - Dependency management with `pipenv`;
-- Some thoughts on functional programming;
+- Some thoughts on functional programming with Python;
 - Unit and assertive testing;
 - Build automation with `ploomber`;
 - Literate programming with Quarto;
