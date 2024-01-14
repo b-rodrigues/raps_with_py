@@ -29,9 +29,10 @@ jobs:
         uses: r-lib/actions/setup-r-dependencies@v2
         with:
           packages: |
-            any::withr
             any::ggplot2
             any::knitr
+            any::rmarkdown
+            any::withr
 
       - name: Set up Python 3.10
         uses: actions/setup-python@v5
