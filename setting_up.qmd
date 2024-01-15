@@ -1,4 +1,83 @@
 # Setting up a development environment
 
-I have to start with on of the hardest chapters of the book,
-how to set up a development environment for Python.
+I have to start with on of the hardest chapters of the book, how to set up a
+development environment for Python.
+
+If you are already using Python, you already have an environment set up and
+might be familiar with `pyenv` or other similar tools. I would still suggest you
+read this chapter and see if you agree with how I approach this issue. You may
+want to adapt your current workflow to it, or keep on doing what you’ve been
+doing up until now, it is up to. If you’re completely new to Python, then you
+definitely need to read this chapter, but also, I need to remind you that this
+is not a book about Python per se. So I won’t be teaching you any Python (I
+wouldn’t really be competent to do so either) and you might want to complement
+reading this book with another that focuses on actually teaching Python.
+Remember, this book is about building reproducible analytical pipelines!
+
+## Why is installing Python such a hard problem?
+
+If you google "how to install Python" you will find a surprising amount of
+articles explaining how to do it. I say "surprising amount" because one might
+expect to install Python like any other piece of software. If you’re already
+familiar with R, you could think that installing Python would be done the same
+way: download the installer for your operating system, and then install it. And,
+actually, you can do just that for Python as well. So why are there 100s of
+articles online explaining how to install Python, and why aren’t all of these
+articles simply telling you to download the installer to install Python? Why
+did I write this chapter on installing Python?
+
+Well, there are several thing that we need to deal with if we want to install
+and use Python the "right way". First of all, Python is pre-installed on Linux
+distributions and older versions of macOS. So if you’re using one of these
+operating systems, you could use the built-in Python interpreter, but this is
+not recommended. The reason being that these bundled versions are generally
+older, and that you don’t control their upgrade process, as these get updated
+alongside the operating system. On Windows and newer versions of macOS, Python
+is, as far as I know, never bundled, so you’d need to install it anyways.
+
+Another thing that you need to consider is that newer Python versions can
+introduce breaking changes, making code written for an earlier version of Python
+not run on a newer version of Python. This is not a Python-specific issue: it
+happens with any programming language. So this means that ideally you would want
+to bundle a Python version with your project’s code.
+
+The same holds true for individual packages: newer versions of packages might
+not even work with older releases of Python, so to avoid any issues, an analysis
+would get bundled with a Python release and Python packages. This bundle is what
+I call a development environment, and in order to build such development environment,
+specific tools have to be used. And there’s a lot of these tools in the Python
+ecosystem... so much so that when you’re first starting, you might get lost.
+So here is he two tools that I use for this, and that I think work quite well: `pyenv`
+and `pipenv`.
+
+## First step: installing Python
+
+In this section, I will assume that you have no version of Python already
+installed on your computer. If you do have Python, you may want to skip this
+section: but know that if you’re not using `pyenv` to download and install
+Python versions, you will need to keep installing your environments manually.
+`pipenv` however install environments automatically if `pyenv` is available,
+so you might want to switch over to `pyenv`.
+
+So first of all, let’s install `pyenv`. `pyenv` is a tool that allows you to install
+as many versions of Python that you need, and that does not depend on Python
+itself, so there’s no bootstrap problem. But it is only available for Linux
+and macOS: Windows users should install `pyenv-win`: the following subsection
+deals with installing `pyenv` on Linux and macOS, the next one with installing
+`pyenv-win` for Windows.
+
+### `pyenv` for Linux or macOS
+
+To avoid simply repeating what is already in the documentation of `pyenv`, I recommend
+you read and follow the [official instructions](https://github.com/pyenv/pyenv?tab=readme-ov-file#installation),
+but here is the gist of it. First, install the build dependencies by following the
+[instructions here](https://github.com/pyenv/pyenv/wiki#suggested-build-environment).
+Then, run the automatic installer by opening a terminal and executing this line here:
+
+```
+curl https://pyenv.run | bash
+```
+
+
+
+### `pyenv-win` for Windows
