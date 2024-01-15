@@ -179,7 +179,18 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#why-is-installing-python-such-a-hard-problem" id="toc-why-is-installing-python-such-a-hard-problem" class="nav-link active" data-scroll-target="#why-is-installing-python-such-a-hard-problem"><span class="header-section-number">1.1</span> Why is installing Python such a hard problem?</a></li>
+  <li><a href="#first-step-installing-python" id="toc-first-step-installing-python" class="nav-link" data-scroll-target="#first-step-installing-python"><span class="header-section-number">1.2</span> First step: installing Python</a>
+  <ul class="collapse">
+  <li><a href="#pyenv-for-linux-or-macos" id="toc-pyenv-for-linux-or-macos" class="nav-link" data-scroll-target="#pyenv-for-linux-or-macos"><span class="header-section-number">1.2.1</span> <code>pyenv</code> for Linux or macOS</a></li>
+  <li><a href="#pyenv-win-for-windows" id="toc-pyenv-win-for-windows" class="nav-link" data-scroll-target="#pyenv-win-for-windows"><span class="header-section-number">1.2.2</span> <code>pyenv-win</code> for Windows</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/b-rodrigues/raps_with_py/edit/master/setting_up.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/b-rodrigues/raps_with_py/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -202,8 +213,29 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 <p>I have to start with on of the hardest chapters of the book, how to set up a development environment for Python.</p>
+<p>If you are already using Python, you already have an environment set up and might be familiar with <code>pyenv</code> or other similar tools. I would still suggest you read this chapter and see if you agree with how I approach this issue. You may want to adapt your current workflow to it, or keep on doing what you’ve been doing up until now, it is up to. If you’re completely new to Python, then you definitely need to read this chapter, but also, I need to remind you that this is not a book about Python per se. So I won’t be teaching you any Python (I wouldn’t really be competent to do so either) and you might want to complement reading this book with another that focuses on actually teaching Python. Remember, this book is about building reproducible analytical pipelines!</p>
+<section id="why-is-installing-python-such-a-hard-problem" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="why-is-installing-python-such-a-hard-problem"><span class="header-section-number">1.1</span> Why is installing Python such a hard problem?</h2>
+<p>If you google “how to install Python” you will find a surprising amount of articles explaining how to do it. I say “surprising amount” because one might expect to install Python like any other piece of software. If you’re already familiar with R, you could think that installing Python would be done the same way: download the installer for your operating system, and then install it. And, actually, you can do just that for Python as well. So why are there 100s of articles online explaining how to install Python, and why aren’t all of these articles simply telling you to download the installer to install Python? Why did I write this chapter on installing Python?</p>
+<p>Well, there are several thing that we need to deal with if we want to install and use Python the “right way”. First of all, Python is pre-installed on Linux distributions and older versions of macOS. So if you’re using one of these operating systems, you could use the built-in Python interpreter, but this is not recommended. The reason being that these bundled versions are generally older, and that you don’t control their upgrade process, as these get updated alongside the operating system. On Windows and newer versions of macOS, Python is, as far as I know, never bundled, so you’d need to install it anyways.</p>
+<p>Another thing that you need to consider is that newer Python versions can introduce breaking changes, making code written for an earlier version of Python not run on a newer version of Python. This is not a Python-specific issue: it happens with any programming language. So this means that ideally you would want to bundle a Python version with your project’s code.</p>
+<p>The same holds true for individual packages: newer versions of packages might not even work with older releases of Python, so to avoid any issues, an analysis would get bundled with a Python release and Python packages. This bundle is what I call a development environment, and in order to build such development environment, specific tools have to be used. And there’s a lot of these tools in the Python ecosystem… so much so that when you’re first starting, you might get lost. So here is he two tools that I use for this, and that I think work quite well: <code>pyenv</code> and <code>pipenv</code>.</p>
+</section>
+<section id="first-step-installing-python" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="first-step-installing-python"><span class="header-section-number">1.2</span> First step: installing Python</h2>
+<p>In this section, I will assume that you have no version of Python already installed on your computer. If you do have Python, you may want to skip this section: but know that if you’re not using <code>pyenv</code> to download and install Python versions, you will need to keep installing your environments manually. <code>pipenv</code> however install environments automatically if <code>pyenv</code> is available, so you might want to switch over to <code>pyenv</code>.</p>
+<p>So first of all, let’s install <code>pyenv</code>. <code>pyenv</code> is a tool that allows you to install as many versions of Python that you need, and that does not depend on Python itself, so there’s no bootstrap problem. But it is only available for Linux and macOS: Windows users should install <code>pyenv-win</code>: the following subsection deals with installing <code>pyenv</code> on Linux and macOS, the next one with installing <code>pyenv-win</code> for Windows.</p>
+<section id="pyenv-for-linux-or-macos" class="level3" data-number="1.2.1">
+<h3 data-number="1.2.1" class="anchored" data-anchor-id="pyenv-for-linux-or-macos"><span class="header-section-number">1.2.1</span> <code>pyenv</code> for Linux or macOS</h3>
+<p>To avoid simply repeating what is already in the documentation of <code>pyenv</code>, I recommend you read and follow the <a href="https://github.com/pyenv/pyenv?tab=readme-ov-file#installation">official instructions</a>, but here is the gist of it. First, install the build dependencies by following the <a href="https://github.com/pyenv/pyenv/wiki#suggested-build-environment">instructions here</a>. Then, run the automatic installer by opening a terminal and executing this line here:</p>
+<pre><code>curl https://pyenv.run | bash</code></pre>
+</section>
+<section id="pyenv-win-for-windows" class="level3" data-number="1.2.2">
+<h3 data-number="1.2.2" class="anchored" data-anchor-id="pyenv-win-for-windows"><span class="header-section-number">1.2.2</span> <code>pyenv-win</code> for Windows</h3>
 
 
+</section>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -570,4 +602,4 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/b-rodrigues/raps_with_py/edit/master/setting_up.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/b-rodrigues/raps_with_py/issues/new" class="toc-action">Report an issue</a></p></div></div></div></div></footer></body></html>
+</body></html>
