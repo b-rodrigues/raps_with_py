@@ -188,7 +188,9 @@ ul.task-list li input[type="checkbox"] {
   <ul class="collapse">
   <li><a href="#pyenv-for-linux-or-macos" id="toc-pyenv-for-linux-or-macos" class="nav-link" data-scroll-target="#pyenv-for-linux-or-macos"><span class="header-section-number">1.2.1</span> <code>pyenv</code> for Linux or macOS</a></li>
   <li><a href="#pyenv-win-for-windows" id="toc-pyenv-win-for-windows" class="nav-link" data-scroll-target="#pyenv-win-for-windows"><span class="header-section-number">1.2.2</span> <code>pyenv-win</code> for Windows</a></li>
+  <li><a href="#using-pyenv" id="toc-using-pyenv" class="nav-link" data-scroll-target="#using-pyenv"><span class="header-section-number">1.2.3</span> Using pyenv</a></li>
   </ul></li>
+  <li><a href="#second-step-pipenv" id="toc-second-step-pipenv" class="nav-link" data-scroll-target="#second-step-pipenv"><span class="header-section-number">1.3</span> Second step: pipenv</a></li>
   </ul>
 <div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/b-rodrigues/raps_with_py/edit/master/setting_up.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/b-rodrigues/raps_with_py/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
     </div>
@@ -227,14 +229,88 @@ ul.task-list li input[type="checkbox"] {
 <p>So first of all, let’s install <code>pyenv</code>. <code>pyenv</code> is a tool that allows you to install as many versions of Python that you need, and that does not depend on Python itself, so there’s no bootstrap problem. But it is only available for Linux and macOS: Windows users should install <code>pyenv-win</code>: the following subsection deals with installing <code>pyenv</code> on Linux and macOS, the next one with installing <code>pyenv-win</code> for Windows.</p>
 <section id="pyenv-for-linux-or-macos" class="level3" data-number="1.2.1">
 <h3 data-number="1.2.1" class="anchored" data-anchor-id="pyenv-for-linux-or-macos"><span class="header-section-number">1.2.1</span> <code>pyenv</code> for Linux or macOS</h3>
-<p>To avoid simply repeating what is already in the documentation of <code>pyenv</code>, I recommend you read and follow the <a href="https://github.com/pyenv/pyenv?tab=readme-ov-file#installation">official instructions</a>, but here is the gist of it. First, install the build dependencies by following the <a href="https://github.com/pyenv/pyenv/wiki#suggested-build-environment">instructions here</a>. Then, run the automatic installer by opening a terminal and executing this line here:</p>
+<p>I recommend you read and follow the <a href="https://github.com/pyenv/pyenv?tab=readme-ov-file#installation">official instructions</a><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>, but I provide here the main steps. In case something doesn’t work as expected, refer to the official documentation linked previously. First, install the build dependencies by following the <a href="https://github.com/pyenv/pyenv/wiki#suggested-build-environment">instructions here</a><a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>. On a Linux distribution like Ubuntu, this means installing a bunch of development libraries from your usual package manager. On macOS, this means installing Xcode and also a bunch of packages with Homebrew.</p>
+<p>Then, on macOS, you can use Hombrew to install <code>pyenv</code>:</p>
+<pre><code>brew update
+brew install pyenv</code></pre>
+<p>For Linux distributions, run the automatic installer by opening a terminal and executing this line here:</p>
 <pre><code>curl https://pyenv.run | bash</code></pre>
+<p>Now comes the more complex part of the installation process. You need to edit some files for your terminal, and these files are different depending on which shell you use. For most Linux distributions, if not all, the default terminal will use bash, and on macOS the default shell is zsh. The detailled instructions, which I recommend you read, are <a href="https://github.com/pyenv/pyenv?tab=readme-ov-file#set-up-your-shell-environment-for-pyenv">here</a><a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>, but here are my recommendations: if you’re using a Linux distribution, you likely are using bash, to find out, run <code>echo $0</code> in a terminal. If your terminal is using bash, “bash” will get printed, if not, “zsh” will get printed instead. If your terminal using bash, run the following in a terminal:</p>
+<pre><code>echo 'export PYENV_ROOT="$HOME/.pyenv"' &gt;&gt; ~/.bashrc
+echo 'command -v pyenv &gt;/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"' &gt;&gt; ~/.bashrc
+echo 'eval "$(pyenv init -)"' &gt;&gt; ~/.bashrc</code></pre>
+<p>and then, you need to check whether you have a <code>.profile</code>, <code>.bash_profile</code> or a <code>.bash_login</code> file in your home directory. These are files used at startup by bash to set some variables and options. They’re similar to the <code>.bashrc</code> file, but the <code>.bashrc</code> is executed when starting a terminal when you’re already logged into the system, while <code>.bash_profile</code>, <code>.bash_login</code> and <code>.profile</code> get executed when logging in through ssh into the system. If you have a <code>.profile</code> file in your HOME, this should return something:</p>
+<pre><code>ls .profile</code></pre>
+<p>if nothing gets returned, you might have instead a <code>.bash_profile</code> or <code>bash_login</code> file instead, try with:</p>
+<pre><code>ls .bash_profile</code></pre>
+<p>or</p>
+<pre><code>ls .bash_login</code></pre>
+<p>If you have more than one, only add the lines to the <code>.bash_profile</code>:</p>
+<pre><code>echo 'export PYENV_ROOT="$HOME/.pyenv"' &gt;&gt; ~/.bash_profile
+echo 'command -v pyenv &gt;/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"' &gt;&gt; ~/.bash_profile
+echo 'eval "$(pyenv init -)"' &gt;&gt; ~/.bash_profile</code></pre>
+<p>but if you have only have a <code>.bash_login</code> file, run this:</p>
+<pre><code>echo 'export PYENV_ROOT="$HOME/.pyenv"' &gt;&gt; ~/.bash_login
+echo 'command -v pyenv &gt;/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"' &gt;&gt; ~/.bash_login
+echo 'eval "$(pyenv init -)"' &gt;&gt; ~/.bash_login</code></pre>
+<p>or if you only have a <code>.profile</code> file, or none of these three files at all, run these lines:</p>
+<pre><code>echo 'export PYENV_ROOT="$HOME/.pyenv"' &gt;&gt; ~/.profile
+echo 'command -v pyenv &gt;/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"' &gt;&gt; ~/.profile
+echo 'eval "$(pyenv init -)"' &gt;&gt; ~/.profile</code></pre>
+<p>If you’re running zsh (which would be the case on macOS, or if you changed form bash to zsh on Linux), then you need to add these lines to the <code>.zshrc</code> file:</p>
+<pre><code>echo 'export PYENV_ROOT="$HOME/.pyenv"' &gt;&gt; ~/.zshrc
+echo '[[ -d $PYENV_ROOT/bin ]] &amp;&amp; export PATH="$PYENV_ROOT/bin:$PATH"' &gt;&gt; ~/.zshrc
+echo 'eval "$(pyenv init -)"' &gt;&gt; ~/.zshrc</code></pre>
+<p>and also to <code>.zprofile</code> or <code>.zlogin</code>, depending on which you have (if you have none, put the lines into <code>.zprofile</code>):</p>
+<pre><code>echo 'export PYENV_ROOT="$HOME/.pyenv"' &gt;&gt; ~/.zprofile
+echo '[[ -d $PYENV_ROOT/bin ]] &amp;&amp; export PATH="$PYENV_ROOT/bin:$PATH"' &gt;&gt; ~/.zprofile
+echo 'eval "$(pyenv init -)"' &gt;&gt; ~/.zprofile</code></pre>
+<p>If you’re using another shell, such as fish, you can checkout the instructions on <code>pyenv</code>’s GitHub repository, or simply add these lines in the equivalent startup files.</p>
 </section>
 <section id="pyenv-win-for-windows" class="level3" data-number="1.2.2">
 <h3 data-number="1.2.2" class="anchored" data-anchor-id="pyenv-win-for-windows"><span class="header-section-number">1.2.2</span> <code>pyenv-win</code> for Windows</h3>
+<p>If you’re using Windows, you should install <code>pyenv-win</code> instead, which you can find <a href="https://github.com/pyenv-win/pyenv-win">here</a><a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>. Installation on Windows is similar to how you install <code>pyenv</code> on Linux, if you choose the PowerShell method. It’s simply running this line (see <a href="https://github.com/pyenv-win/pyenv-win/blob/master/docs/installation.md#powershell">here</a><a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a>) in Powershell:</p>
+<pre><code>Invoke-WebRequest -UseBasicParsing -Uri "https://raw.githubusercontent.com/pyenv-win/pyenv-win/master/pyenv-win/install-pyenv-win.ps1" -OutFile "./install-pyenv-win.ps1"; &amp;"./install-pyenv-win.ps1"</code></pre>
+<p>Open a new PowerShell prompt and run <code>pyenv</code>. If you see a “command not found” error, you need to manually add <code>pyenv</code> to the PATH. On Windows, this is done graphically. Click on the start menu, and look for “Edit environment variables for your account”. Then, click on the “New…” button, and the <code>PYENV</code>, <code>PYENV_HOME</code> and <code>PYENV_ROOT</code>. Make sure to adjus the paths to the ones on your machine. Also check the <a href="https://github.com/pyenv-win/pyenv-win/wiki">FAQ</a><a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a> if you need further details.</p>
+</section>
+<section id="using-pyenv" class="level3" data-number="1.2.3">
+<h3 data-number="1.2.3" class="anchored" data-anchor-id="using-pyenv"><span class="header-section-number">1.2.3</span> Using pyenv</h3>
+<p>Now that you have <code>pyenv</code> installed, we can use it to install as many different Python versions that we need, typically one per project. First, I’ll install a version of Python that I want to use. Let’s got with the latest available. Let’s see what is available:</p>
+<pre><code>pyenv install -l</code></pre>
+<p>As of writing, the latest version that is not in beta is <code>3.10.5</code>, so let’s install this one (if you’re reading this from the future and a new version of Python is available, install <code>3.10.5</code> nonetheless):</p>
+<pre><code>pyenv install 3.10.5</code></pre>
+<p>this will install Python <code>3.10.5</code>. But how do we use it now? Let’s suppose that we want to use it for a project. Let’s create a folder that will contain the different scripts that we are going to write in the next chapter and called it <code>housing</code>.</p>
+<p>Open a terminal inside that folder, or open a terminal and <code>cd</code> into that folder:</p>
+<pre><code>cd ~/home/Documents/housing</code></pre>
+<p>(depending on your operating system, you could first open the folder, then right click somewhere empty and then click on <em>Open in terminal</em>, which would open a terminal in that folder). We would like to use Python <code>3.10.5</code> for this project, and we would like to do so each time we interact with the files in that folder. We need to set version <code>3.10.5</code> as the <em>local</em> Python version, meaning, the Python version that will be used for this project only:</p>
+<pre><code>pyenv local 3.10.5</code></pre>
+<p>This will generate a <code>.python-version</code> with the following line in it:</p>
+<pre><code>3.10.5</code></pre>
+<p>This file will get used by <code>pipenv</code>, which we are now ready to set up!</p>
+</section>
+</section>
+<section id="second-step-pipenv" class="level2" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="second-step-pipenv"><span class="header-section-number">1.3</span> Second step: pipenv</h2>
+<p>We can now use our local Python interpreter to install <code>pipenv</code>:</p>
+<pre><code>pip install --user pipenv</code></pre>
+<p>We can now use <code>pipenv</code> to install the packages for our project. But why use <code>pipenv</code> instead of <code>pip</code>. In my opinion, <code>pipenv</code> has one absolutely crucial feature for reproducibility: <code>pipenv</code> enables deterministic builds, which means that when using <code>pipenv</code>, we will <em>always</em> get exactly the same packages installed.</p>
+<p>But you may be wondering, how is that different from using <code>pip</code> with a <code>requirements.txt</code> file? After all, if you make the effort to specify the packages you need, and their versions, wouldn’t running <code>pip install -r requirements.txt</code> also install exactly the same packages?</p>
+<p>Well, not quite. Imagine for example that you need a package called <code>hello</code> and you put it into your <code>requirements.txt</code> like so:</p>
+<pre><code>hello==1.0.1</code></pre>
+<p>Suppose that <code>hello</code> depends on another package called <code>ciao</code>. If you run <code>pip install -r requirements.txt</code> today, you’ll get <code>hello</code> at version <code>1.0.1</code> and <code>ciao</code>, say, at version <code>0.3.2</code>. But if you run <code>pip install -r requirements.txt</code> in 6 months, you would still get <code>hello</code> at version <code>1.0.1</code> but you might get a newer version of <code>ciao</code>.</p>
 
 
 </section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p>https://github.com/pyenv/pyenv?tab=readme-ov-file#installation<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>https://github.com/pyenv/pyenv/wiki#suggested-build-environment<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>https://github.com/pyenv/pyenv?tab=readme-ov-file#set-up-your-shell-environment-for-pyenv<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>https://github.com/pyenv-win/pyenv-win<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p>https://github.com/pyenv-win/pyenv-win/blob/master/docs/installation.md#powershell<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn6"><p>https://github.com/pyenv-win/pyenv-win/wiki<a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
 </section>
 
 </main> <!-- /main -->
