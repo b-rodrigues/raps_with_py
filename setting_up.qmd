@@ -68,16 +68,214 @@ deals with installing `pyenv` on Linux and macOS, the next one with installing
 
 ### `pyenv` for Linux or macOS
 
-To avoid simply repeating what is already in the documentation of `pyenv`, I recommend
-you read and follow the [official instructions](https://github.com/pyenv/pyenv?tab=readme-ov-file#installation),
-but here is the gist of it. First, install the build dependencies by following the
-[instructions here](https://github.com/pyenv/pyenv/wiki#suggested-build-environment).
-Then, run the automatic installer by opening a terminal and executing this line here:
+I recommend you read and follow the [official
+instructions](https://github.com/pyenv/pyenv?tab=readme-ov-file#installation)^[https://github.com/pyenv/pyenv?tab=readme-ov-file#installation],
+but I provide here the main steps. In case something doesn’t work as expected,
+refer to the official documentation linked previously. First, install the build
+dependencies by following the [instructions
+here](https://github.com/pyenv/pyenv/wiki#suggested-build-environment)^[https://github.com/pyenv/pyenv/wiki#suggested-build-environment].
+On a Linux distribution like Ubuntu, this means installing a bunch of
+development libraries from your usual package manager. On macOS, this means
+installing Xcode and also a bunch of packages with Homebrew.
+
+Then, on macOS, you can use Hombrew to install `pyenv`:
+
+```
+brew update
+brew install pyenv
+```
+
+For Linux distributions, run the automatic installer by opening a terminal and
+executing this line here:
 
 ```
 curl https://pyenv.run | bash
 ```
 
+Now comes the more complex part of the installation process. You need to edit
+some files for your terminal, and these files are different depending on which
+shell you use. For most Linux distributions, if not all, the default terminal
+will use bash, and on macOS the default shell is zsh. The detailled
+instructions, which I recommend you read, are
+[here](https://github.com/pyenv/pyenv?tab=readme-ov-file#set-up-your-shell-environment-for-pyenv)^[https://github.com/pyenv/pyenv?tab=readme-ov-file#set-up-your-shell-environment-for-pyenv],
+but here are my recommendations: if you’re using a Linux distribution, you
+likely are using bash, to find out, run `echo $0` in a terminal. If your
+terminal is using bash, "bash" will get printed, if not, "zsh" will get printed
+instead. If your terminal using bash, run the following in a terminal:
 
+```
+echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.bashrc
+echo 'command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.bashrc
+echo 'eval "$(pyenv init -)"' >> ~/.bashrc
+```
+
+and then, you need to check whether you have a `.profile`, `.bash_profile` or a
+`.bash_login` file in your home directory. These are files used at startup by
+bash to set some variables and options. They’re similar to the `.bashrc` file,
+but the `.bashrc` is executed when starting a terminal when you’re already
+logged into the system, while `.bash_profile`, `.bash_login` and `.profile` get
+executed when logging in through ssh into the system. If you have a `.profile`
+file in your HOME, this should return something:
+
+```
+ls .profile
+```
+
+if nothing gets returned, you might have instead a `.bash_profile` or
+`bash_login` file instead, try with:
+
+```
+ls .bash_profile
+```
+
+or 
+
+```
+ls .bash_login
+```
+
+If you have more than one, only add the lines to the `.bash_profile`:
+
+```
+echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.bash_profile
+echo 'command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.bash_profile
+echo 'eval "$(pyenv init -)"' >> ~/.bash_profile
+```
+
+but if you have only have a `.bash_login` file, run this:
+
+```
+echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.bash_login
+echo 'command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.bash_login
+echo 'eval "$(pyenv init -)"' >> ~/.bash_login
+```
+
+or if you only have a `.profile` file, or none of these three files at all, run these lines:
+
+```
+echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.profile
+echo 'command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.profile
+echo 'eval "$(pyenv init -)"' >> ~/.profile
+```
+
+If you’re running zsh (which would be the case on macOS, or if you changed form
+bash to zsh on Linux), then you need to add these lines to the `.zshrc` file:
+
+```
+echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.zshrc
+echo '[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.zshrc
+echo 'eval "$(pyenv init -)"' >> ~/.zshrc
+```
+
+and also to `.zprofile` or `.zlogin`, depending on which you have (if you have none,
+put the lines into `.zprofile`):
+
+```
+echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.zprofile
+echo '[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.zprofile
+echo 'eval "$(pyenv init -)"' >> ~/.zprofile
+```
+
+If you’re using another shell, such as fish, you can checkout the instructions on `pyenv`’s
+GitHub repository, or simply add these lines in the equivalent startup files.
 
 ### `pyenv-win` for Windows
+
+If you’re using Windows, you should install `pyenv-win` instead, which you can
+find
+[here](https://github.com/pyenv-win/pyenv-win)^[https://github.com/pyenv-win/pyenv-win].
+Installation on Windows is similar to how you install `pyenv` on Linux, if you
+choose the PowerShell method. It’s simply running this line (see
+[here](https://github.com/pyenv-win/pyenv-win/blob/master/docs/installation.md#powershell)^[https://github.com/pyenv-win/pyenv-win/blob/master/docs/installation.md#powershell])
+in Powershell:
+
+```
+Invoke-WebRequest -UseBasicParsing -Uri "https://raw.githubusercontent.com/pyenv-win/pyenv-win/master/pyenv-win/install-pyenv-win.ps1" -OutFile "./install-pyenv-win.ps1"; &"./install-pyenv-win.ps1"
+```
+
+Open a new PowerShell prompt and run `pyenv`. If you see a "command not found" error, you need to
+manually add `pyenv` to the PATH. On Windows, this is done graphically. Click on the start menu,
+and look for "Edit environment variables for your account". Then, click on the "New..." button, and 
+the `PYENV`, `PYENV_HOME` and `PYENV_ROOT`. Make sure to adjus the paths to the ones on your
+machine. Also check the [FAQ](https://github.com/pyenv-win/pyenv-win/wiki)^[https://github.com/pyenv-win/pyenv-win/wiki] 
+if you need further details.
+
+### Using pyenv
+
+Now that you have `pyenv` installed, we can use it to install as many different Python versions that
+we need, typically one per project. First, I’ll install a version of Python that I want to use. Let’s 
+got with the latest available. Let’s see what is available:
+
+```
+pyenv install -l
+```
+
+As of writing, the latest version that is not in beta is `3.10.5`, so let’s install this one (if you’re 
+reading this from the future and a new version of Python is available, install `3.10.5` nonetheless):
+
+```
+pyenv install 3.10.5
+```
+
+this will install Python `3.10.5`. But how do we use it now? Let’s suppose that
+we want to use it for a project. Let’s create a folder that will contain the
+different scripts that we are going to write in the next chapter and called it
+`housing`.
+
+Open a terminal inside that folder, or open a terminal and `cd` into that folder:
+
+```
+cd ~/home/Documents/housing
+```
+
+(depending on your operating system, you could first open the folder, then right click somewhere 
+empty and then click on *Open in terminal*, which would open a terminal in that folder).
+We would like to use Python `3.10.5` for this project, and we would like to do so 
+each time we interact with the files in that folder. We need to set version `3.10.5`
+as the *local* Python version, meaning, the Python version that will be used for this project
+only:
+
+```
+pyenv local 3.10.5
+```
+
+This will generate a `.python-version` with the following line in it:
+
+```
+3.10.5
+```
+
+This file will get used by `pipenv`, which we are now ready to set up!
+
+## Second step: pipenv
+
+We can now use our local Python interpreter to install `pipenv`:
+
+```
+pip install --user pipenv
+```
+
+We can now use `pipenv` to install the packages for our project. But why use
+`pipenv` instead of `pip`. In my opinion, `pipenv` has one absolutely crucial
+feature for reproducibility: `pipenv` enables deterministic builds, which means
+that when using `pipenv`, we will *always* get exactly the same packages
+installed.
+
+But you may be wondering, how is that different from using `pip` with a
+`requirements.txt` file? After all, if you make the effort to specify the
+packages you need, and their versions, wouldn’t running `pip install -r
+requirements.txt` also install exactly the same packages?
+
+Well, not quite. Imagine for example that you need a package called `hello`
+and you put it into your `requirements.txt` like so:
+
+```
+hello==1.0.1
+```
+
+Suppose that `hello` depends on another package called `ciao`. If you run `pip
+install -r requirements.txt` today, you’ll get `hello` at version `1.0.1` and
+`ciao`, say, at version `0.3.2`. But if you run `pip install -r
+requirements.txt` in 6 months, you would still get `hello` at version `1.0.1`
+but you might get a newer version of `ciao`.
+
