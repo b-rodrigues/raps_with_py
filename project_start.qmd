@@ -6,7 +6,16 @@ the book together, you will rewrite that project by implementing the techniques
 I will teach you. By the end of the book you will have built a reproducible
 analytical pipeline. To get things going, we are going to keep it simple; our
 goal here is to get an analysis done, that's it. We won't focus on
-reproducibility. We are going to download some data, and analyse it, that's it.
+reproducibility (well, not beyond what was done in the previous chapter to set
+up our development environment). We are going to download some data, and analyse
+it, that's it. But before all of that, I will present the Polars package. In the
+preface, I said that this wasn’t supposed to be a book about Python, so why am
+I talking about a specific package? It’s because I think that Polars, unlike Pandas,
+has some features and design choices that actually improve reproducibility.
+
+## The Polars package and why you should ditch Pandas in its favour
+
+
 
 ## Housing in Luxembourg
 

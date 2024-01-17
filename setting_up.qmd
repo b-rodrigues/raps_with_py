@@ -76,7 +76,9 @@ dependencies by following the [instructions
 here](https://github.com/pyenv/pyenv/wiki#suggested-build-environment)^[https://github.com/pyenv/pyenv/wiki#suggested-build-environment].
 On a Linux distribution like Ubuntu, this means installing a bunch of
 development libraries from your usual package manager. On macOS, this means
-installing Xcode and also a bunch of packages with Homebrew.
+installing Xcode and also a bunch of packages with Homebrew. Also, make sure you
+have installed Git as well. We will be using Git later in the book too, but it
+is required to install `pyenv`.
 
 Then, on macOS, you can use Hombrew to install `pyenv`:
 
@@ -176,8 +178,17 @@ echo '[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.zpr
 echo 'eval "$(pyenv init -)"' >> ~/.zprofile
 ```
 
-If you’re using another shell, such as fish, you can checkout the instructions on `pyenv`’s
-GitHub repository, or simply add these lines in the equivalent startup files.
+If you’re using another shell, such as fish, you can checkout the instructions
+on `pyenv`’s GitHub repository, or simply add these lines in the equivalent
+startup files.
+
+Finally, also add this line to your `.bashrc` or `.zshrc`:
+
+```
+eval "$(pyenv virtualenv-init -)"
+```
+
+to load `pyenv-virtualenv` automatically (as stated by the installer).
 
 ### `pyenv-win` for Windows
 
@@ -193,25 +204,43 @@ in Powershell:
 Invoke-WebRequest -UseBasicParsing -Uri "https://raw.githubusercontent.com/pyenv-win/pyenv-win/master/pyenv-win/install-pyenv-win.ps1" -OutFile "./install-pyenv-win.ps1"; &"./install-pyenv-win.ps1"
 ```
 
-Open a new PowerShell prompt and run `pyenv`. If you see a "command not found" error, you need to
-manually add `pyenv` to the PATH. On Windows, this is done graphically. Click on the start menu,
-and look for "Edit environment variables for your account". Then, click on the "New..." button, and 
-the `PYENV`, `PYENV_HOME` and `PYENV_ROOT`. Make sure to adjus the paths to the ones on your
-machine. Also check the [FAQ](https://github.com/pyenv-win/pyenv-win/wiki)^[https://github.com/pyenv-win/pyenv-win/wiki] 
+Open a new PowerShell prompt and run `pyenv`. If you see a "command not found"
+error, you need to manually add `pyenv` to the PATH. On Windows, this is done
+graphically. Click on the start menu, and look for "Edit environment variables
+for your account". 
+
+```{r, echo = F, out.width="300px"}
+#| fig-cap: "Look for 'Edit environment variables for your account'"
+knitr::include_graphics("images/edit_user_envvars.png")
+```
+
+
+Then, click on the "New..." button, and the `PYENV`, `PYENV_HOME` and
+`PYENV_ROOT`. Make sure to adjus the paths to the ones on your machine.
+
+```{r, echo = F, out.width="300px"}
+#| fig-cap: "Make sure your environment variables are correctly set"
+knitr::include_graphics("images/pyenv-win-envvars.png")
+```
+
+Also check the
+[FAQ](https://github.com/pyenv-win/pyenv-win/wiki)^[https://github.com/pyenv-win/pyenv-win/wiki]
 if you need further details.
 
 ### Using pyenv
 
-Now that you have `pyenv` installed, we can use it to install as many different Python versions that
-we need, typically one per project. First, I’ll install a version of Python that I want to use. Let’s 
-got with the latest available. Let’s see what is available:
+Now that you have `pyenv` installed, we can use it to install as many different
+Python versions that we need, typically one per project. First, I’ll install a
+version of Python that I want to use. Let’s got with the latest available. Let’s
+see what is available:
 
 ```
 pyenv install -l
 ```
 
-As of writing, the latest version that is not in beta is `3.10.5`, so let’s install this one (if you’re 
-reading this from the future and a new version of Python is available, install `3.10.5` nonetheless):
+As of writing, the latest version that is not in beta is `3.10.5`, so let’s
+install this one (if you’re reading this from the future and a new version of
+Python is available, install `3.10.5` nonetheless):
 
 ```
 pyenv install 3.10.5
@@ -222,18 +251,19 @@ we want to use it for a project. Let’s create a folder that will contain the
 different scripts that we are going to write in the next chapter and called it
 `housing`.
 
-Open a terminal inside that folder, or open a terminal and `cd` into that folder:
+Open a terminal inside that folder, or open a terminal and `cd` into that
+folder:
 
 ```
 cd ~/home/Documents/housing
 ```
 
-(depending on your operating system, you could first open the folder, then right click somewhere 
-empty and then click on *Open in terminal*, which would open a terminal in that folder).
-We would like to use Python `3.10.5` for this project, and we would like to do so 
-each time we interact with the files in that folder. We need to set version `3.10.5`
-as the *local* Python version, meaning, the Python version that will be used for this project
-only:
+(depending on your operating system, you could first open the folder, then right
+click somewhere empty and then click on *Open in terminal*, which would open a
+terminal in that folder). We would like to use Python `3.10.5` for this project,
+and we would like to do so each time we interact with the files in that folder.
+We need to set version `3.10.5` as the *local* Python version, meaning, the
+Python version that will be used for this project only:
 
 ```
 pyenv local 3.10.5
@@ -245,7 +275,10 @@ This will generate a `.python-version` with the following line in it:
 3.10.5
 ```
 
-This file will get used by `pipenv`, which we are now ready to set up!
+This file will only be used by `pyenv`, not `pipenv`, but it’s nice to keep
+it as a reminder of which Python version you actually need for this project. 
+`pipenv` specifies the Python version in its own file, which I will discuss
+in the next section.
 
 ## Second step: pipenv
 
@@ -255,14 +288,14 @@ We can now use our local Python interpreter to install `pipenv`:
 pip install --user pipenv
 ```
 
-We can now use `pipenv` to install the packages for our project. But why use
-`pipenv` instead of `pip`. In my opinion, `pipenv` has one absolutely crucial
-feature for reproducibility: `pipenv` enables deterministic builds, which means
-that when using `pipenv`, we will *always* get exactly the same packages
-installed.
+We can now use `pipenv` to install the packages for our project. But why don’t
+we just keep using `pip` instead of `pipenv`? Why introduce yet another tool? In
+my opinion, `pipenv` has one absolutely crucial feature for reproducibility:
+`pipenv` enables deterministic builds, which means that when using `pipenv`, we
+will *always* get exactly the same packages installed.
 
-But you may be wondering, how is that different from using `pip` with a
-`requirements.txt` file? After all, if you make the effort to specify the
+"But isn’t that exctaly what using `requirements.txt` file does?" you wonder.
+You are not entirely wrong. After all, if you make the effort to specify the
 packages you need, and their versions, wouldn’t running `pip install -r
 requirements.txt` also install exactly the same packages?
 
@@ -277,5 +310,168 @@ Suppose that `hello` depends on another package called `ciao`. If you run `pip
 install -r requirements.txt` today, you’ll get `hello` at version `1.0.1` and
 `ciao`, say, at version `0.3.2`. But if you run `pip install -r
 requirements.txt` in 6 months, you would still get `hello` at version `1.0.1`
-but you might get a newer version of `ciao`.
+but you might get a newer version of `ciao`. This is because `ciao` itself is
+not specified in the `requirements.txt`, unless you made sure to add it (and
+then also add its dependencies, and their dependencies...). `pipenv` takes care
+of this for you, and adds further security checks by comparing sha256 hashes
+from the lock file to the ones from the downloaded packages, making sure that
+you are actually installing what you believe you are.
 
+Now that `pipenv` is installed, let’s start using it to install the packages we
+need for our project:
+
+```
+pipenv --python 3.10.5 install beautifulsoup4==4.12.2 pandas==2.1.4 plotnine==0.12.4 skimpy==0.0.11
+```
+
+(Little sidenote: in Chapter 2, we will be working together on a project using
+real data with `polars` instead of `pandas`. But for now, let’s get `pandas`
+installed: I’ll do a short comparison of the two, and then we’ll keep on using
+`polars` for the remainder of the book.)
+
+As you can see, I chose to install specific versions of packages. This is
+because I want you to follow along with the same versions as in the book. You
+could remove the `==x.y.z` strings from the command above to install the latest
+versions of the packages available if you prefer, but then there would be no
+guarantee that you would find the same results as I do in the remainder of the
+book. Also, if you don’t specify versions, the `Pipfile` file won’t specify them
+either, only the `Pipfile.lock` will, which in certain cases could lead to
+undesired behaviour. I won’t go into specifics, because I highly recommend you
+always take the time to specify package versions when installing. Check package
+versions on Pypi. For example,
+[here](https://pypi.org/project/pandas/)^[https://pypi.org/project/pandas/] is
+the page to check out versions of the pandas package. 
+
+You should see now two new files in the `housing` folder, `Pipfile` and
+`Pipfile.lock`. Start by opening `Pipfile`, it should look like this:
+
+```
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+beautifulsoup4 = "==4.12.2"
+pandas = "==2.1.4"
+plotnine = "==0.12.4"
+skimpy = "==0.0.11"
+
+[dev-packages]
+
+[requires]
+python_version = "3.10"
+python_full_version = "3.10.5"
+```
+
+I think that this file is pretty self-evident: the packages being used for this
+project are listed alongside their versions. The exact Python version is also
+listed. Sometimes, depending on how you set up the project, it could happen that
+the Python version listed is not the same, or that only the field
+`python_verison=` is listed. In this case, I highly recommend you change it to
+match the same version as in the `.python-version` file that was generated by
+`pyenv`, and add the `python_full_version=` field if necessary, in order to
+avoid any possible differences in how the code runs. If you edited the `Pipfile`
+then you need to run `pipenv lock` to regenerate the `Pipfile.lock` file as well:
+
+```
+pipenv lock
+```
+
+this will make sure to also set the required/correct Python version in there.
+
+If you open the `Pipfile.lock` in a text editor, you will see that it is a json
+file and that is also lists the dependecies of your project, but also the
+dependencies’ dependencies. You will also notice several fields called `hashes`.
+These are there for security reasons: whenever someone, (or you in the future)
+will regenerate this environment, the packages will get downloaded and their
+hashes will get compared to the ones listed in the `Pipfile.lock`. If they don’t
+match, then something very wrong is happening and packages won’t get installed.
+
+To check whether everything installed correctly, drop into the development shell using:
+
+```
+pipenv shell
+```
+
+and start the Python interpreter:
+
+```
+python
+```
+
+Then check that the correct versions of the packages were installed:
+
+```
+import pandas as pd
+pd.__version__
+```
+
+You should see `2.1.4` as the listed version.
+
+## Debugging
+
+It can sometimes happen that `pipenv` does not use the right version of Python.
+Running `pipenv shell` and then starting the Python interpreter will start a
+different version of Python than the one you expect/need.
+
+In that case, it might be best to simply start over. Start by completely
+removing the virtual environment and packages by running:
+
+```
+pipenv --rm
+```
+
+Make sure that the correct version of Python (or rather, the version you need)
+is specified in the `Pipfile`. For example, in my case:
+
+```
+[requires]
+python_full_version = "3.10.5"
+```
+
+(you might instead see `python_version = "3.10"`, or any other version, in that
+case I recommend you specify `python_full_version` as I did above, check the
+`.python-version` file that was generated by `pyenv` if you don’t remember the
+right version).
+
+Now, restore the environment and packages by running:
+
+```
+pipenv install
+```
+
+`pipenv install` will regenerate the `Pipfile.lock` file to list the required Python
+version, and then install the packages. It essentially runs `pipenv lock` to generate
+the lock file, and then `pipenv sync` to install the packages from the lock file.
+
+Check if `pipenv` now uses the correct Python version.
+
+```
+pipenv run python --version
+```
+
+## A high-level description of how to set up a project
+
+Ok, so to summarise, we install `pyenv` which will make it easy to install any
+version of Python that we require, and then we installed `pipenv`, which we use
+to install packages. The advantage of using `pipenv` is that we get
+deterministic builds, and `pipenv` works well with `pyenv` to build
+project-specific environments.
+
+The way I would suggest you use these tools now, is that for each project, you
+install the latest available version of Python, define it as the local version
+using `pyenv local`, and then install packages by specyifing their versions,
+like so:
+
+```
+pipenv --python 3.10.5 install beautifulsoup4==4.12.2 pandas==2.1.4 plotnine==0.12.4 skimpy==0.0.11
+```
+
+(Replace the versions of Python and packages by the latest, or those you need.)
+
+This will ensure that your project uses the correct software stack, and that collaborators
+or future you will be able to regenerate this environment by calling `pipenv sync`.
+`pipenv sync` differs from `pipenv install` because it will not touch the `Pipfile.lock`
+file, and will just download the packages as listed in the lock file. This is also
+the command that we will use later, in the chapter on CI/CD.

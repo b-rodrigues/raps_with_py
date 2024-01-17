@@ -1,0 +1,16 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+beautifulsoup4 = "==4.12.2"
+pandas = "==2.1.4"
+plotnine = "==0.12.4"
+skimpy = "==0.0.11"
+
+[dev-packages]
+
+[requires]
+python_version = "3.10"
+python_full_version = "3.10.5"
