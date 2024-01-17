@@ -191,6 +191,8 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#using-pyenv" id="toc-using-pyenv" class="nav-link" data-scroll-target="#using-pyenv"><span class="header-section-number">1.2.3</span> Using pyenv</a></li>
   </ul></li>
   <li><a href="#second-step-pipenv" id="toc-second-step-pipenv" class="nav-link" data-scroll-target="#second-step-pipenv"><span class="header-section-number">1.3</span> Second step: pipenv</a></li>
+  <li><a href="#debugging" id="toc-debugging" class="nav-link" data-scroll-target="#debugging"><span class="header-section-number">1.4</span> Debugging</a></li>
+  <li><a href="#a-high-level-description-of-how-to-set-up-a-project" id="toc-a-high-level-description-of-how-to-set-up-a-project" class="nav-link" data-scroll-target="#a-high-level-description-of-how-to-set-up-a-project"><span class="header-section-number">1.5</span> A high-level description of how to set up a project</a></li>
   </ul>
 <div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/b-rodrigues/raps_with_py/edit/master/setting_up.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/b-rodrigues/raps_with_py/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
     </div>
@@ -229,7 +231,7 @@ ul.task-list li input[type="checkbox"] {
 <p>So first of all, let’s install <code>pyenv</code>. <code>pyenv</code> is a tool that allows you to install as many versions of Python that you need, and that does not depend on Python itself, so there’s no bootstrap problem. But it is only available for Linux and macOS: Windows users should install <code>pyenv-win</code>: the following subsection deals with installing <code>pyenv</code> on Linux and macOS, the next one with installing <code>pyenv-win</code> for Windows.</p>
 <section id="pyenv-for-linux-or-macos" class="level3" data-number="1.2.1">
 <h3 data-number="1.2.1" class="anchored" data-anchor-id="pyenv-for-linux-or-macos"><span class="header-section-number">1.2.1</span> <code>pyenv</code> for Linux or macOS</h3>
-<p>I recommend you read and follow the <a href="https://github.com/pyenv/pyenv?tab=readme-ov-file#installation">official instructions</a><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>, but I provide here the main steps. In case something doesn’t work as expected, refer to the official documentation linked previously. First, install the build dependencies by following the <a href="https://github.com/pyenv/pyenv/wiki#suggested-build-environment">instructions here</a><a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>. On a Linux distribution like Ubuntu, this means installing a bunch of development libraries from your usual package manager. On macOS, this means installing Xcode and also a bunch of packages with Homebrew.</p>
+<p>I recommend you read and follow the <a href="https://github.com/pyenv/pyenv?tab=readme-ov-file#installation">official instructions</a><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>, but I provide here the main steps. In case something doesn’t work as expected, refer to the official documentation linked previously. First, install the build dependencies by following the <a href="https://github.com/pyenv/pyenv/wiki#suggested-build-environment">instructions here</a><a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>. On a Linux distribution like Ubuntu, this means installing a bunch of development libraries from your usual package manager. On macOS, this means installing Xcode and also a bunch of packages with Homebrew. Also, make sure you have installed Git as well. We will be using Git later in the book too, but it is required to install <code>pyenv</code>.</p>
 <p>Then, on macOS, you can use Hombrew to install <code>pyenv</code>:</p>
 <pre><code>brew update
 brew install pyenv</code></pre>
@@ -266,12 +268,37 @@ echo 'eval "$(pyenv init -)"' &gt;&gt; ~/.zshrc</code></pre>
 echo '[[ -d $PYENV_ROOT/bin ]] &amp;&amp; export PATH="$PYENV_ROOT/bin:$PATH"' &gt;&gt; ~/.zprofile
 echo 'eval "$(pyenv init -)"' &gt;&gt; ~/.zprofile</code></pre>
 <p>If you’re using another shell, such as fish, you can checkout the instructions on <code>pyenv</code>’s GitHub repository, or simply add these lines in the equivalent startup files.</p>
+<p>Finally, also add this line to your <code>.bashrc</code> or <code>.zshrc</code>:</p>
+<pre><code>eval "$(pyenv virtualenv-init -)"</code></pre>
+<p>to load <code>pyenv-virtualenv</code> automatically (as stated by the installer).</p>
 </section>
 <section id="pyenv-win-for-windows" class="level3" data-number="1.2.2">
 <h3 data-number="1.2.2" class="anchored" data-anchor-id="pyenv-win-for-windows"><span class="header-section-number">1.2.2</span> <code>pyenv-win</code> for Windows</h3>
 <p>If you’re using Windows, you should install <code>pyenv-win</code> instead, which you can find <a href="https://github.com/pyenv-win/pyenv-win">here</a><a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>. Installation on Windows is similar to how you install <code>pyenv</code> on Linux, if you choose the PowerShell method. It’s simply running this line (see <a href="https://github.com/pyenv-win/pyenv-win/blob/master/docs/installation.md#powershell">here</a><a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a>) in Powershell:</p>
 <pre><code>Invoke-WebRequest -UseBasicParsing -Uri "https://raw.githubusercontent.com/pyenv-win/pyenv-win/master/pyenv-win/install-pyenv-win.ps1" -OutFile "./install-pyenv-win.ps1"; &amp;"./install-pyenv-win.ps1"</code></pre>
-<p>Open a new PowerShell prompt and run <code>pyenv</code>. If you see a “command not found” error, you need to manually add <code>pyenv</code> to the PATH. On Windows, this is done graphically. Click on the start menu, and look for “Edit environment variables for your account”. Then, click on the “New…” button, and the <code>PYENV</code>, <code>PYENV_HOME</code> and <code>PYENV_ROOT</code>. Make sure to adjus the paths to the ones on your machine. Also check the <a href="https://github.com/pyenv-win/pyenv-win/wiki">FAQ</a><a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a> if you need further details.</p>
+<p>Open a new PowerShell prompt and run <code>pyenv</code>. If you see a “command not found” error, you need to manually add <code>pyenv</code> to the PATH. On Windows, this is done graphically. Click on the start menu, and look for “Edit environment variables for your account”.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/edit_user_envvars.png" class="img-fluid figure-img" width="300"></p>
+<figcaption class="figure-caption">Look for ‘Edit environment variables for your account’</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Then, click on the “New…” button, and the <code>PYENV</code>, <code>PYENV_HOME</code> and <code>PYENV_ROOT</code>. Make sure to adjus the paths to the ones on your machine.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/pyenv-win-envvars.png" class="img-fluid figure-img" width="300"></p>
+<figcaption class="figure-caption">Make sure your environment variables are correctly set</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Also check the <a href="https://github.com/pyenv-win/pyenv-win/wiki">FAQ</a><a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a> if you need further details.</p>
 </section>
 <section id="using-pyenv" class="level3" data-number="1.2.3">
 <h3 data-number="1.2.3" class="anchored" data-anchor-id="using-pyenv"><span class="header-section-number">1.2.3</span> Using pyenv</h3>
@@ -286,18 +313,74 @@ echo 'eval "$(pyenv init -)"' &gt;&gt; ~/.zprofile</code></pre>
 <pre><code>pyenv local 3.10.5</code></pre>
 <p>This will generate a <code>.python-version</code> with the following line in it:</p>
 <pre><code>3.10.5</code></pre>
-<p>This file will get used by <code>pipenv</code>, which we are now ready to set up!</p>
+<p>This file will only be used by <code>pyenv</code>, not <code>pipenv</code>, but it’s nice to keep it as a reminder of which Python version you actually need for this project. <code>pipenv</code> specifies the Python version in its own file, which I will discuss in the next section.</p>
 </section>
 </section>
 <section id="second-step-pipenv" class="level2" data-number="1.3">
 <h2 data-number="1.3" class="anchored" data-anchor-id="second-step-pipenv"><span class="header-section-number">1.3</span> Second step: pipenv</h2>
 <p>We can now use our local Python interpreter to install <code>pipenv</code>:</p>
 <pre><code>pip install --user pipenv</code></pre>
-<p>We can now use <code>pipenv</code> to install the packages for our project. But why use <code>pipenv</code> instead of <code>pip</code>. In my opinion, <code>pipenv</code> has one absolutely crucial feature for reproducibility: <code>pipenv</code> enables deterministic builds, which means that when using <code>pipenv</code>, we will <em>always</em> get exactly the same packages installed.</p>
-<p>But you may be wondering, how is that different from using <code>pip</code> with a <code>requirements.txt</code> file? After all, if you make the effort to specify the packages you need, and their versions, wouldn’t running <code>pip install -r requirements.txt</code> also install exactly the same packages?</p>
+<p>We can now use <code>pipenv</code> to install the packages for our project. But why don’t we just keep using <code>pip</code> instead of <code>pipenv</code>? Why introduce yet another tool? In my opinion, <code>pipenv</code> has one absolutely crucial feature for reproducibility: <code>pipenv</code> enables deterministic builds, which means that when using <code>pipenv</code>, we will <em>always</em> get exactly the same packages installed.</p>
+<p>“But isn’t that exctaly what using <code>requirements.txt</code> file does?” you wonder. You are not entirely wrong. After all, if you make the effort to specify the packages you need, and their versions, wouldn’t running <code>pip install -r requirements.txt</code> also install exactly the same packages?</p>
 <p>Well, not quite. Imagine for example that you need a package called <code>hello</code> and you put it into your <code>requirements.txt</code> like so:</p>
 <pre><code>hello==1.0.1</code></pre>
-<p>Suppose that <code>hello</code> depends on another package called <code>ciao</code>. If you run <code>pip install -r requirements.txt</code> today, you’ll get <code>hello</code> at version <code>1.0.1</code> and <code>ciao</code>, say, at version <code>0.3.2</code>. But if you run <code>pip install -r requirements.txt</code> in 6 months, you would still get <code>hello</code> at version <code>1.0.1</code> but you might get a newer version of <code>ciao</code>.</p>
+<p>Suppose that <code>hello</code> depends on another package called <code>ciao</code>. If you run <code>pip install -r requirements.txt</code> today, you’ll get <code>hello</code> at version <code>1.0.1</code> and <code>ciao</code>, say, at version <code>0.3.2</code>. But if you run <code>pip install -r requirements.txt</code> in 6 months, you would still get <code>hello</code> at version <code>1.0.1</code> but you might get a newer version of <code>ciao</code>. This is because <code>ciao</code> itself is not specified in the <code>requirements.txt</code>, unless you made sure to add it (and then also add its dependencies, and their dependencies…). <code>pipenv</code> takes care of this for you, and adds further security checks by comparing sha256 hashes from the lock file to the ones from the downloaded packages, making sure that you are actually installing what you believe you are.</p>
+<p>Now that <code>pipenv</code> is installed, let’s start using it to install the packages we need for our project:</p>
+<pre><code>pipenv --python 3.10.5 install beautifulsoup4==4.12.2 pandas==2.1.4 plotnine==0.12.4 skimpy==0.0.11</code></pre>
+<p>(Little sidenote: in Chapter 2, we will be working together on a project using real data with <code>polars</code> instead of <code>pandas</code>. But for now, let’s get <code>pandas</code> installed: I’ll do a short comparison of the two, and then we’ll keep on using <code>polars</code> for the remainder of the book.)</p>
+<p>As you can see, I chose to install specific versions of packages. This is because I want you to follow along with the same versions as in the book. You could remove the <code>==x.y.z</code> strings from the command above to install the latest versions of the packages available if you prefer, but then there would be no guarantee that you would find the same results as I do in the remainder of the book. Also, if you don’t specify versions, the <code>Pipfile</code> file won’t specify them either, only the <code>Pipfile.lock</code> will, which in certain cases could lead to undesired behaviour. I won’t go into specifics, because I highly recommend you always take the time to specify package versions when installing. Check package versions on Pypi. For example, <a href="https://pypi.org/project/pandas/">here</a><a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a> is the page to check out versions of the pandas package.</p>
+<p>You should see now two new files in the <code>housing</code> folder, <code>Pipfile</code> and <code>Pipfile.lock</code>. Start by opening <code>Pipfile</code>, it should look like this:</p>
+<pre><code>[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+beautifulsoup4 = "==4.12.2"
+pandas = "==2.1.4"
+plotnine = "==0.12.4"
+skimpy = "==0.0.11"
+
+[dev-packages]
+
+[requires]
+python_version = "3.10"
+python_full_version = "3.10.5"</code></pre>
+<p>I think that this file is pretty self-evident: the packages being used for this project are listed alongside their versions. The exact Python version is also listed. Sometimes, depending on how you set up the project, it could happen that the Python version listed is not the same, or that only the field <code>python_verison=</code> is listed. In this case, I highly recommend you change it to match the same version as in the <code>.python-version</code> file that was generated by <code>pyenv</code>, and add the <code>python_full_version=</code> field if necessary, in order to avoid any possible differences in how the code runs. If you edited the <code>Pipfile</code> then you need to run <code>pipenv lock</code> to regenerate the <code>Pipfile.lock</code> file as well:</p>
+<pre><code>pipenv lock</code></pre>
+<p>this will make sure to also set the required/correct Python version in there.</p>
+<p>If you open the <code>Pipfile.lock</code> in a text editor, you will see that it is a json file and that is also lists the dependecies of your project, but also the dependencies’ dependencies. You will also notice several fields called <code>hashes</code>. These are there for security reasons: whenever someone, (or you in the future) will regenerate this environment, the packages will get downloaded and their hashes will get compared to the ones listed in the <code>Pipfile.lock</code>. If they don’t match, then something very wrong is happening and packages won’t get installed.</p>
+<p>To check whether everything installed correctly, drop into the development shell using:</p>
+<pre><code>pipenv shell</code></pre>
+<p>and start the Python interpreter:</p>
+<pre><code>python</code></pre>
+<p>Then check that the correct versions of the packages were installed:</p>
+<pre><code>import pandas as pd
+pd.__version__</code></pre>
+<p>You should see <code>2.1.4</code> as the listed version.</p>
+</section>
+<section id="debugging" class="level2" data-number="1.4">
+<h2 data-number="1.4" class="anchored" data-anchor-id="debugging"><span class="header-section-number">1.4</span> Debugging</h2>
+<p>It can sometimes happen that <code>pipenv</code> does not use the right version of Python. Running <code>pipenv shell</code> and then starting the Python interpreter will start a different version of Python than the one you expect/need.</p>
+<p>In that case, it might be best to simply start over. Start by completely removing the virtual environment and packages by running:</p>
+<pre><code>pipenv --rm</code></pre>
+<p>Make sure that the correct version of Python (or rather, the version you need) is specified in the <code>Pipfile</code>. For example, in my case:</p>
+<pre><code>[requires]
+python_full_version = "3.10.5"</code></pre>
+<p>(you might instead see <code>python_version = "3.10"</code>, or any other version, in that case I recommend you specify <code>python_full_version</code> as I did above, check the <code>.python-version</code> file that was generated by <code>pyenv</code> if you don’t remember the right version).</p>
+<p>Now, restore the environment and packages by running:</p>
+<pre><code>pipenv install</code></pre>
+<p><code>pipenv install</code> will regenerate the <code>Pipfile.lock</code> file to list the required Python version, and then install the packages. It essentially runs <code>pipenv lock</code> to generate the lock file, and then <code>pipenv sync</code> to install the packages from the lock file.</p>
+<p>Check if <code>pipenv</code> now uses the correct Python version.</p>
+<pre><code>pipenv run python --version</code></pre>
+</section>
+<section id="a-high-level-description-of-how-to-set-up-a-project" class="level2" data-number="1.5">
+<h2 data-number="1.5" class="anchored" data-anchor-id="a-high-level-description-of-how-to-set-up-a-project"><span class="header-section-number">1.5</span> A high-level description of how to set up a project</h2>
+<p>Ok, so to summarise, we install <code>pyenv</code> which will make it easy to install any version of Python that we require, and then we installed <code>pipenv</code>, which we use to install packages. The advantage of using <code>pipenv</code> is that we get deterministic builds, and <code>pipenv</code> works well with <code>pyenv</code> to build project-specific environments.</p>
+<p>The way I would suggest you use these tools now, is that for each project, you install the latest available version of Python, define it as the local version using <code>pyenv local</code>, and then install packages by specyifing their versions, like so:</p>
+<pre><code>pipenv --python 3.10.5 install beautifulsoup4==4.12.2 pandas==2.1.4 plotnine==0.12.4 skimpy==0.0.11</code></pre>
+<p>(Replace the versions of Python and packages by the latest, or those you need.)</p>
+<p>This will ensure that your project uses the correct software stack, and that collaborators or future you will be able to regenerate this environment by calling <code>pipenv sync</code>. <code>pipenv sync</code> differs from <code>pipenv install</code> because it will not touch the <code>Pipfile.lock</code> file, and will just download the packages as listed in the lock file. This is also the command that we will use later, in the chapter on CI/CD.</p>
 
 
 </section>
@@ -310,6 +393,7 @@ echo 'eval "$(pyenv init -)"' &gt;&gt; ~/.zprofile</code></pre>
 <li id="fn4"><p>https://github.com/pyenv-win/pyenv-win<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn5"><p>https://github.com/pyenv-win/pyenv-win/blob/master/docs/installation.md#powershell<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn6"><p>https://github.com/pyenv-win/pyenv-win/wiki<a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn7"><p>https://pypi.org/project/pandas/<a href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 
