@@ -288,6 +288,29 @@ We can now use our local Python interpreter to install `pipenv`:
 pip install --user pipenv
 ```
 
+Right after install `pipenv`, your terminal might print this message:
+
+```
+WARNING: The script virtualenv is installed in '/home/USER/.local/bin'
+  which is not on PATH.
+Consider adding this directory to PATH or, if you prefer to suppress this warning,
+  use --no-warn-script-location.
+WARNING: The scripts pipenv and pipenv-resolver are installed in '/home/cbrunos/.local/bin'
+  which is not on PATH.
+Consider adding this directory to PATH or, if you prefer to suppress this warning,
+  use --no-warn-script-location.
+```
+
+This is important, because if you don't add that folder to your `PATH`, `pipenv`
+won't work. Open your `.bashrc` or `.zshrc` in your favorite editor and add
+this line:
+
+```
+export PATH="$HOME/.local/bin:$PATH"
+```
+
+Close the terminal (and every other open terminals if necessary), and open a new one.
+
 We can now use `pipenv` to install the packages for our project. But why don’t
 we just keep using `pip` instead of `pipenv`? Why introduce yet another tool? In
 my opinion, `pipenv` has one absolutely crucial feature for reproducibility:
