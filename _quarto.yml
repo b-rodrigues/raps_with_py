@@ -14,6 +14,7 @@ book:
   downloads: [pdf, epub]
   chapters:
     - index.qmd
+    - intro.qmd
     - preface.qmd
     - setting_up.qmd
     - project_start.qmd
