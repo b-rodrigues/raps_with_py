@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Building reproducible analytical pipelines with Python - 1&nbsp; Setting up a development environment</title>
+<title>Building reproducible analytical pipelines with Python - 2&nbsp; Setting up a development environment</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -80,7 +80,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./setting_up.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Setting up a development environment</span></a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./setting_up.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Setting up a development environment</span></a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -151,6 +151,12 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./preface.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Preface</span></a>
   </div>
@@ -158,13 +164,13 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./setting_up.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Setting up a development environment</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Setting up a development environment</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./project_start.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Project start</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Project start</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -183,16 +189,16 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#why-is-installing-python-such-a-hard-problem" id="toc-why-is-installing-python-such-a-hard-problem" class="nav-link active" data-scroll-target="#why-is-installing-python-such-a-hard-problem"><span class="header-section-number">1.1</span> Why is installing Python such a hard problem?</a></li>
-  <li><a href="#first-step-installing-python" id="toc-first-step-installing-python" class="nav-link" data-scroll-target="#first-step-installing-python"><span class="header-section-number">1.2</span> First step: installing Python</a>
+  <li><a href="#why-is-installing-python-such-a-hard-problem" id="toc-why-is-installing-python-such-a-hard-problem" class="nav-link active" data-scroll-target="#why-is-installing-python-such-a-hard-problem"><span class="header-section-number">2.1</span> Why is installing Python such a hard problem?</a></li>
+  <li><a href="#first-step-installing-python" id="toc-first-step-installing-python" class="nav-link" data-scroll-target="#first-step-installing-python"><span class="header-section-number">2.2</span> First step: installing Python</a>
   <ul class="collapse">
-  <li><a href="#pyenv-for-linux-or-macos" id="toc-pyenv-for-linux-or-macos" class="nav-link" data-scroll-target="#pyenv-for-linux-or-macos"><span class="header-section-number">1.2.1</span> <code>pyenv</code> for Linux or macOS</a></li>
-  <li><a href="#pyenv-win-for-windows" id="toc-pyenv-win-for-windows" class="nav-link" data-scroll-target="#pyenv-win-for-windows"><span class="header-section-number">1.2.2</span> <code>pyenv-win</code> for Windows</a></li>
-  <li><a href="#using-pyenv" id="toc-using-pyenv" class="nav-link" data-scroll-target="#using-pyenv"><span class="header-section-number">1.2.3</span> Using pyenv</a></li>
+  <li><a href="#pyenv-for-linux-or-macos" id="toc-pyenv-for-linux-or-macos" class="nav-link" data-scroll-target="#pyenv-for-linux-or-macos"><span class="header-section-number">2.2.1</span> <code>pyenv</code> for Linux or macOS</a></li>
+  <li><a href="#pyenv-win-for-windows" id="toc-pyenv-win-for-windows" class="nav-link" data-scroll-target="#pyenv-win-for-windows"><span class="header-section-number">2.2.2</span> <code>pyenv-win</code> for Windows</a></li>
+  <li><a href="#using-pyenv" id="toc-using-pyenv" class="nav-link" data-scroll-target="#using-pyenv"><span class="header-section-number">2.2.3</span> Using pyenv</a></li>
   </ul></li>
-  <li><a href="#second-step-pipenv" id="toc-second-step-pipenv" class="nav-link" data-scroll-target="#second-step-pipenv"><span class="header-section-number">1.3</span> Second step: pipenv</a></li>
-  <li><a href="#debugging" id="toc-debugging" class="nav-link" data-scroll-target="#debugging"><span class="header-section-number">1.4</span> Debugging</a></li>
-  <li><a href="#a-high-level-description-of-how-to-set-up-a-project" id="toc-a-high-level-description-of-how-to-set-up-a-project" class="nav-link" data-scroll-target="#a-high-level-description-of-how-to-set-up-a-project"><span class="header-section-number">1.5</span> A high-level description of how to set up a project</a></li>
+  <li><a href="#second-step-pipenv" id="toc-second-step-pipenv" class="nav-link" data-scroll-target="#second-step-pipenv"><span class="header-section-number">2.3</span> Second step: pipenv</a></li>
+  <li><a href="#debugging" id="toc-debugging" class="nav-link" data-scroll-target="#debugging"><span class="header-section-number">2.4</span> Debugging</a></li>
+  <li><a href="#a-high-level-description-of-how-to-set-up-a-project" id="toc-a-high-level-description-of-how-to-set-up-a-project" class="nav-link" data-scroll-target="#a-high-level-description-of-how-to-set-up-a-project"><span class="header-section-number">2.5</span> A high-level description of how to set up a project</a></li>
   </ul>
 <div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/b-rodrigues/raps_with_py/edit/master/setting_up.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/b-rodrigues/raps_with_py/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
     </div>
@@ -201,7 +207,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Setting up a development environment</span></h1>
+<h1 class="title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Setting up a development environment</span></h1>
 </div>
 
 
@@ -218,19 +224,19 @@ ul.task-list li input[type="checkbox"] {
 
 <p>I have to start with on of the hardest chapters of the book, how to set up a development environment for Python.</p>
 <p>If you are already using Python, you already have an environment set up and might be familiar with <code>pyenv</code> or other similar tools. I would still suggest you read this chapter and see if you agree with how I approach this issue. You may want to adapt your current workflow to it, or keep on doing what you’ve been doing up until now, it is up to. If you’re completely new to Python, then you definitely need to read this chapter, but also, I need to remind you that this is not a book about Python per se. So I won’t be teaching you any Python (I wouldn’t really be competent to do so either) and you might want to complement reading this book with another that focuses on actually teaching Python. Remember, this book is about building reproducible analytical pipelines!</p>
-<section id="why-is-installing-python-such-a-hard-problem" class="level2" data-number="1.1">
-<h2 data-number="1.1" class="anchored" data-anchor-id="why-is-installing-python-such-a-hard-problem"><span class="header-section-number">1.1</span> Why is installing Python such a hard problem?</h2>
+<section id="why-is-installing-python-such-a-hard-problem" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="why-is-installing-python-such-a-hard-problem"><span class="header-section-number">2.1</span> Why is installing Python such a hard problem?</h2>
 <p>If you google “how to install Python” you will find a surprising amount of articles explaining how to do it. I say “surprising amount” because one might expect to install Python like any other piece of software. If you’re already familiar with R, you could think that installing Python would be done the same way: download the installer for your operating system, and then install it. And, actually, you can do just that for Python as well. So why are there 100s of articles online explaining how to install Python, and why aren’t all of these articles simply telling you to download the installer to install Python? Why did I write this chapter on installing Python?</p>
 <p>Well, there are several thing that we need to deal with if we want to install and use Python the “right way”. First of all, Python is pre-installed on Linux distributions and older versions of macOS. So if you’re using one of these operating systems, you could use the built-in Python interpreter, but this is not recommended. The reason being that these bundled versions are generally older, and that you don’t control their upgrade process, as these get updated alongside the operating system. On Windows and newer versions of macOS, Python is, as far as I know, never bundled, so you’d need to install it anyways.</p>
 <p>Another thing that you need to consider is that newer Python versions can introduce breaking changes, making code written for an earlier version of Python not run on a newer version of Python. This is not a Python-specific issue: it happens with any programming language. So this means that ideally you would want to bundle a Python version with your project’s code.</p>
 <p>The same holds true for individual packages: newer versions of packages might not even work with older releases of Python, so to avoid any issues, an analysis would get bundled with a Python release and Python packages. This bundle is what I call a development environment, and in order to build such development environment, specific tools have to be used. And there’s a lot of these tools in the Python ecosystem… so much so that when you’re first starting, you might get lost. So here is he two tools that I use for this, and that I think work quite well: <code>pyenv</code> and <code>pipenv</code>.</p>
 </section>
-<section id="first-step-installing-python" class="level2" data-number="1.2">
-<h2 data-number="1.2" class="anchored" data-anchor-id="first-step-installing-python"><span class="header-section-number">1.2</span> First step: installing Python</h2>
+<section id="first-step-installing-python" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="first-step-installing-python"><span class="header-section-number">2.2</span> First step: installing Python</h2>
 <p>In this section, I will assume that you have no version of Python already installed on your computer. If you do have Python, you may want to skip this section: but know that if you’re not using <code>pyenv</code> to download and install Python versions, you will need to keep installing your environments manually. <code>pipenv</code> however install environments automatically if <code>pyenv</code> is available, so you might want to switch over to <code>pyenv</code>.</p>
 <p>So first of all, let’s install <code>pyenv</code>. <code>pyenv</code> is a tool that allows you to install as many versions of Python that you need, and that does not depend on Python itself, so there’s no bootstrap problem. But it is only available for Linux and macOS: Windows users should install <code>pyenv-win</code>: the following subsection deals with installing <code>pyenv</code> on Linux and macOS, the next one with installing <code>pyenv-win</code> for Windows.</p>
-<section id="pyenv-for-linux-or-macos" class="level3" data-number="1.2.1">
-<h3 data-number="1.2.1" class="anchored" data-anchor-id="pyenv-for-linux-or-macos"><span class="header-section-number">1.2.1</span> <code>pyenv</code> for Linux or macOS</h3>
+<section id="pyenv-for-linux-or-macos" class="level3" data-number="2.2.1">
+<h3 data-number="2.2.1" class="anchored" data-anchor-id="pyenv-for-linux-or-macos"><span class="header-section-number">2.2.1</span> <code>pyenv</code> for Linux or macOS</h3>
 <p>I recommend you read and follow the <a href="https://github.com/pyenv/pyenv?tab=readme-ov-file#installation">official instructions</a><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>, but I provide here the main steps. In case something doesn’t work as expected, refer to the official documentation linked previously. First, install the build dependencies by following the <a href="https://github.com/pyenv/pyenv/wiki#suggested-build-environment">instructions here</a><a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>. On a Linux distribution like Ubuntu, this means installing a bunch of development libraries from your usual package manager. On macOS, this means installing Xcode and also a bunch of packages with Homebrew. Also, make sure you have installed Git as well. We will be using Git later in the book too, but it is required to install <code>pyenv</code>.</p>
 <p>Then, on macOS, you can use Hombrew to install <code>pyenv</code>:</p>
 <pre><code>brew update
@@ -272,8 +278,8 @@ echo 'eval "$(pyenv init -)"' &gt;&gt; ~/.zprofile</code></pre>
 <pre><code>eval "$(pyenv virtualenv-init -)"</code></pre>
 <p>to load <code>pyenv-virtualenv</code> automatically (as stated by the installer).</p>
 </section>
-<section id="pyenv-win-for-windows" class="level3" data-number="1.2.2">
-<h3 data-number="1.2.2" class="anchored" data-anchor-id="pyenv-win-for-windows"><span class="header-section-number">1.2.2</span> <code>pyenv-win</code> for Windows</h3>
+<section id="pyenv-win-for-windows" class="level3" data-number="2.2.2">
+<h3 data-number="2.2.2" class="anchored" data-anchor-id="pyenv-win-for-windows"><span class="header-section-number">2.2.2</span> <code>pyenv-win</code> for Windows</h3>
 <p>If you’re using Windows, you should install <code>pyenv-win</code> instead, which you can find <a href="https://github.com/pyenv-win/pyenv-win">here</a><a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>. Installation on Windows is similar to how you install <code>pyenv</code> on Linux, if you choose the PowerShell method. It’s simply running this line (see <a href="https://github.com/pyenv-win/pyenv-win/blob/master/docs/installation.md#powershell">here</a><a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a>) in Powershell:</p>
 <pre><code>Invoke-WebRequest -UseBasicParsing -Uri "https://raw.githubusercontent.com/pyenv-win/pyenv-win/master/pyenv-win/install-pyenv-win.ps1" -OutFile "./install-pyenv-win.ps1"; &amp;"./install-pyenv-win.ps1"</code></pre>
 <p>Open a new PowerShell prompt and run <code>pyenv</code>. If you see a “command not found” error, you need to manually add <code>pyenv</code> to the PATH. On Windows, this is done graphically. Click on the start menu, and look for “Edit environment variables for your account”.</p>
@@ -300,8 +306,8 @@ echo 'eval "$(pyenv init -)"' &gt;&gt; ~/.zprofile</code></pre>
 </div>
 <p>Also check the <a href="https://github.com/pyenv-win/pyenv-win/wiki">FAQ</a><a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a> if you need further details.</p>
 </section>
-<section id="using-pyenv" class="level3" data-number="1.2.3">
-<h3 data-number="1.2.3" class="anchored" data-anchor-id="using-pyenv"><span class="header-section-number">1.2.3</span> Using pyenv</h3>
+<section id="using-pyenv" class="level3" data-number="2.2.3">
+<h3 data-number="2.2.3" class="anchored" data-anchor-id="using-pyenv"><span class="header-section-number">2.2.3</span> Using pyenv</h3>
 <p>Now that you have <code>pyenv</code> installed, we can use it to install as many different Python versions that we need, typically one per project. First, I’ll install a version of Python that I want to use. Let’s got with the latest available. Let’s see what is available:</p>
 <pre><code>pyenv install -l</code></pre>
 <p>As of writing, the latest version that is not in beta is <code>3.10.5</code>, so let’s install this one (if you’re reading this from the future and a new version of Python is available, install <code>3.10.5</code> nonetheless):</p>
@@ -316,8 +322,8 @@ echo 'eval "$(pyenv init -)"' &gt;&gt; ~/.zprofile</code></pre>
 <p>This file will only be used by <code>pyenv</code>, not <code>pipenv</code>, but it’s nice to keep it as a reminder of which Python version you actually need for this project. <code>pipenv</code> specifies the Python version in its own file, which I will discuss in the next section.</p>
 </section>
 </section>
-<section id="second-step-pipenv" class="level2" data-number="1.3">
-<h2 data-number="1.3" class="anchored" data-anchor-id="second-step-pipenv"><span class="header-section-number">1.3</span> Second step: pipenv</h2>
+<section id="second-step-pipenv" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="second-step-pipenv"><span class="header-section-number">2.3</span> Second step: pipenv</h2>
 <p>We can now use our local Python interpreter to install <code>pipenv</code>:</p>
 <pre><code>pip install --user pipenv</code></pre>
 <p>Right after install <code>pipenv</code>, your terminal might print this message:</p>
@@ -371,8 +377,8 @@ python_full_version = "3.10.5"</code></pre>
 pd.__version__</code></pre>
 <p>You should see <code>2.1.4</code> as the listed version.</p>
 </section>
-<section id="debugging" class="level2" data-number="1.4">
-<h2 data-number="1.4" class="anchored" data-anchor-id="debugging"><span class="header-section-number">1.4</span> Debugging</h2>
+<section id="debugging" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="debugging"><span class="header-section-number">2.4</span> Debugging</h2>
 <p>It can sometimes happen that <code>pipenv</code> does not use the right version of Python. Running <code>pipenv shell</code> and then starting the Python interpreter will start a different version of Python than the one you expect/need.</p>
 <p>In that case, it might be best to simply start over. Start by completely removing the virtual environment and packages by running:</p>
 <pre><code>pipenv --rm</code></pre>
@@ -386,8 +392,8 @@ python_full_version = "3.10.5"</code></pre>
 <p>Check if <code>pipenv</code> now uses the correct Python version.</p>
 <pre><code>pipenv run python --version</code></pre>
 </section>
-<section id="a-high-level-description-of-how-to-set-up-a-project" class="level2" data-number="1.5">
-<h2 data-number="1.5" class="anchored" data-anchor-id="a-high-level-description-of-how-to-set-up-a-project"><span class="header-section-number">1.5</span> A high-level description of how to set up a project</h2>
+<section id="a-high-level-description-of-how-to-set-up-a-project" class="level2" data-number="2.5">
+<h2 data-number="2.5" class="anchored" data-anchor-id="a-high-level-description-of-how-to-set-up-a-project"><span class="header-section-number">2.5</span> A high-level description of how to set up a project</h2>
 <p>Ok, so to summarise, we install <code>pyenv</code> which will make it easy to install any version of Python that we require, and then we installed <code>pipenv</code>, which we use to install packages. The advantage of using <code>pipenv</code> is that we get deterministic builds, and <code>pipenv</code> works well with <code>pyenv</code> to build project-specific environments.</p>
 <p>The way I would suggest you use these tools now, is that for each project, you install the latest available version of Python, define it as the local version using <code>pyenv local</code>, and then install packages by specyifing their versions, like so:</p>
 <pre><code>pipenv --python 3.10.5 install beautifulsoup4==4.12.2 pandas==2.1.4 plotnine==0.12.4 skimpy==0.0.11</code></pre>
@@ -766,7 +772,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   </div>
   <div class="nav-page nav-page-next">
       <a href="./project_start.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Project start</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Project start</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
