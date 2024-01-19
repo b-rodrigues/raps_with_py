@@ -44,9 +44,7 @@ jobs:
 
       - name: Install packages globally
         run: pipenv install --system
-      - name: where am I
-        run: git status && ls -la
-      
+    
       - name: Install epubcheck
         run: sudo apt-get install epubcheck
 
@@ -57,5 +55,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # this secret is always available for github actions
 
+      - name: where am I
+        run: git status && ls -la
+        
       - name: Check the epub
         run: epubcheck Building-reproducible-analytical-pipelines-with-Python.epub
