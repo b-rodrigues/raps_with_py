@@ -18,7 +18,7 @@ This book is about building reproducible pipelines. And in order to build
 reproducible pipelines, you need to apply certain general ideas. This book will
 discuss these ideas, and illustrate them using the Python programming language.
 I wrote such a book already: you can read it
-[here](www.raps-with-r.dev)^[www.raps-with-r.dev]. The book was well received:
+[here](https://www.raps-with-r.dev)^[https://www.raps-with-r.dev]. The book was well received:
 lots of people contacted me to thank me for having written it, I was invited to
 give talks several times on the book already, give some workshops and some
 people are already asking me for a second edition. I thought it would be an
@@ -53,10 +53,10 @@ colleague of mine contacted me in the summer of 2022 to ask me if I was
 interested in teaching a course for the Data Science Master degree at the
 University of Luxembourg. Long story short, I've decide to teach students how to
 set up data science projects in a way that they're reproducible. I wrote my
-course notes into a [freely available bookdown](https://rap4mads.eu/) that I
+course notes into a [freely available bookdown](https://rap4mads.eu/)^[https://rap4mads.eu/] that I
 used for teaching. When I started compiling my notes, I discovered the concept of
 *Reproducible Analytical Pipelines* as developed by the [Office for National
-Statistics](https://analysisfunction.civilservice.gov.uk/support/reproducible-analytical-pipelines/)
+Statistics](https://analysisfunction.civilservice.gov.uk/support/reproducible-analytical-pipelines/)^[https://analysisfunction.civilservice.gov.uk/support/reproducible-analytical-pipelines/]
 (henceforth ONS). I found the name "Reproducible Analytical Pipeline"
 (henceforth RAP) really perfect for what I was aiming at. The ONS team
 responsible for evangelising RAPs also published a free
