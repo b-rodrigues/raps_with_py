@@ -55,8 +55,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # this secret is always available for github actions
 
-      - name: where am I
-        run: git status && ls -la
-        
       - name: Check the epub
-        run: epubcheck Building-reproducible-analytical-pipelines-with-Python.epub
+        run: epubcheck _book/Building-reproducible-analytical-pipelines-with-Python.epub
