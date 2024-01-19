@@ -425,7 +425,7 @@ python
 
 Then check that the correct versions of the packages were installed:
 
-```{python, eval=F, use.reticulate=F}
+```{python, eval=F, python.reticulate=F}
 import pandas as pd
 pd.__version__
 ```
