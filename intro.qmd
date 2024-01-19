@@ -286,7 +286,7 @@ the case of Python, this could be as simple as providing a `requirements.txt`
 file that lists the dependencies of the project, and which could be easily
 install using `pip`:
 
-```
+```bash
 pip install -r requirements.txt
 ```
 
