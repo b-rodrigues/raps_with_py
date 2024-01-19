@@ -46,7 +46,7 @@ jobs:
         run: pipenv install --system
 
       - name: Install epubcheck
-        run: sudo apt-get install epucheck
+        run: sudo apt-get install epubcheck
 
       - name: Publish to GitHub Pages (and render)
         uses: quarto-dev/quarto-actions/publish@v2
