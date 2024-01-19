@@ -56,4 +56,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # this secret is always available for github actions
 
       - name: Check the epub
-        run: epucheck Building-reproducible-analytical-pipelines-with-Python.epub
+        run: epubcheck Building-reproducible-analytical-pipelines-with-Python.epub
