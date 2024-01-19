@@ -44,7 +44,9 @@ jobs:
 
       - name: Install packages globally
         run: pipenv install --system
-
+      - name: where am I
+        run: git status && ls -la
+      
       - name: Install epubcheck
         run: sudo apt-get install epubcheck
 
