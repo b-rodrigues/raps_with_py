@@ -43,7 +43,7 @@ jobs:
         run: pip install pipenv
 
       - name: Install packages globally
-        run: pipenv install --system
+        run: pipenv sync
     
       - name: Install epubcheck
         run: sudo apt-get install epubcheck
