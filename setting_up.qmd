@@ -47,273 +47,53 @@ would get bundled with a Python release and Python packages. This bundle is what
 I call a development environment, and in order to build such development environment,
 specific tools have to be used. And there’s a lot of these tools in the Python
 ecosystem... so much so that when you’re first starting, you might get lost.
-So here is he two tools that I use for this, and that I think work quite well: `pyenv`
+So here is he two tools that I use for this, and that I think work quite well: `micromamba`
 and `pipenv`.
 
-## First step: installing Python
+The workflow is as follows:
 
-In this section, I will assume that you have no version of Python already
-installed on your computer. If you do have Python, you may want to skip this
-section: but know that if you’re not using `pyenv` to download and install
-Python versions, you will need to keep installing your environments manually.
-`pipenv` however install environments automatically if `pyenv` is available,
-so you might want to switch over to `pyenv`.
+- Install `micromamba`, a lightweight package manager
+- Using `micromamba`, create an environment that contains a Python interpreter and `pipenv`
+- Using this environment, install the required packages using `pipenv`
+- `pipenv` will automatically generate two very useful files, `Pipfile` and `Pipfile.lock`
 
-So first of all, let’s install `pyenv`. `pyenv` is a tool that allows you to install
-as many versions of Python that you need, and that does not depend on Python
-itself, so there’s no bootstrap problem. But it is only available for Linux
-and macOS: Windows users should install `pyenv-win`: the following subsection
-deals with installing `pyenv` on Linux and macOS, the next one with installing
-`pyenv-win` for Windows.
+In the following sections I detail this process.
 
-### `pyenv` for Linux or macOS
+## Creating a project-specific development environment
 
-I recommend you read and follow the [official
-instructions](https://github.com/pyenv/pyenv?tab=readme-ov-file#installation)^[https://github.com/pyenv/pyenv?tab=readme-ov-file#installation],
-but I provide here the main steps. In case something doesn’t work as expected,
-refer to the official documentation linked previously. First, install the build
-dependencies by following the [instructions
-here](https://github.com/pyenv/pyenv/wiki#suggested-build-environment)^[https://github.com/pyenv/pyenv/wiki#suggested-build-environment].
-On a Linux distribution like Ubuntu, this means installing a bunch of
-development libraries from your usual package manager. On macOS, this means
-installing Xcode and also a bunch of packages with Homebrew. Also, make sure you
-have installed Git as well. We will be using Git later in the book too, but it
-is required to install `pyenv`.
+What we want is to have project-specific development environments that should include a
+specific Python version, specific versions of Python packages and all the code to actually
+run the project.
 
-Then, on macOS, you can use Hombrew to install `pyenv`:
+I’m going to assume that you don’t have any Python version available on your computer
+and need to get one. Let’s suppose that Python version 3.12.1 is the latest released 
+version, and let’s also suppose that you would like to use that version to start 
+working on a project. To first get the right Python interpreter ready, you should
+install `micromamba`. Please refer to the `micromamba` 
+documentation 
+[here](https://mamba.readthedocs.io/en/latest/installation/micromamba-installation.html#automatic-install)^[https://mamba.readthedocs.io/en/latest/installation/micromamba-installation.html#automatic-install]
+but on Linux, macOS and Git Bash on Windows (there’s also instructions for Powershell, if you don’t
+have Git Bash installed on Windows), it should be as easy as:
 
 ```bash
-brew update
-brew install pyenv
+"${SHELL}" <(curl -L micro.mamba.pm/install.sh)
 ```
 
-For Linux distributions, run the automatic installer by opening a terminal and
-executing this line here:
+for Poweshell use instead `Invoke-Expression ((Invoke-WebRequest -Uri https://micro.mamba.pm/install.ps1).Content)`
+
+We can now use `micromamba` to create an environment that will contain a Python
+interpreter and `pipenv`. Type the following command to create this environment:
 
 ```bash
-curl https://pyenv.run | bash
+micromamba create -n 3.12.1 pipenv python=3.12.1
 ```
 
-Now comes the more complex part of the installation process. You need to edit
-some files for your terminal, and these files are different depending on which
-shell you use. For most Linux distributions, if not all, the default terminal
-will use bash, and on macOS the default shell is zsh. The detailled
-instructions, which I recommend you read, are
-[here](https://github.com/pyenv/pyenv?tab=readme-ov-file#set-up-your-shell-environment-for-pyenv)^[https://github.com/pyenv/pyenv?tab=readme-ov-file#set-up-your-shell-environment-for-pyenv],
-but here are my recommendations: if you’re using a Linux distribution, you
-likely are using bash, to find out, run `echo $0` in a terminal. If your
-terminal is using bash, "bash" will get printed, if not, "zsh" will get printed
-instead. If your terminal using bash, run the following in a terminal:
-
-```bash
-echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.bashrc
-echo 'command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.bashrc
-echo 'eval "$(pyenv init -)"' >> ~/.bashrc
-```
-
-and then, you need to check whether you have a `.profile`, `.bash_profile` or a
-`.bash_login` file in your home directory. These are files used at startup by
-bash to set some variables and options. They’re similar to the `.bashrc` file,
-but the `.bashrc` is executed when starting a terminal when you’re already
-logged into the system, while `.bash_profile`, `.bash_login` and `.profile` get
-executed when logging in through ssh into the system. If you have a `.profile`
-file in your HOME, this should return something:
-
-```bash
-ls .profile
-```
-
-if nothing gets returned, you might have instead a `.bash_profile` or
-`bash_login` file instead, try with:
-
-```bash
-ls .bash_profile
-```
-
-or 
-
-```bash
-ls .bash_login
-```
-
-If you have more than one, only add the lines to the `.bash_profile`:
-
-```bash
-echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.bash_profile
-echo 'command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.bash_profile
-echo 'eval "$(pyenv init -)"' >> ~/.bash_profile
-```
-
-but if you have only have a `.bash_login` file, run this:
-
-```bash
-echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.bash_login
-echo 'command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.bash_login
-echo 'eval "$(pyenv init -)"' >> ~/.bash_login
-```
-
-or if you only have a `.profile` file, or none of these three files at all, run these lines:
-
-```bash
-echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.profile
-echo 'command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.profile
-echo 'eval "$(pyenv init -)"' >> ~/.profile
-```
-
-If you’re running zsh (which would be the case on macOS, or if you changed form
-bash to zsh on Linux), then you need to add these lines to the `.zshrc` file:
-
-```bash
-echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.zshrc
-echo '[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.zshrc
-echo 'eval "$(pyenv init -)"' >> ~/.zshrc
-```
-
-and also to `.zprofile` or `.zlogin`, depending on which you have (if you have none,
-put the lines into `.zprofile`):
-
-```bash
-echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.zprofile
-echo '[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.zprofile
-echo 'eval "$(pyenv init -)"' >> ~/.zprofile
-```
-
-If you’re using another shell, such as fish, you can checkout the instructions
-on `pyenv`’s GitHub repository, or simply add these lines in the equivalent
-startup files.
-
-Finally, also add this line to your `.bashrc` or `.zshrc`:
-
-```bash
-eval "$(pyenv virtualenv-init -)"
-```
-
-to load `pyenv-virtualenv` automatically (as stated by the installer).
-
-### `pyenv-win` for Windows
-
-If you’re using Windows, you should install `pyenv-win` instead, which you can
-find
-[here](https://github.com/pyenv-win/pyenv-win)^[https://github.com/pyenv-win/pyenv-win].
-Installation on Windows is similar to how you install `pyenv` on Linux, if you
-choose the PowerShell method. It’s simply running this line (see
-[here](https://github.com/pyenv-win/pyenv-win/blob/master/docs/installation.md#powershell)^[https://github.com/pyenv-win/pyenv-win/blob/master/docs/installation.md#powershell])
-in Powershell:
-
-```bash
-Invoke-WebRequest -UseBasicParsing -Uri "https://raw.githubusercontent.com/pyenv-win/pyenv-win/master/pyenv-win/install-pyenv-win.ps1" -OutFile "./install-pyenv-win.ps1"; &"./install-pyenv-win.ps1"
-```
-
-Open a new PowerShell prompt and run `pyenv`. If you see a "command not found"
-error, you need to manually add `pyenv` to the PATH. On Windows, this is done
-graphically. Click on the start menu, and look for "Edit environment variables
-for your account". 
-
-```{r, echo = F, out.width="300px"}
-#| fig-cap: "Look for 'Edit environment variables for your account'"
-knitr::include_graphics("images/edit_user_envvars.png")
-```
-
-
-Then, click on the "New..." button, and the `PYENV`, `PYENV_HOME` and
-`PYENV_ROOT`. Make sure to adjus the paths to the ones on your machine.
-
-```{r, echo = F, out.width="300px"}
-#| fig-cap: "Make sure your environment variables are correctly set"
-knitr::include_graphics("images/pyenv-win-envvars.png")
-```
-
-Also check the
-[FAQ](https://github.com/pyenv-win/pyenv-win/wiki)^[https://github.com/pyenv-win/pyenv-win/wiki]
-if you need further details.
-
-### Using pyenv
-
-Now that you have `pyenv` installed, we can use it to install as many different
-Python versions that we need, typically one per project. First, I’ll install a
-version of Python that I want to use. Let’s got with the latest available. Let’s
-see what is available:
-
-```bash
-pyenv install -l
-```
-
-As of writing, the latest version that is not in beta is `3.10.5`, so let’s
-install this one (if you’re reading this from the future and a new version of
-Python is available, install `3.10.5` nonetheless):
-
-```bash
-pyenv install 3.10.5
-```
-
-this will install Python `3.10.5`. But how do we use it now? Let’s suppose that
-we want to use it for a project. Let’s create a folder that will contain the
-different scripts that we are going to write in the next chapter and called it
-`housing`.
-
-Open a terminal inside that folder, or open a terminal and `cd` into that
-folder:
-
-```bash
-cd ~/home/Documents/housing
-```
-
-(depending on your operating system, you could first open the folder, then right
-click somewhere empty and then click on *Open in terminal*, which would open a
-terminal in that folder). We would like to use Python `3.10.5` for this project,
-and we would like to do so each time we interact with the files in that folder.
-We need to set version `3.10.5` as the *local* Python version, meaning, the
-Python version that will be used for this project only:
-
-```bash
-pyenv local 3.10.5
-```
-
-This will generate a `.python-version` with the following line in it:
-
-```bash
-3.10.5
-```
-
-This file will only be used by `pyenv`, not `pipenv`, but it’s nice to keep
-it as a reminder of which Python version you actually need for this project. 
-`pipenv` specifies the Python version in its own file, which I will discuss
-in the next section.
-
-## Second step: pipenv
-
-We can now use our local Python interpreter to install `pipenv`:
-
-```bash
-pip install --user pipenv
-```
-
-Right after install `pipenv`, your terminal might print this message:
-
-```bash
-WARNING: The script virtualenv is installed in '/home/USER/.local/bin'
-  which is not on PATH.
-Consider adding this directory to PATH or, if you prefer to suppress this warning,
-  use --no-warn-script-location.
-WARNING: The scripts pipenv and pipenv-resolver are installed in '/home/cbrunos/.local/bin'
-  which is not on PATH.
-Consider adding this directory to PATH or, if you prefer to suppress this warning,
-  use --no-warn-script-location.
-```
-
-This is important, because if you don't add that folder to your `PATH`, `pipenv`
-won't work. Open your `.bashrc` or `.zshrc` in your favorite editor and add
-this line:
-
-```bash
-export PATH="$HOME/.local/bin:$PATH"
-```
-
-Close the terminal (and every other open terminals if necessary), and open a new one.
+This will create an environment named "3.12.1" that includes Python 3.12.1 and `pipenv`.
 
 We can now use `pipenv` to install the packages for our project. But why don’t
-we just keep using `pip` instead of `pipenv`? Why introduce yet another tool? In
-my opinion, `pipenv` has one absolutely crucial feature for reproducibility:
+we just the more common `pip` instead of `pipenv`, or even `micromamba` which
+can also install any other Python package that we require for our projects? 
+Why introduce yet another tool? In my opinion, `pipenv` has one absolutely crucial feature for reproducibility:
 `pipenv` enables deterministic builds, which means that when using `pipenv`, we
 will *always* get exactly the same packages installed.
 
@@ -336,15 +116,23 @@ requirements.txt` in 6 months, you would still get `hello` at version `1.0.1`
 but you might get a newer version of `ciao`. This is because `ciao` itself is
 not specified in the `requirements.txt`, unless you made sure to add it (and
 then also add its dependencies, and their dependencies...). `pipenv` takes care
-of this for you, and adds further security checks by comparing sha256 hashes
+of this for you by generating a so-called lock file automatically, 
+and adds further security checks by comparing sha256 hashes
 from the lock file to the ones from the downloaded packages, making sure that
-you are actually installing what you believe you are.
+you are actually installing what you believe you are. 
+
+What about using `micromamba`? `micromamba` could indeed be used to install
+the project’s dependencies, but would required another tool called `conda-lock`
+to generate lock files, and in my experience, using `conda-lock` doesn’t always
+work. I have 0 issues with `pipenv` on the other hand.
 
 Now that `pipenv` is installed, let’s start using it to install the packages we
-need for our project:
+need for our project. Because the Python interpreter was installed using
+`micromamba`, we either need to activate the environment to get access to it, or
+we should use `micromamba run` to run the Python intpreter from this environment:
 
 ```bash
-pipenv --python 3.10.5 install beautifulsoup4==4.12.2 pandas==2.1.4 plotnine==0.12.4 skimpy==0.0.11
+micromamba run -n 3.12.1 pipenv install polars==1.1.0 plotnine beautifulsoup4 pandas plotnine skimpy
 ```
 
 (Little sidenote: in Chapter 2, we will be working together on a project using
@@ -357,13 +145,7 @@ because I want you to follow along with the same versions as in the book. You
 could remove the `==x.y.z` strings from the command above to install the latest
 versions of the packages available if you prefer, but then there would be no
 guarantee that you would find the same results as I do in the remainder of the
-book. Also, if you don’t specify versions, the `Pipfile` file won’t specify them
-either, only the `Pipfile.lock` will, which in certain cases could lead to
-undesired behaviour. I won’t go into specifics, because I highly recommend you
-always take the time to specify package versions when installing. Check package
-versions on Pypi. For example,
-[here](https://pypi.org/project/pandas/)^[https://pypi.org/project/pandas/] is
-the page to check out versions of the pandas package. 
+book.
 
 You should see now two new files in the `housing` folder, `Pipfile` and
 `Pipfile.lock`. Start by opening `Pipfile`, it should look like this:
