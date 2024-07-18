@@ -4,7 +4,7 @@ let
   inherit (pkgs.rPackages) quarto ggplot2 knitr rmarkdown withr;
  };
  pypkgs = builtins.attrValues {
-   inherit (pkgs.python312Packages) plotnine beautifoulsoup4 polars;
+   inherit (pkgs.python312Packages) plotnine beautifulsoup4 polars;
  };
  tex = (pkgs.texlive.combine {
    inherit (pkgs.texlive) scheme-small amsmath framed fvextra environ fontawesome5 orcidlink pdfcol tcolorbox tikzfill;
