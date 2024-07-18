@@ -4,7 +4,7 @@ project:
 book:
   title: "Building reproducible analytical pipelines with Python"
   author: "Bruno Rodrigues"
-  date: "2024-01-13"
+  date: "2024-07-18"
   search: true
   repo-url: "https://github.com/b-rodrigues/raps_with_py"
   repo-actions: [edit, issue]
