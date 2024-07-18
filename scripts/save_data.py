@@ -11,7 +11,7 @@ def read_excel(excel_file, sheet):
     out = pl.read_excel(
             source = excel_file,
             sheet_name = sheet,
-            read_csv_options = {
+            read_options = {
             "skip_rows": 6,
             "has_header": True
             }

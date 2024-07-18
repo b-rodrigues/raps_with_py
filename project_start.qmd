@@ -8,14 +8,7 @@ analytical pipeline. To get things going, we are going to keep it simple; our
 goal here is to get an analysis done, that's it. We won't focus on
 reproducibility (well, not beyond what was done in the previous chapter to set
 up our development environment). We are going to download some data, and analyse
-it, that's it. But before all of that, I will present the Polars package. In the
-preface, I said that this wasn’t supposed to be a book about Python, so why am
-I talking about a specific package? It’s because I think that Polars, unlike Pandas,
-has some features and design choices that actually improve reproducibility.
-
-## The Polars package and why you should ditch Pandas in its favour
-
-
+it, that's it.
 
 ## Housing in Luxembourg
 
@@ -50,11 +43,11 @@ knitr::include_graphics("images/lux_rhode_island.png")
 ```
 :::
 
-What you should also know is that the population is about 645,000 as of writing
-(January 2023), half of which are foreigners. Around 400,000 persons work in
-Luxembourg, of which half do not live in Luxembourg; so every morning from
-Monday to Friday, 200,000 people enter the country to work and then leave in the
-evening to go back to either Belgium, France or Germany, the neighbouring
+What you should also know is that the population is about 672,050 people as of
+writing (July 2024), half of which are foreigners. Around 400,000 persons
+work in Luxembourg, of which half do not live in Luxembourg; so every morning
+from Monday to Friday, 200,000 people enter the country to work and then leave
+in the evening to go back to either Belgium, France or Germany, the neighbouring
 countries. As you can imagine, this puts enormous pressure on the transportation
 system and on the roads, but also on the housing market; everyone wants to live
 in Luxembourg to avoid the horrible daily commute, and everyone wants to live
@@ -88,10 +81,11 @@ If you want to download the data, click
 Let us paste the definition of the HPI in here (taken from the HPI's
 [metadata](https://archive.is/OrQwA)^[https://archive.is/OrQwA, archived link for posterity.] page):
 
-*The House Price Index (HPI) measures inflation in the residential property market. The HPI
-captures price changes of all types of dwellings purchased by households (flats, detached houses,
-terraced houses, etc.). Only transacted dwellings are considered, self-build dwellings are
-excluded. The land component of the dwelling is included.*
+*The House Price Index (HPI) measures inflation in the residential property
+market. The HPI captures price changes of all types of dwellings purchased by
+households (flats, detached houses, terraced houses, etc.). Only transacted
+dwellings are considered, self-build dwellings are excluded. The land component
+of the dwelling is included.*
 
 So from the plot, we can see that the price of dwellings more than doubled
 between 2010 and 2021; the value of the index is 214.81 in 2021 for Luxembourg,
@@ -202,6 +196,7 @@ import polars as pl
 import polars.selectors as cs
 import re
 ```
+
 I will be using the `polars` package to manipulate data.
 
 Next, the code below downloads the data, and puts it in a data frame:
