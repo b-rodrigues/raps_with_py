@@ -29,7 +29,7 @@ jobs:
           # signingKey: '${{ secrets.CACHIX_SIGNING_KEY }}'
           # If you chose API tokens for write access OR if you have a private cache
           authToken: '${{ secrets.CACHIX_AUTH }}'
-
+    
       - name: Build development environment
         run: |
           nix-build
@@ -39,5 +39,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
 
+      - name: Install epubcheck
+        run: sudo apt-get install epubcheck
+    
       - name: Check the epub
         run: epubcheck _book/Building-reproducible-analytical-pipelines-with-Python.epub
