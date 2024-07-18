@@ -1,17 +1,17 @@
 # Setting up a development environment
 
-I have to start with on of the hardest chapters of the book, how to set up a
+I have to start with one of the hardest chapters of the book, which is how to set up a
 development environment for Python.
 
-If you are already using Python, you already have an environment set up and
-might be familiar with `pyenv` or other similar tools. I would still suggest you
+If you are already using Python, you are likely already familiar with setting up
+per-project development environments using tools like `pyenv`. I would still suggest you
 read this chapter and see if you agree with how I approach this issue. You may
 want to adapt your current workflow to it, or keep on doing what you’ve been
-doing up until now, it is up to. If you’re completely new to Python, then you
+doing up until now, it is up to. If you're completely new to Python, then you
 definitely need to read this chapter, but also, I need to remind you that this
-is not a book about Python per se. So I won’t be teaching you any Python (I
-wouldn’t really be competent to do so either) and you might want to complement
-reading this book with another that focuses on actually teaching Python.
+is not a book about Python per se. So I won't be teaching you any Python (I
+wouldn't really be competent to do so either) and you might want to complement
+reading this book with another that focuses on actually teaching you Python.
 Remember, this book is about building reproducible analytical pipelines!
 
 ## Why is installing Python such a hard problem?
@@ -22,40 +22,40 @@ expect to install Python like any other piece of software. If you’re already
 familiar with R, you could think that installing Python would be done the same
 way: download the installer for your operating system, and then install it. And,
 actually, you can do just that for Python as well. So why are there 100s of
-articles online explaining how to install Python, and why aren’t all of these
+articles online explaining how to install Python, and why aren't all of these
 articles simply telling you to download the installer to install Python? Why
 did I write this chapter on installing Python?
 
 Well, there are several thing that we need to deal with if we want to install
 and use Python the "right way". First of all, Python is pre-installed on Linux
-distributions and older versions of macOS. So if you’re using one of these
+distributions and older versions of macOS. So if you're using one of these
 operating systems, you could use the built-in Python interpreter, but this is
 not recommended. The reason being that these bundled versions are generally
-older, and that you don’t control their upgrade process, as these get updated
+older, and that you don't control their upgrade process, as these get updated
 alongside the operating system. On Windows and newer versions of macOS, Python
-is, as far as I know, never bundled, so you’d need to install it anyways.
+is, as far as I know, never bundled, so you'd need to install it anyways.
 
-Another thing that you need to consider is that newer Python versions can
-introduce breaking changes, making code written for an earlier version of Python
+Another reason why you should install a Python version and manage it yourself,
+is that newer Python versions can introduce breaking changes, making code written for an earlier version of Python
 not run on a newer version of Python. This is not a Python-specific issue: it
 happens with any programming language. So this means that ideally you would want
-to bundle a Python version with your project’s code.
+to bundle a Python version with your project's code.
 
 The same holds true for individual packages: newer versions of packages might
 not even work with older releases of Python, so to avoid any issues, an analysis
 would get bundled with a Python release and Python packages. This bundle is what
-I call a development environment, and in order to build such development environment,
-specific tools have to be used. And there’s a lot of these tools in the Python
-ecosystem... so much so that when you’re first starting, you might get lost.
-So here is he two tools that I use for this, and that I think work quite well: `micromamba`
-and `pipenv`.
+I call a development environment, and in order to build such development environments,
+specific tools have to be used. And there's a lot of these tools in the Python
+ecosystem... so much so that when you're first starting, you might get lost.
+So here are the two tools that I use for this, and that I think work quite well 
+together: `micromamba` and `pipenv`.
 
 The workflow is as follows:
 
-- Install `micromamba`, a lightweight package manager
-- Using `micromamba`, create an environment that contains a Python interpreter and `pipenv`
-- Using this environment, install the required packages using `pipenv`
-- `pipenv` will automatically generate two very useful files, `Pipfile` and `Pipfile.lock`
+- Install `micromamba`, a lightweight package manager.
+- Using `micromamba`, create an environment that contains a Python interpreter and the `pipenv` package.
+- Using this environment, install the required packages using `pipenv`.
+- `pipenv` will automatically generate two very useful files, `Pipfile` and `Pipfile.lock`.
 
 In the following sections I detail this process.
 
@@ -63,38 +63,39 @@ In the following sections I detail this process.
 
 What we want is to have project-specific development environments that should include a
 specific Python version, specific versions of Python packages and all the code to actually
-run the project.
+run the project. If you do this, you have already achieved a great deal to make your 
+analysis reproducible. Some would even argue that it is enough!
 
-I’m going to assume that you don’t have any Python version available on your computer
+I'm going to assume that you don't have any Python version available on your computer
 and need to get one. Let’s suppose that Python version 3.12.1 is the latest released 
 version, and let’s also suppose that you would like to use that version to start 
 working on a project. To first get the right Python interpreter ready, you should
-install `micromamba`. Please refer to the `micromamba` 
-documentation 
+install `micromamba`. Please refer to the `micromamba` documentation 
 [here](https://mamba.readthedocs.io/en/latest/installation/micromamba-installation.html#automatic-install)^[https://mamba.readthedocs.io/en/latest/installation/micromamba-installation.html#automatic-install]
 but on Linux, macOS and Git Bash on Windows (there’s also instructions for Powershell, if you don’t
-have Git Bash installed on Windows), it should be as easy as:
+have Git Bash installed on Windows), it should be as easy as running this in your terminal:
 
 ```bash
 "${SHELL}" <(curl -L micro.mamba.pm/install.sh)
 ```
 
 for Poweshell use instead `Invoke-Expression ((Invoke-WebRequest -Uri https://micro.mamba.pm/install.ps1).Content)`
+instead.
 
 We can now use `micromamba` to create an environment that will contain a Python
 interpreter for our project and `pipenv`. Type the following command to create this environment:
 
 ```bash
-micromamba create -n housing python=3.11.9 pipenv
+micromamba create -n housing python=3.12.1 pipenv
 ```
 
 This will create an environment named "pipenv_env" that includes `pipenv` and
-the version 3.11.9 of Python. If you're just starting a project, you can safely
+the version 3.12.1 of Python. If you're just starting a project, you can safely
 choose the very latest released version (check the releases pages on Python's 
 website). 
 
 We can now use `pipenv` to install the packages for our project. But why don’t
-we just the more common `pip` instead of `pipenv`, or even `micromamba` which
+we just use the more common `pip` instead of `pipenv`, or even `micromamba` which
 can also install any other Python package that we require for our projects? 
 Why introduce yet another tool? In my opinion, `pipenv` has one absolutely crucial feature for reproducibility:
 `pipenv` enables deterministic builds, which means that when using `pipenv`, we
@@ -102,8 +103,10 @@ will *always* get exactly the same packages installed.
 
 "But isn’t that exctaly what using `requirements.txt` file does?" you wonder.
 You are not entirely wrong. After all, if you make the effort to specify the
-packages you need, and their versions, wouldn’t running `pip install -r
-requirements.txt` also install exactly the same packages?
+packages you need, and their versions, wouldn't running `pip install -r
+requirements.txt` also install exactly the same packages? (If you don't know
+what a `requirements.txt` file is, you can think of it as a simple text file
+that lists the required packages and their versions for an analysis).
 
 Well, not quite. Imagine for example that you need a package called `hello`
 and you put it into your `requirements.txt` like so:
@@ -118,18 +121,26 @@ install -r requirements.txt` today, you’ll get `hello` at version `1.0.1` and
 requirements.txt` in 6 months, you would still get `hello` at version `1.0.1`
 but you might get a newer version of `ciao`. This is because `ciao` itself is
 not specified in the `requirements.txt`, unless you made sure to add it (and
-then also add its dependencies, and their dependencies...). `pipenv` takes care
-of this for you by generating a so-called lock file automatically, 
+then also add its dependencies, and their dependencies...). This mismatch in the
+versions of `ciao` can cause issues. `pipenv` takes care
+of this for you by generating a so-called *lock* file automatically, 
 and adds further security checks by comparing sha256 hashes
 from the lock file to the ones from the downloaded packages, making sure that
 you are actually installing what you believe you are. 
 
 What about using `micromamba`? `micromamba` could indeed be used to install
-the project’s dependencies, but would required another tool called `conda-lock`
-to generate lock files, and in my experience, using `conda-lock` doesn’t always
-work. I have 0 issues with `pipenv` on the other hand.
+the project’s dependencies, but would require another tool called `conda-lock`
+to generate lock files, and in my experience, using `conda-lock` doesn't always
+work. I have had 0 issues with `pipenv` on the other hand.
 
-Now that `pipenv` is installed, let’s start using it to install the packages we
+In any case, the point is that you should use a tool that specifies dependencies
+very strictly and precisely. Use whatever you're comfortable with if you already
+are familiar with one such tool. If not, and you want to follow along, use
+`pipenv` but take some time to check out other options. I personally use Nix, which
+is not specific to Python, but I decided not to discuss Nix in this book, because
+to properly discuss it, it would require a book on its own.
+
+Now that `pipenv` is installed, let's start using it to install the packages we
 need for our project. Because the Python interpreter was installed using
 `micromamba`, we either need to activate the environment to get access to it, or
 we should use `micromamba run` to run the Python intpreter from this environment.
@@ -140,11 +151,6 @@ Then, from that folder, run the following command:
 micromamba run -n housing pipenv install polars==1.1.0 plotnine beautifulsoup4 pandas plotnine skimpy
 ```
 
-(Little sidenote: in Chapter 2, we will be working together on a project using
-real data with `polars` instead of `pandas`. But for now, let’s get `pandas`
-installed: I’ll do a short comparison of the two, and then we’ll keep on using
-`polars` for the remainder of the book.)
-
 As you can see, I chose to install specific versions of `polars`. This is
 because I want you to follow along with the same versions as in the book. You
 could remove the `==x.y.z` string from the command above to install the latest
@@ -152,7 +158,7 @@ versions of `polars` available if you prefer, but then there would be no
 guarantee that you would find the same results as I do in the remainder of the
 book. You could also specify versions for the other packages if you wish.
 
-You should see now two new files in the `housing` folder, `Pipfile` and
+You should now see two new files in the `housing` folder, `Pipfile` and
 `Pipfile.lock`. Start by opening `Pipfile`, it should look like this:
 
 ```
@@ -171,7 +177,7 @@ skimpy = "*"
 [dev-packages]
 
 [requires]
-python_version = "3.11"
+python_version = "3.12"
 ```
 
 I think that this file is pretty self-evident: the packages being used for this
@@ -179,9 +185,9 @@ project are listed alongside their versions. The Python version is also
 listed. Sometimes, depending on how you set up the project, it could happen that
 the Python version listed is not the one you want for your project. 
 In this case, I highly recommend you change the version to the right one. Also,
-you'll notice that here the Python version is "3.11", but we specified version
-"3.11.9" with `micromamba` when we created the environment. I would recommend
-that you add the missing ".9" for maximum reproducibility. If you edited the `Pipfile`
+you'll notice that here the Python version is "3.12", but we specified version
+"3.12.1" with `micromamba` when we created the environment. I would recommend
+that you add the missing ".1" for maximum reproducibility. If you edited the `Pipfile`
 then you need to run `pipenv lock` to regenerate the `Pipfile.lock` file as well:
 
 ```bash
@@ -191,8 +197,8 @@ micromamba run -n housing pipenv lock
 this will make sure to also set the required/correct Python version in there.
 
 If you open the `Pipfile.lock` in a text editor, you will see that it is a json
-file and that is also lists the dependecies of your project, but also the
-dependencies’ dependencies. You will also notice several fields called `hashes`.
+file and that also lists the dependecies of your project, but also the
+dependencies' dependencies. You will also notice several fields called `hashes`.
 These are there for security reasons: whenever someone, (or you in the future)
 will regenerate this environment, the packages will get downloaded and their
 hashes will get compared to the ones listed in the `Pipfile.lock`. If they don’t
@@ -212,7 +218,7 @@ and check that the right version of Python is being used:
 python --version
 ```
 
-This should print `Python 3.11.9` in the terminal. Start the Python interpreter
+This should print `Python 3.12.1` in the terminal. Start the Python interpreter
 and let's check `polars`'s version:
 
 ```bash
@@ -226,18 +232,18 @@ import polars as pl
 pl.__version__
 ```
 
-You should see `1.1.0` as the listed version. Quite the shell, and then
-quite the environment with `exit`.
+You should see `1.1.0` as the listed version. Quit the shell, and then
+quit the environment with `exit`.
 
 ## One last thing
 
 Before continuing, it would be nice if we would automatically drop into the 
 environment each time we are in the right folder; so for example, each time
-we navigate to the `housing` folder, the `housing` environment starts. We
-can achieve this by using a tool called `direnv`.
+we navigate to the `housing` folder for our project on housing, 
+the `housing` environment starts. We can achieve this by using a tool called `direnv`.
 
 - Install direnv
-- Take note of the command when you run `micromamba run -n housing pipenv shell
+- Take note of the command when you run `micromamba run -n housing pipenv shell`
 ` in my case `. /home/b-rodrigues/.local/share/virtualenvs/py_housing-MvX0wC5I/bin/activate`
 - put that in a `.envrc` file in your folder
 - direnv allow
