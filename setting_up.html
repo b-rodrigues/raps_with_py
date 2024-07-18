@@ -324,7 +324,7 @@ python_version = "3.12"</code></pre>
 <p>This should print <code>Python 3.12.1</code> in the terminal. Start the Python interpreter and let’s check <code>polars</code>’s version:</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Then check that the correct versions of the packages were installed:</p>
-<div id="d1e3e0b7" class="cell" data-execution_count="1">
+<div id="bfcfb79e" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> polars <span class="im">as</span> pl</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>pl.__version__</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
@@ -336,23 +336,19 @@ python_version = "3.12"</code></pre>
 <section id="one-last-thing" class="level2" data-number="2.3">
 <h2 data-number="2.3" class="anchored" data-anchor-id="one-last-thing"><span class="header-section-number">2.3</span> One last thing</h2>
 <p>Before continuing, it would be nice if we would automatically drop into the environment each time we are in the right folder; so for example, each time we navigate to the <code>housing</code> folder for our project on housing, the <code>housing</code> environment starts. We can achieve this by using a tool called <code>direnv</code>.</p>
-<ul>
-<li>Install direnv</li>
-<li>Take note of the command when you run <code>micromamba run -n housing pipenv shell</code> <code>in my case</code>. /home/b-rodrigues/.local/share/virtualenvs/py_housing-MvX0wC5I/bin/activate`</li>
-<li>put that in a <code>.envrc</code> file in your folder</li>
-<li>direnv allow</li>
-<li>profit</li>
-</ul>
+<p>I won’t go into details to install <code>direnv</code>, simply consult the <a href="https://direnv.net/docs/installation.html">documentation</a>.</p>
+<p>The next step is to start a shell in your environment by running <code>micromamba run -n housing pipenv shell</code>. This will start a shell inside the <code>housing</code> environment by executing <code>pipenv shell</code>. Take note of the command that appears, in my case it’s this: <code>. /home/b-rodrigues/.local/share/virtualenvs/py_housing-MvX0wC5I/bin/activate</code> (pay attention to the <code>.</code> character at the very beginning of this command!).</p>
+<p>In the root folder of the <code>housing</code> project, create an empty text file and name it <code>.envrc</code>. Inside of that file, paste the line from before into the empty <code>.envrc</code> file. Finally, run <code>direnv allow</code> in a terminal in that folder, and each time you will navigate to this folder using a terminal, that development environment will be used. Many development interfaces can work together with <code>direnv</code>, refer to their documentation to learn how to configure your IDE to make use of <code>direnv</code>.</p>
 </section>
 <section id="a-high-level-description-of-how-to-set-up-a-project" class="level2" data-number="2.4">
 <h2 data-number="2.4" class="anchored" data-anchor-id="a-high-level-description-of-how-to-set-up-a-project"><span class="header-section-number">2.4</span> A high-level description of how to set up a project</h2>
-<p>Ok, so to summarise, we install <code>micromamba</code> which will make it easy to install any version of Python that we require, and we also installed <code>pipenv</code>, which we use to install packages. The advantage of using <code>pipenv</code> is that we get deterministic builds, and <code>pipenv</code> works well with <code>micromamba</code> to build project-specific environments.</p>
+<p>Ok, so to summarise, we installed <code>micromamba</code> which will make it easy to install any version of Python that we require, and we also installed <code>pipenv</code>, which we use to install packages. The advantage of using <code>pipenv</code> is that we get deterministic builds, and <code>pipenv</code> works well with <code>micromamba</code> to build project-specific environments.</p>
 <p>The way I would suggest you use these tools now, is that for each project, you install the latest available version of Python and then install packages by specyifing their versions, like so:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ex">micromamba</span> create <span class="at">-n</span> project_name python=X.YY.Z pipenv </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ex">micromamba</span> create <span class="at">-n</span> project_name python=X.YY.Z pipenv</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>then, use this environment in a fresh folder to install the packages you need:</p>
 <pre><code>micromamba run -n housing pipenv install beautifulsoup4==4.12.2 pandas==2.1.4 plotnine==0.12.4 skimpy==0.0.11</code></pre>
 <p>(Replace the versions of Python and packages by the latest, or those you need.)</p>
-<p>This will ensure that your project uses the correct software stack, and that collaborators or future you will be able to regenerate this environment by calling <code>pipenv sync</code>. <code>pipenv sync</code> differs from <code>pipenv install</code> because it will not touch the <code>Pipfile.lock</code> file, and will just download the packages as listed in the lock file. This is also the command that we will use later, in the chapter on CI/CD.</p>
+<p>This will ensure that your project uses the correct software stack, and that collaborators or future you will be able to regenerate this environment by calling <code>pipenv sync</code>. This is also the command that we will use later, in the chapter on CI/CD.</p>
 <p>If you need to add packages to an environment, run: <code>micromamba run -n housing pipenv install great_tables</code> (or simply if <code>pipenv install great_tables</code> if you’re already in the activated <code>housing</code> environment).</p>
 
 
