@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.353">
+<meta name="generator" content="quarto-1.5.54">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Building reproducible analytical pipelines with Python - 2&nbsp; Setting up a development environment</title>
+<title>2&nbsp; Setting up a development environment – Building reproducible analytical pipelines with Python</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -22,7 +22,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -33,7 +33,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -83,7 +83,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   "collapse-after": 3,
   "panel-placement": "start",
   "type": "textbox",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -92,8 +98,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit"
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
   }
 }</script>
 <script data-goatcounter="https://brodriguesco-raps-with-python.goatcounter.com/count" async="" src="//gc.zgo.at/count.js"></script>
@@ -111,12 +119,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./setting_up.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Setting up a development environment</span></a></li></ol></nav>
-      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-      </a>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./setting_up.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Setting up a development environment</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
@@ -126,41 +134,41 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Building reproducible analytical pipelines with Python</a> 
         <div class="sidebar-tools-main tools-wide">
     <a href="https://github.com/b-rodrigues/raps_with_py" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
     <div class="dropdown">
-      <a href="" title="Download" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download"><i class="bi bi-download"></i></a>
+      <a href="" title="Download" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" role="link" aria-label="Download"><i class="bi bi-download"></i></a>
       <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
           <li>
             <a class="dropdown-item sidebar-tools-main-item" href="./Building-reproducible-analytical-pipelines-with-Python.pdf">
-              <i class="bi bi-bi-file-pdf pe-1"></i>
+              <i class="bi bi-file-pdf pe-1"></i>
             Download PDF
             </a>
           </li>
           <li>
             <a class="dropdown-item sidebar-tools-main-item" href="./Building-reproducible-analytical-pipelines-with-Python.epub">
-              <i class="bi bi-bi-journal pe-1"></i>
+              <i class="bi bi-journal pe-1"></i>
             Download ePub
             </a>
           </li>
       </ul>
     </div>
     <div class="dropdown">
-      <a href="" title="Share" id="quarto-navigation-tool-dropdown-1" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Share"><i class="bi bi-share"></i></a>
+      <a href="" title="Share" id="quarto-navigation-tool-dropdown-1" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" role="link" aria-label="Share"><i class="bi bi-share"></i></a>
       <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-1">
           <li>
             <a class="dropdown-item sidebar-tools-main-item" href="https://twitter.com/intent/tweet?url=|url|">
-              <i class="bi bi-bi-twitter pe-1"></i>
+              <i class="bi bi-twitter pe-1"></i>
             Twitter
             </a>
           </li>
           <li>
             <a class="dropdown-item sidebar-tools-main-item" href="https://www.facebook.com/sharer/sharer.php?u=|url|">
-              <i class="bi bi-bi-facebook pe-1"></i>
+              <i class="bi bi-facebook pe-1"></i>
             Facebook
             </a>
           </li>
@@ -216,7 +224,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </ul>
     </div>
 </nav>
-<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
@@ -224,17 +232,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#why-is-installing-python-such-a-hard-problem" id="toc-why-is-installing-python-such-a-hard-problem" class="nav-link active" data-scroll-target="#why-is-installing-python-such-a-hard-problem"><span class="header-section-number">2.1</span> Why is installing Python such a hard problem?</a></li>
-  <li><a href="#first-step-installing-python" id="toc-first-step-installing-python" class="nav-link" data-scroll-target="#first-step-installing-python"><span class="header-section-number">2.2</span> First step: installing Python</a>
-  <ul class="collapse">
-  <li><a href="#pyenv-for-linux-or-macos" id="toc-pyenv-for-linux-or-macos" class="nav-link" data-scroll-target="#pyenv-for-linux-or-macos"><span class="header-section-number">2.2.1</span> <code>pyenv</code> for Linux or macOS</a></li>
-  <li><a href="#pyenv-win-for-windows" id="toc-pyenv-win-for-windows" class="nav-link" data-scroll-target="#pyenv-win-for-windows"><span class="header-section-number">2.2.2</span> <code>pyenv-win</code> for Windows</a></li>
-  <li><a href="#using-pyenv" id="toc-using-pyenv" class="nav-link" data-scroll-target="#using-pyenv"><span class="header-section-number">2.2.3</span> Using pyenv</a></li>
-  </ul></li>
-  <li><a href="#second-step-pipenv" id="toc-second-step-pipenv" class="nav-link" data-scroll-target="#second-step-pipenv"><span class="header-section-number">2.3</span> Second step: pipenv</a></li>
-  <li><a href="#debugging" id="toc-debugging" class="nav-link" data-scroll-target="#debugging"><span class="header-section-number">2.4</span> Debugging</a></li>
-  <li><a href="#a-high-level-description-of-how-to-set-up-a-project" id="toc-a-high-level-description-of-how-to-set-up-a-project" class="nav-link" data-scroll-target="#a-high-level-description-of-how-to-set-up-a-project"><span class="header-section-number">2.5</span> A high-level description of how to set up a project</a></li>
+  <li><a href="#creating-a-project-specific-development-environment" id="toc-creating-a-project-specific-development-environment" class="nav-link" data-scroll-target="#creating-a-project-specific-development-environment"><span class="header-section-number">2.2</span> Creating a project-specific development environment</a></li>
+  <li><a href="#one-last-thing" id="toc-one-last-thing" class="nav-link" data-scroll-target="#one-last-thing"><span class="header-section-number">2.3</span> One last thing</a></li>
+  <li><a href="#a-high-level-description-of-how-to-set-up-a-project" id="toc-a-high-level-description-of-how-to-set-up-a-project" class="nav-link" data-scroll-target="#a-high-level-description-of-how-to-set-up-a-project"><span class="header-section-number">2.4</span> A high-level description of how to set up a project</a></li>
   </ul>
-<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/b-rodrigues/raps_with_py/edit/master/setting_up.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/b-rodrigues/raps_with_py/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/b-rodrigues/raps_with_py/edit/master/setting_up.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/b-rodrigues/raps_with_py/issues" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -254,7 +256,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
   
 
+
 </header>
+
 
 <p>I have to start with on of the hardest chapters of the book, how to set up a development environment for Python.</p>
 <p>If you are already using Python, you already have an environment set up and might be familiar with <code>pyenv</code> or other similar tools. I would still suggest you read this chapter and see if you agree with how I approach this issue. You may want to adapt your current workflow to it, or keep on doing what you’ve been doing up until now, it is up to. If you’re completely new to Python, then you definitely need to read this chapter, but also, I need to remind you that this is not a book about Python per se. So I won’t be teaching you any Python (I wouldn’t really be competent to do so either) and you might want to complement reading this book with another that focuses on actually teaching Python. Remember, this book is about building reproducible analytical pipelines!</p>
@@ -263,124 +267,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>If you google “how to install Python” you will find a surprising amount of articles explaining how to do it. I say “surprising amount” because one might expect to install Python like any other piece of software. If you’re already familiar with R, you could think that installing Python would be done the same way: download the installer for your operating system, and then install it. And, actually, you can do just that for Python as well. So why are there 100s of articles online explaining how to install Python, and why aren’t all of these articles simply telling you to download the installer to install Python? Why did I write this chapter on installing Python?</p>
 <p>Well, there are several thing that we need to deal with if we want to install and use Python the “right way”. First of all, Python is pre-installed on Linux distributions and older versions of macOS. So if you’re using one of these operating systems, you could use the built-in Python interpreter, but this is not recommended. The reason being that these bundled versions are generally older, and that you don’t control their upgrade process, as these get updated alongside the operating system. On Windows and newer versions of macOS, Python is, as far as I know, never bundled, so you’d need to install it anyways.</p>
 <p>Another thing that you need to consider is that newer Python versions can introduce breaking changes, making code written for an earlier version of Python not run on a newer version of Python. This is not a Python-specific issue: it happens with any programming language. So this means that ideally you would want to bundle a Python version with your project’s code.</p>
-<p>The same holds true for individual packages: newer versions of packages might not even work with older releases of Python, so to avoid any issues, an analysis would get bundled with a Python release and Python packages. This bundle is what I call a development environment, and in order to build such development environment, specific tools have to be used. And there’s a lot of these tools in the Python ecosystem… so much so that when you’re first starting, you might get lost. So here is he two tools that I use for this, and that I think work quite well: <code>pyenv</code> and <code>pipenv</code>.</p>
+<p>The same holds true for individual packages: newer versions of packages might not even work with older releases of Python, so to avoid any issues, an analysis would get bundled with a Python release and Python packages. This bundle is what I call a development environment, and in order to build such development environment, specific tools have to be used. And there’s a lot of these tools in the Python ecosystem… so much so that when you’re first starting, you might get lost. So here is he two tools that I use for this, and that I think work quite well: <code>micromamba</code> and <code>pipenv</code>.</p>
+<p>The workflow is as follows:</p>
+<ul>
+<li>Install <code>micromamba</code>, a lightweight package manager</li>
+<li>Using <code>micromamba</code>, create an environment that contains a Python interpreter and <code>pipenv</code></li>
+<li>Using this environment, install the required packages using <code>pipenv</code></li>
+<li><code>pipenv</code> will automatically generate two very useful files, <code>Pipfile</code> and <code>Pipfile.lock</code></li>
+</ul>
+<p>In the following sections I detail this process.</p>
 </section>
-<section id="first-step-installing-python" class="level2" data-number="2.2">
-<h2 data-number="2.2" class="anchored" data-anchor-id="first-step-installing-python"><span class="header-section-number">2.2</span> First step: installing Python</h2>
-<p>In this section, I will assume that you have no version of Python already installed on your computer. If you do have Python, you may want to skip this section: but know that if you’re not using <code>pyenv</code> to download and install Python versions, you will need to keep installing your environments manually. <code>pipenv</code> however install environments automatically if <code>pyenv</code> is available, so you might want to switch over to <code>pyenv</code>.</p>
-<p>So first of all, let’s install <code>pyenv</code>. <code>pyenv</code> is a tool that allows you to install as many versions of Python that you need, and that does not depend on Python itself, so there’s no bootstrap problem. But it is only available for Linux and macOS: Windows users should install <code>pyenv-win</code>: the following subsection deals with installing <code>pyenv</code> on Linux and macOS, the next one with installing <code>pyenv-win</code> for Windows.</p>
-<section id="pyenv-for-linux-or-macos" class="level3" data-number="2.2.1">
-<h3 data-number="2.2.1" class="anchored" data-anchor-id="pyenv-for-linux-or-macos"><span class="header-section-number">2.2.1</span> <code>pyenv</code> for Linux or macOS</h3>
-<p>I recommend you read and follow the <a href="https://github.com/pyenv/pyenv?tab=readme-ov-file#installation">official instructions</a><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>, but I provide here the main steps. In case something doesn’t work as expected, refer to the official documentation linked previously. First, install the build dependencies by following the <a href="https://github.com/pyenv/pyenv/wiki#suggested-build-environment">instructions here</a><a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>. On a Linux distribution like Ubuntu, this means installing a bunch of development libraries from your usual package manager. On macOS, this means installing Xcode and also a bunch of packages with Homebrew. Also, make sure you have installed Git as well. We will be using Git later in the book too, but it is required to install <code>pyenv</code>.</p>
-<p>Then, on macOS, you can use Hombrew to install <code>pyenv</code>:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">brew</span> update</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">brew</span> install pyenv</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>For Linux distributions, run the automatic installer by opening a terminal and executing this line here:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> https://pyenv.run <span class="kw">|</span> <span class="fu">bash</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Now comes the more complex part of the installation process. You need to edit some files for your terminal, and these files are different depending on which shell you use. For most Linux distributions, if not all, the default terminal will use bash, and on macOS the default shell is zsh. The detailled instructions, which I recommend you read, are <a href="https://github.com/pyenv/pyenv?tab=readme-ov-file#set-up-your-shell-environment-for-pyenv">here</a><a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>, but here are my recommendations: if you’re using a Linux distribution, you likely are using bash, to find out, run <code>echo $0</code> in a terminal. If your terminal is using bash, “bash” will get printed, if not, “zsh” will get printed instead. If your terminal using bash, run the following in a terminal:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">'export PYENV_ROOT="$HOME/.pyenv"'</span> <span class="op">&gt;&gt;</span> ~/.bashrc</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">'command -v pyenv &gt;/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"'</span> <span class="op">&gt;&gt;</span> ~/.bashrc</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">'eval "$(pyenv init -)"'</span> <span class="op">&gt;&gt;</span> ~/.bashrc</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>and then, you need to check whether you have a <code>.profile</code>, <code>.bash_profile</code> or a <code>.bash_login</code> file in your home directory. These are files used at startup by bash to set some variables and options. They’re similar to the <code>.bashrc</code> file, but the <code>.bashrc</code> is executed when starting a terminal when you’re already logged into the system, while <code>.bash_profile</code>, <code>.bash_login</code> and <code>.profile</code> get executed when logging in through ssh into the system. If you have a <code>.profile</code> file in your HOME, this should return something:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> .profile</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>if nothing gets returned, you might have instead a <code>.bash_profile</code> or <code>bash_login</code> file instead, try with:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> .bash_profile</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>or</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> .bash_login</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>If you have more than one, only add the lines to the <code>.bash_profile</code>:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">'export PYENV_ROOT="$HOME/.pyenv"'</span> <span class="op">&gt;&gt;</span> ~/.bash_profile</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">'command -v pyenv &gt;/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"'</span> <span class="op">&gt;&gt;</span> ~/.bash_profile</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">'eval "$(pyenv init -)"'</span> <span class="op">&gt;&gt;</span> ~/.bash_profile</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>but if you have only have a <code>.bash_login</code> file, run this:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">'export PYENV_ROOT="$HOME/.pyenv"'</span> <span class="op">&gt;&gt;</span> ~/.bash_login</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">'command -v pyenv &gt;/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"'</span> <span class="op">&gt;&gt;</span> ~/.bash_login</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">'eval "$(pyenv init -)"'</span> <span class="op">&gt;&gt;</span> ~/.bash_login</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>or if you only have a <code>.profile</code> file, or none of these three files at all, run these lines:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">'export PYENV_ROOT="$HOME/.pyenv"'</span> <span class="op">&gt;&gt;</span> ~/.profile</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">'command -v pyenv &gt;/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"'</span> <span class="op">&gt;&gt;</span> ~/.profile</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">'eval "$(pyenv init -)"'</span> <span class="op">&gt;&gt;</span> ~/.profile</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>If you’re running zsh (which would be the case on macOS, or if you changed form bash to zsh on Linux), then you need to add these lines to the <code>.zshrc</code> file:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">'export PYENV_ROOT="$HOME/.pyenv"'</span> <span class="op">&gt;&gt;</span> ~/.zshrc</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">'[[ -d $PYENV_ROOT/bin ]] &amp;&amp; export PATH="$PYENV_ROOT/bin:$PATH"'</span> <span class="op">&gt;&gt;</span> ~/.zshrc</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">'eval "$(pyenv init -)"'</span> <span class="op">&gt;&gt;</span> ~/.zshrc</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>and also to <code>.zprofile</code> or <code>.zlogin</code>, depending on which you have (if you have none, put the lines into <code>.zprofile</code>):</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">'export PYENV_ROOT="$HOME/.pyenv"'</span> <span class="op">&gt;&gt;</span> ~/.zprofile</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">'[[ -d $PYENV_ROOT/bin ]] &amp;&amp; export PATH="$PYENV_ROOT/bin:$PATH"'</span> <span class="op">&gt;&gt;</span> ~/.zprofile</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">'eval "$(pyenv init -)"'</span> <span class="op">&gt;&gt;</span> ~/.zprofile</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>If you’re using another shell, such as fish, you can checkout the instructions on <code>pyenv</code>’s GitHub repository, or simply add these lines in the equivalent startup files.</p>
-<p>Finally, also add this line to your <code>.bashrc</code> or <code>.zshrc</code>:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="bu">eval</span> <span class="st">"</span><span class="va">$(</span><span class="ex">pyenv</span> virtualenv-init <span class="at">-</span><span class="va">)</span><span class="st">"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>to load <code>pyenv-virtualenv</code> automatically (as stated by the installer).</p>
-</section>
-<section id="pyenv-win-for-windows" class="level3" data-number="2.2.2">
-<h3 data-number="2.2.2" class="anchored" data-anchor-id="pyenv-win-for-windows"><span class="header-section-number">2.2.2</span> <code>pyenv-win</code> for Windows</h3>
-<p>If you’re using Windows, you should install <code>pyenv-win</code> instead, which you can find <a href="https://github.com/pyenv-win/pyenv-win">here</a><a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>. Installation on Windows is similar to how you install <code>pyenv</code> on Linux, if you choose the PowerShell method. It’s simply running this line (see <a href="https://github.com/pyenv-win/pyenv-win/blob/master/docs/installation.md#powershell">here</a><a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a>) in Powershell:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="ex">Invoke-WebRequest</span> <span class="at">-UseBasicParsing</span> <span class="at">-Uri</span> <span class="st">"https://raw.githubusercontent.com/pyenv-win/pyenv-win/master/pyenv-win/install-pyenv-win.ps1"</span> <span class="at">-OutFile</span> <span class="st">"./install-pyenv-win.ps1"</span><span class="kw">;</span> <span class="kw">&amp;</span><span class="st">"./install-pyenv-win.ps1"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Open a new PowerShell prompt and run <code>pyenv</code>. If you see a “command not found” error, you need to manually add <code>pyenv</code> to the PATH. On Windows, this is done graphically. Click on the start menu, and look for “Edit environment variables for your account”.</p>
-<div class="cell">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="images/edit_user_envvars.png" class="img-fluid figure-img" width="300"></p>
-<figcaption class="figure-caption">Look for ‘Edit environment variables for your account’</figcaption>
-</figure>
-</div>
-</div>
-</div>
-<p>Then, click on the “New…” button, and the <code>PYENV</code>, <code>PYENV_HOME</code> and <code>PYENV_ROOT</code>. Make sure to adjus the paths to the ones on your machine.</p>
-<div class="cell">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="images/pyenv-win-envvars.png" class="img-fluid figure-img" width="300"></p>
-<figcaption class="figure-caption">Make sure your environment variables are correctly set</figcaption>
-</figure>
-</div>
-</div>
-</div>
-<p>Also check the <a href="https://github.com/pyenv-win/pyenv-win/wiki">FAQ</a><a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a> if you need further details.</p>
-</section>
-<section id="using-pyenv" class="level3" data-number="2.2.3">
-<h3 data-number="2.2.3" class="anchored" data-anchor-id="using-pyenv"><span class="header-section-number">2.2.3</span> Using pyenv</h3>
-<p>Now that you have <code>pyenv</code> installed, we can use it to install as many different Python versions that we need, typically one per project. First, I’ll install a version of Python that I want to use. Let’s got with the latest available. Let’s see what is available:</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pyenv</span> install <span class="at">-l</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>As of writing, the latest version that is not in beta is <code>3.10.5</code>, so let’s install this one (if you’re reading this from the future and a new version of Python is available, install <code>3.10.5</code> nonetheless):</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pyenv</span> install 3.10.5</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>this will install Python <code>3.10.5</code>. But how do we use it now? Let’s suppose that we want to use it for a project. Let’s create a folder that will contain the different scripts that we are going to write in the next chapter and called it <code>housing</code>.</p>
-<p>Open a terminal inside that folder, or open a terminal and <code>cd</code> into that folder:</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/home/Documents/housing</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>(depending on your operating system, you could first open the folder, then right click somewhere empty and then click on <em>Open in terminal</em>, which would open a terminal in that folder). We would like to use Python <code>3.10.5</code> for this project, and we would like to do so each time we interact with the files in that folder. We need to set version <code>3.10.5</code> as the <em>local</em> Python version, meaning, the Python version that will be used for this project only:</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pyenv</span> local 3.10.5</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>This will generate a <code>.python-version</code> with the following line in it:</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="ex">3.10.5</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>This file will only be used by <code>pyenv</code>, not <code>pipenv</code>, but it’s nice to keep it as a reminder of which Python version you actually need for this project. <code>pipenv</code> specifies the Python version in its own file, which I will discuss in the next section.</p>
-</section>
-</section>
-<section id="second-step-pipenv" class="level2" data-number="2.3">
-<h2 data-number="2.3" class="anchored" data-anchor-id="second-step-pipenv"><span class="header-section-number">2.3</span> Second step: pipenv</h2>
-<p>We can now use our local Python interpreter to install <code>pipenv</code>:</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">--user</span> pipenv</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Right after install <code>pipenv</code>, your terminal might print this message:</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="ex">WARNING:</span> The script virtualenv is installed in <span class="st">'/home/USER/.local/bin'</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">which</span> is not on PATH.</span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="ex">Consider</span> adding this directory to PATH or, if you prefer to suppress this warning,</span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="ex">use</span> <span class="at">--no-warn-script-location.</span></span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="ex">WARNING:</span> The scripts pipenv and pipenv-resolver are installed in <span class="st">'/home/cbrunos/.local/bin'</span></span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">which</span> is not on PATH.</span>
-<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="ex">Consider</span> adding this directory to PATH or, if you prefer to suppress this warning,</span>
-<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>  <span class="ex">use</span> <span class="at">--no-warn-script-location.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>This is important, because if you don’t add that folder to your <code>PATH</code>, <code>pipenv</code> won’t work. Open your <code>.bashrc</code> or <code>.zshrc</code> in your favorite editor and add this line:</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">PATH</span><span class="op">=</span><span class="st">"</span><span class="va">$HOME</span><span class="st">/.local/bin:</span><span class="va">$PATH</span><span class="st">"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Close the terminal (and every other open terminals if necessary), and open a new one.</p>
-<p>We can now use <code>pipenv</code> to install the packages for our project. But why don’t we just keep using <code>pip</code> instead of <code>pipenv</code>? Why introduce yet another tool? In my opinion, <code>pipenv</code> has one absolutely crucial feature for reproducibility: <code>pipenv</code> enables deterministic builds, which means that when using <code>pipenv</code>, we will <em>always</em> get exactly the same packages installed.</p>
+<section id="creating-a-project-specific-development-environment" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="creating-a-project-specific-development-environment"><span class="header-section-number">2.2</span> Creating a project-specific development environment</h2>
+<p>What we want is to have project-specific development environments that should include a specific Python version, specific versions of Python packages and all the code to actually run the project.</p>
+<p>I’m going to assume that you don’t have any Python version available on your computer and need to get one. Let’s suppose that Python version 3.12.1 is the latest released version, and let’s also suppose that you would like to use that version to start working on a project. To first get the right Python interpreter ready, you should install <code>micromamba</code>. Please refer to the <code>micromamba</code> documentation <a href="https://mamba.readthedocs.io/en/latest/installation/micromamba-installation.html#automatic-install">here</a><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> but on Linux, macOS and Git Bash on Windows (there’s also instructions for Powershell, if you don’t have Git Bash installed on Windows), it should be as easy as:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="st">"</span><span class="va">${SHELL}</span><span class="st">"</span> <span class="op">&lt;(</span><span class="ex">curl</span> <span class="at">-L</span> micro.mamba.pm/install.sh<span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>for Poweshell use instead <code>Invoke-Expression ((Invoke-WebRequest -Uri https://micro.mamba.pm/install.ps1).Content)</code></p>
+<p>We can now use <code>micromamba</code> to create an environment that will contain a Python interpreter for our project and <code>pipenv</code>. Type the following command to create this environment:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">micromamba</span> create <span class="at">-n</span> housing python=3.11.9 pipenv</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This will create an environment named “pipenv_env” that includes <code>pipenv</code> and the version 3.11.9 of Python. If you’re just starting a project, you can safely choose the very latest released version (check the releases pages on Python’s website).</p>
+<p>We can now use <code>pipenv</code> to install the packages for our project. But why don’t we just the more common <code>pip</code> instead of <code>pipenv</code>, or even <code>micromamba</code> which can also install any other Python package that we require for our projects? Why introduce yet another tool? In my opinion, <code>pipenv</code> has one absolutely crucial feature for reproducibility: <code>pipenv</code> enables deterministic builds, which means that when using <code>pipenv</code>, we will <em>always</em> get exactly the same packages installed.</p>
 <p>“But isn’t that exctaly what using <code>requirements.txt</code> file does?” you wonder. You are not entirely wrong. After all, if you make the effort to specify the packages you need, and their versions, wouldn’t running <code>pip install -r requirements.txt</code> also install exactly the same packages?</p>
 <p>Well, not quite. Imagine for example that you need a package called <code>hello</code> and you put it into your <code>requirements.txt</code> like so:</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="va">hello</span><span class="op">=</span>=1.0.1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Suppose that <code>hello</code> depends on another package called <code>ciao</code>. If you run <code>pip install -r requirements.txt</code> today, you’ll get <code>hello</code> at version <code>1.0.1</code> and <code>ciao</code>, say, at version <code>0.3.2</code>. But if you run <code>pip install -r requirements.txt</code> in 6 months, you would still get <code>hello</code> at version <code>1.0.1</code> but you might get a newer version of <code>ciao</code>. This is because <code>ciao</code> itself is not specified in the <code>requirements.txt</code>, unless you made sure to add it (and then also add its dependencies, and their dependencies…). <code>pipenv</code> takes care of this for you, and adds further security checks by comparing sha256 hashes from the lock file to the ones from the downloaded packages, making sure that you are actually installing what you believe you are.</p>
-<p>Now that <code>pipenv</code> is installed, let’s start using it to install the packages we need for our project:</p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pipenv</span> <span class="at">--python</span> 3.10.5 install beautifulsoup4==4.12.2 pandas==2.1.4 plotnine==0.12.4 skimpy==0.0.11</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="va">hello</span><span class="op">=</span>=1.0.1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Suppose that <code>hello</code> depends on another package called <code>ciao</code>. If you run <code>pip install -r requirements.txt</code> today, you’ll get <code>hello</code> at version <code>1.0.1</code> and <code>ciao</code>, say, at version <code>0.3.2</code>. But if you run <code>pip install -r requirements.txt</code> in 6 months, you would still get <code>hello</code> at version <code>1.0.1</code> but you might get a newer version of <code>ciao</code>. This is because <code>ciao</code> itself is not specified in the <code>requirements.txt</code>, unless you made sure to add it (and then also add its dependencies, and their dependencies…). <code>pipenv</code> takes care of this for you by generating a so-called lock file automatically, and adds further security checks by comparing sha256 hashes from the lock file to the ones from the downloaded packages, making sure that you are actually installing what you believe you are.</p>
+<p>What about using <code>micromamba</code>? <code>micromamba</code> could indeed be used to install the project’s dependencies, but would required another tool called <code>conda-lock</code> to generate lock files, and in my experience, using <code>conda-lock</code> doesn’t always work. I have 0 issues with <code>pipenv</code> on the other hand.</p>
+<p>Now that <code>pipenv</code> is installed, let’s start using it to install the packages we need for our project. Because the Python interpreter was installed using <code>micromamba</code>, we either need to activate the environment to get access to it, or we should use <code>micromamba run</code> to run the Python intpreter from this environment. First, create a folder called <code>housing</code>, which will contain our analysis scripts. Then, from that folder, run the following command:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">micromamba</span> run <span class="at">-n</span> housing pipenv install polars==1.1.0 plotnine beautifulsoup4 pandas plotnine skimpy</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>(Little sidenote: in Chapter 2, we will be working together on a project using real data with <code>polars</code> instead of <code>pandas</code>. But for now, let’s get <code>pandas</code> installed: I’ll do a short comparison of the two, and then we’ll keep on using <code>polars</code> for the remainder of the book.)</p>
-<p>As you can see, I chose to install specific versions of packages. This is because I want you to follow along with the same versions as in the book. You could remove the <code>==x.y.z</code> strings from the command above to install the latest versions of the packages available if you prefer, but then there would be no guarantee that you would find the same results as I do in the remainder of the book. Also, if you don’t specify versions, the <code>Pipfile</code> file won’t specify them either, only the <code>Pipfile.lock</code> will, which in certain cases could lead to undesired behaviour. I won’t go into specifics, because I highly recommend you always take the time to specify package versions when installing. Check package versions on Pypi. For example, <a href="https://pypi.org/project/pandas/">here</a><a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a> is the page to check out versions of the pandas package.</p>
+<p>As you can see, I chose to install specific versions of <code>polars</code>. This is because I want you to follow along with the same versions as in the book. You could remove the <code>==x.y.z</code> string from the command above to install the latest versions of <code>polars</code> available if you prefer, but then there would be no guarantee that you would find the same results as I do in the remainder of the book. You could also specify versions for the other packages if you wish.</p>
 <p>You should see now two new files in the <code>housing</code> folder, <code>Pipfile</code> and <code>Pipfile.lock</code>. Start by opening <code>Pipfile</code>, it should look like this:</p>
 <pre><code>[[source]]
 url = "https://pypi.org/simple"
@@ -388,66 +303,64 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-beautifulsoup4 = "==4.12.2"
-pandas = "==2.1.4"
-plotnine = "==0.12.4"
-skimpy = "==0.0.11"
+polars = "==1.1.0"
+plotnine = "*"
+beautifulsoup4 = "*"
+pandas = "*"
+skimpy = "*"
 
 [dev-packages]
 
 [requires]
-python_version = "3.10"
-python_full_version = "3.10.5"</code></pre>
-<p>I think that this file is pretty self-evident: the packages being used for this project are listed alongside their versions. The exact Python version is also listed. Sometimes, depending on how you set up the project, it could happen that the Python version listed is not the same, or that only the field <code>python_verison=</code> is listed. In this case, I highly recommend you change it to match the same version as in the <code>.python-version</code> file that was generated by <code>pyenv</code>, and add the <code>python_full_version=</code> field if necessary, in order to avoid any possible differences in how the code runs. If you edited the <code>Pipfile</code> then you need to run <code>pipenv lock</code> to regenerate the <code>Pipfile.lock</code> file as well:</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pipenv</span> lock</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+python_version = "3.11"</code></pre>
+<p>I think that this file is pretty self-evident: the packages being used for this project are listed alongside their versions. The Python version is also listed. Sometimes, depending on how you set up the project, it could happen that the Python version listed is not the one you want for your project. In this case, I highly recommend you change the version to the right one. Also, you’ll notice that here the Python version is “3.11”, but we specified version “3.11.9” with <code>micromamba</code> when we created the environment. I would recommend that you add the missing “.9” for maximum reproducibility. If you edited the <code>Pipfile</code> then you need to run <code>pipenv lock</code> to regenerate the <code>Pipfile.lock</code> file as well:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">micromamba</span> run <span class="at">-n</span> housing pipenv lock</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>this will make sure to also set the required/correct Python version in there.</p>
-<p>If you open the <code>Pipfile.lock</code> in a text editor, you will see that it is a json file and that is also lists the dependecies of your project, but also the dependencies’ dependencies. You will also notice several fields called <code>hashes</code>. These are there for security reasons: whenever someone, (or you in the future) will regenerate this environment, the packages will get downloaded and their hashes will get compared to the ones listed in the <code>Pipfile.lock</code>. If they don’t match, then something very wrong is happening and packages won’t get installed.</p>
+<p>If you open the <code>Pipfile.lock</code> in a text editor, you will see that it is a json file and that is also lists the dependecies of your project, but also the dependencies’ dependencies. You will also notice several fields called <code>hashes</code>. These are there for security reasons: whenever someone, (or you in the future) will regenerate this environment, the packages will get downloaded and their hashes will get compared to the ones listed in the <code>Pipfile.lock</code>. If they don’t match, then something very wrong is happening and packages won’t get installed. These two files are very important, because they will make sure that it will be possible to regenerate the same environment on another machine.</p>
 <p>To check whether everything installed correctly, drop into the development shell using:</p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pipenv</span> shell</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>and start the Python interpreter:</p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">micromamba</span> run <span class="at">-r</span> housing pipenv shell</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>and check that the right version of Python is being used:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">--version</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This should print <code>Python 3.11.9</code> in the terminal. Start the Python interpreter and let’s check <code>polars</code>’s version:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Then check that the correct versions of the packages were installed:</p>
-<div class="cell" data-python.reticulate="false">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>pd.__version__</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="7d78df06" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> polars <span class="im">as</span> pl</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>pl.__version__</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>'0.20.15'</code></pre>
 </div>
-<p>You should see <code>2.1.4</code> as the listed version.</p>
+</div>
+<p>You should see <code>1.1.0</code> as the listed version. Quite the shell, and then quite the environment with <code>exit</code>.</p>
 </section>
-<section id="debugging" class="level2" data-number="2.4">
-<h2 data-number="2.4" class="anchored" data-anchor-id="debugging"><span class="header-section-number">2.4</span> Debugging</h2>
-<p>It can sometimes happen that <code>pipenv</code> does not use the right version of Python. Running <code>pipenv shell</code> and then starting the Python interpreter will start a different version of Python than the one you expect/need.</p>
-<p>In that case, it might be best to simply start over. Start by completely removing the virtual environment and packages by running:</p>
-<div class="sourceCode" id="cb29"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pipenv</span> <span class="at">--rm</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Make sure that the correct version of Python (or rather, the version you need) is specified in the <code>Pipfile</code>. For example, in my case:</p>
-<pre><code>[requires]
-python_full_version = "3.10.5"</code></pre>
-<p>(you might instead see <code>python_version = "3.10"</code>, or any other version, in that case I recommend you specify <code>python_full_version</code> as I did above, check the <code>.python-version</code> file that was generated by <code>pyenv</code> if you don’t remember the right version).</p>
-<p>Now, restore the environment and packages by running:</p>
-<div class="sourceCode" id="cb31"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pipenv</span> install</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p><code>pipenv install</code> will regenerate the <code>Pipfile.lock</code> file to list the required Python version, and then install the packages. It essentially runs <code>pipenv lock</code> to generate the lock file, and then <code>pipenv sync</code> to install the packages from the lock file.</p>
-<p>Check if <code>pipenv</code> now uses the correct Python version.</p>
-<div class="sourceCode" id="cb32"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pipenv</span> run python <span class="at">--version</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="one-last-thing" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="one-last-thing"><span class="header-section-number">2.3</span> One last thing</h2>
+<p>Before continuing, it would be nice if we would automatically drop into the environment each time we are in the right folder; so for example, each time we navigate to the <code>housing</code> folder, the <code>housing</code> environment starts. We can achieve this by using a tool called <code>direnv</code>.</p>
+<ul>
+<li>Install direnv</li>
+<li>Take note of the command when you run <code>micromamba run -n housing pipenv shell</code> in my case <code>. /home/b-rodrigues/.local/share/virtualenvs/py_housing-MvX0wC5I/bin/activate</code></li>
+<li>put that in a <code>.envrc</code> file in your folder</li>
+<li>direnv allow</li>
+<li>profit</li>
+</ul>
 </section>
-<section id="a-high-level-description-of-how-to-set-up-a-project" class="level2" data-number="2.5">
-<h2 data-number="2.5" class="anchored" data-anchor-id="a-high-level-description-of-how-to-set-up-a-project"><span class="header-section-number">2.5</span> A high-level description of how to set up a project</h2>
-<p>Ok, so to summarise, we install <code>pyenv</code> which will make it easy to install any version of Python that we require, and then we installed <code>pipenv</code>, which we use to install packages. The advantage of using <code>pipenv</code> is that we get deterministic builds, and <code>pipenv</code> works well with <code>pyenv</code> to build project-specific environments.</p>
-<p>The way I would suggest you use these tools now, is that for each project, you install the latest available version of Python, define it as the local version using <code>pyenv local</code>, and then install packages by specyifing their versions, like so:</p>
-<div class="sourceCode" id="cb33"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pipenv</span> <span class="at">--python</span> 3.10.5 install beautifulsoup4==4.12.2 pandas==2.1.4 plotnine==0.12.4 skimpy==0.0.11</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="a-high-level-description-of-how-to-set-up-a-project" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="a-high-level-description-of-how-to-set-up-a-project"><span class="header-section-number">2.4</span> A high-level description of how to set up a project</h2>
+<p>Ok, so to summarise, we install <code>micromamba</code> which will make it easy to install any version of Python that we require, and we also installed <code>pipenv</code>, which we use to install packages. The advantage of using <code>pipenv</code> is that we get deterministic builds, and <code>pipenv</code> works well with <code>micromamba</code> to build project-specific environments.</p>
+<p>The way I would suggest you use these tools now, is that for each project, you install the latest available version of Python and then install packages by specyifing their versions, like so:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ex">micromamba</span> create <span class="at">-n</span> project_name python=X.YY.Z pipenv </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>then, use this environment in a fresh folder to install the packages you need:</p>
+<pre><code>micromamba run -n housing pipenv install beautifulsoup4==4.12.2 pandas==2.1.4 plotnine==0.12.4 skimpy==0.0.11</code></pre>
 <p>(Replace the versions of Python and packages by the latest, or those you need.)</p>
 <p>This will ensure that your project uses the correct software stack, and that collaborators or future you will be able to regenerate this environment by calling <code>pipenv sync</code>. <code>pipenv sync</code> differs from <code>pipenv install</code> because it will not touch the <code>Pipfile.lock</code> file, and will just download the packages as listed in the lock file. This is also the command that we will use later, in the chapter on CI/CD.</p>
+<p>If you need to add packages to an environment, run: <code>micromamba run -n housing pipenv install great_tables</code> (or simply if <code>pipenv install great_tables</code> if you’re already in the activated <code>housing</code> environment).</p>
 
 
 </section>
 <section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
 <hr>
 <ol>
-<li id="fn1"><p>https://github.com/pyenv/pyenv?tab=readme-ov-file#installation<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn2"><p>https://github.com/pyenv/pyenv/wiki#suggested-build-environment<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn3"><p>https://github.com/pyenv/pyenv?tab=readme-ov-file#set-up-your-shell-environment-for-pyenv<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn4"><p>https://github.com/pyenv-win/pyenv-win<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn5"><p>https://github.com/pyenv-win/pyenv-win/blob/master/docs/installation.md#powershell<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn6"><p>https://github.com/pyenv-win/pyenv-win/wiki<a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn7"><p>https://pypi.org/project/pandas/<a href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn1"><p>https://mamba.readthedocs.io/en/latest/installation/micromamba-installation.html#automatic-install<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 
@@ -493,6 +406,33 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       } else {
         el.classList.add('notransition');
       }
+    }
+  }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
     }
   }
   const toggleColorMode = (alternate) => {
@@ -561,13 +501,15 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return localAlternateSentinel;
     }
   }
-  let localAlternateSentinel = 'default';
+  const darkModeDefault = false;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
   // Dark / light mode switch
   window.quartoToggleColorScheme = () => {
     // Read the current dark / light value 
     let toAlternate = !hasAlternateSentinel();
     toggleColorMode(toAlternate);
     setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
   };
   // Ensure there is a toggle, if there isn't float one in the top right
   if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
@@ -602,18 +544,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -645,11 +576,50 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
-  function tippyHover(el, contentFn) {
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -659,8 +629,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -672,7 +651,130 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -716,6 +818,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -741,6 +844,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -802,12 +931,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./intro.html" class="pagination-link">
+      <a href="./intro.html" class="pagination-link" aria-label="Introduction">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./project_start.html" class="pagination-link">
+      <a href="./project_start.html" class="pagination-link" aria-label="Project start">
         <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Project start</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
@@ -816,4 +945,5 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
-</body></html>
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/b-rodrigues/raps_with_py/edit/master/setting_up.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/b-rodrigues/raps_with_py/issues" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
