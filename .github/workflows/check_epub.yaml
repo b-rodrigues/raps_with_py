@@ -1,0 +1,21 @@
+name: Check ebook
+
+on:
+  workflow_run:
+    workflows: ["Render and Publish"]
+    types:
+      - completed
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install epubcheck
+        run: sudo apt-get install epubcheck
+    
+      - name: Check the epub
+        run: epubcheck _book/Building-reproducible-analytical-pipelines-with-Python.epub
