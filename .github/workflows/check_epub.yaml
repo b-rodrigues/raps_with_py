@@ -2,7 +2,7 @@ name: Check ebook
 
 on:
   workflow_run:
-    workflows: ["Render and Publish"]
+    workflows: [Render and Publish]
     types:
       - completed
 
