@@ -347,127 +347,114 @@ An Excel file meant for human eyes.
 <li><em>Prix moyen annoncé en Euros courants</em>: Average selling price in nominal Euros;</li>
 <li><em>Prix moyen annoncé au m2 en Euros courants</em>: Average selling price in square meters in nominal Euros.</li>
 </ul>
-<p>For ease of presentation, I’m going to show you each step of the analysis here separately, but I’ll be putting everything together in a single script once I’m done explaining each step. So first, let’s load some packages:</p>
+<p>For ease of presentation, I’m going to show you each step of the analysis here separately, but I’ll be putting everything together in a single script once I’m done explaining each step. So first, let’s import some packages:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> polars <span class="im">as</span> pl</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> polars.selectors <span class="im">as</span> cs</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> re</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>I will be using the <code>polars</code> package to manipulate data.</p>
+<p>I will be using the <code>polars</code> package to manipulate data, <code>polars.selectors</code> contains handy functions to refer to columns and <code>re</code> is for regular expressions which I will need below.</p>
 <p>Next, the code below downloads the data, and puts it in a data frame:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The url below points to an Excel file</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># hosted on the book's github repository</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://is.gd/1vvBAc"</span></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Let's first download the file</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> tempfile <span class="im">import</span> NamedTemporaryFile</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> requests <span class="im">import</span> get</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> get(url)</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> NamedTemporaryFile(delete<span class="op">=</span><span class="va">False</span>, suffix <span class="op">=</span> <span class="st">'.xlsx'</span>) <span class="im">as</span> temp_file:</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    temp_file.write(response.content)</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    temp_file_path <span class="op">=</span> temp_file.name</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Let's first download the file into a temporary file and then </span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># return its path</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> tempfile <span class="im">import</span> NamedTemporaryFile</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> requests <span class="im">import</span> get</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> get(url)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> NamedTemporaryFile(delete <span class="op">=</span> <span class="va">False</span>, suffix <span class="op">=</span> <span class="st">'.xlsx'</span>) <span class="im">as</span> temp_file:</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    temp_file.write(response.content)</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    temp_file_path <span class="op">=</span> temp_file.name</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>220016</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Polars can read all the sheets of an Excel workbook</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># in one go and return a list of sheets, but I want to</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># add a column with the year. So I write this function</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># that reads the sheet and adds the column. I then</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co"># map this function over a list of sheet names.</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> read_excel(excel_file, sheet):</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    out <span class="op">=</span> pl.read_excel(</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>            source <span class="op">=</span> excel_file,</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>            sheet_name <span class="op">=</span> sheet,</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>            schema_overrides <span class="op">=</span> {<span class="st">"Nombre d'offres"</span>: pl.String},</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>            read_csv_options <span class="op">=</span> {</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>            <span class="st">"skip_rows"</span>: <span class="dv">6</span>,</span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>            <span class="st">"has_header"</span>: <span class="va">True</span></span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>            }</span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>          ).with_columns(pl.lit(sheet).alias(<span class="st">"year"</span>))</span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> out</span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="co"># This function sets the excel_file argument to 'url'</span></span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="co"># which points to the Excel file. I will then</span></span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="co"># map over 'sheet'</span></span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> wrap_read_excel(sheet):</span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>    out <span class="op">=</span> read_excel(excel_file <span class="op">=</span> temp_file_path,</span>
-<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>                          sheet <span class="op">=</span> sheet)</span>
-<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> out</span>
-<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a><span class="co"># This creates a list of sheet names to map over</span></span>
-<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>sheets <span class="op">=</span> <span class="bu">list</span>(<span class="bu">map</span>(<span class="bu">str</span>, <span class="bu">range</span>(<span class="dv">2010</span>, <span class="dv">2022</span>)))</span>
-<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a><span class="co"># I can now map the function over the list of sheets</span></span>
-<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a><span class="co"># and concatenate them into a single polars data frame</span></span>
-<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a><span class="co"># using pl.concat.</span></span>
-<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>raw_data <span class="op">=</span> pl.concat(<span class="bu">list</span>(<span class="bu">map</span>(wrap_read_excel, sheets)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>&lt;string&gt;:8: DeprecationWarning: `the argument read_csv_options` for `read_excel` is deprecated. It has been renamed to `read_options`.</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># This function will be used below to clean the column names</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># If I was using Pandas, I could have used clean_columns from skimpy</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># but unfortunately this function doesn't work with Polars DFs.</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co"># So I write this little function to clean the column names instead.</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Inspired by the `clean_names()` function from the `{janitor}` R package.</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> clean_names(string):</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># inspired by https://nadeauinnovations.com/post/2020/11/python-tricks-replace-all-non-alphanumeric-characters-in-a-string/</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    clean_string <span class="op">=</span> [s <span class="cf">for</span> s <span class="kw">in</span> string <span class="cf">if</span> s.isalnum() <span class="kw">or</span> s.isspace()]</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    out <span class="op">=</span> <span class="st">""</span>.join(clean_string).lower()</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    out <span class="op">=</span> re.sub(<span class="vs">r"\s+"</span>, <span class="st">"_"</span>, out)</span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    out <span class="op">=</span> out.encode(<span class="st">"ascii"</span>, <span class="st">"ignore"</span>).decode(<span class="st">"utf-8"</span>)</span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> out</span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="co"># This row-binds all the datasets (first converting the dict to a list), and</span></span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="co"># then renames the columns using the above defined function</span></span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Not as nice as skimpy.clean_columns, but works on Polars DataFrames</span></span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>raw_data <span class="op">=</span> raw_data.select(pl.<span class="bu">all</span>().name.<span class="bu">map</span>(clean_names))</span>
-<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Finally, let's rename some columns and do some more cleaning</span></span>
-<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a><span class="co"># - converting column types</span></span>
-<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a><span class="co"># - ensuring consistent names for the communes (for example, sometimes </span></span>
-<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a><span class="co">#   the commune of Luxembourg is spelled "Luxembourg", sometimes "Luxembourg-Ville"</span></span>
-<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a><span class="co"># - converting columns to their right types</span></span>
-<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a><span class="co"># - filtering out rows with irrelevant text</span></span>
-<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>raw_data <span class="op">=</span> (</span>
-<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>    raw_data</span>
-<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>    .rename(</span>
-<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>      {</span>
-<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>        <span class="st">"commune"</span>: <span class="st">"locality"</span>,</span>
-<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>        <span class="st">"nombre_doffres"</span>: <span class="st">"n_offers"</span>,</span>
-<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>        <span class="st">"prix_moyen_annonc_en_courant"</span>: <span class="st">"average_price_nominal_euros"</span>,</span>
-<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>        <span class="st">"prix_moyen_annonc_au_m_en_courant"</span>: <span class="st">"average_price_m2_nominal_euros"</span></span>
-<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>      }</span>
-<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a>    .with_columns(</span>
-<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a>      cs.<span class="bu">all</span>().<span class="bu">str</span>.strip_chars()</span>
-<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a>    .with_columns(</span>
-<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a>      cs.contains(<span class="st">"average"</span>).cast(pl.Float64, strict <span class="op">=</span> <span class="va">False</span>)</span>
-<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a>    .with_columns(</span>
-<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a>      <span class="co"># In some sheets it's "Luxembourg", in others it's "Luxembourg-Ville"</span></span>
-<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a>      pl.col(<span class="st">"locality"</span>).<span class="bu">str</span>.replace_all(<span class="st">"Luxembourg.*"</span>, <span class="st">"Luxembourg"</span>)</span>
-<span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a>    .with_columns(</span>
-<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a>      <span class="co"># In some sheets it's "Pétange", in others it's "Petange"</span></span>
-<span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a>      pl.col(<span class="st">"locality"</span>).<span class="bu">str</span>.replace_all(<span class="st">"P.*tange"</span>, <span class="st">"Pétange"</span>)</span>
-<span id="cb6-49"><a href="#cb6-49" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb6-50"><a href="#cb6-50" aria-hidden="true" tabindex="-1"></a>    .<span class="bu">filter</span>(</span>
-<span id="cb6-51"><a href="#cb6-51" aria-hidden="true" tabindex="-1"></a>      pl.col(<span class="st">"n_offers"</span>) <span class="op">!=</span> <span class="st">"Nombre d'offres"</span></span>
-<span id="cb6-52"><a href="#cb6-52" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb6-53"><a href="#cb6-53" aria-hidden="true" tabindex="-1"></a>    .with_columns(</span>
-<span id="cb6-54"><a href="#cb6-54" aria-hidden="true" tabindex="-1"></a>      pl.col(<span class="st">"n_offers"</span>).cast(pl.Int64)</span>
-<span id="cb6-55"><a href="#cb6-55" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb6-56"><a href="#cb6-56" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>If you are familiar with the <code>{tidyverse}</code> <span class="citation" data-cites="wickham2019b">(<a href="references.html#ref-wickham2019b" role="doc-biblioref">Wickham et al. 2019</a>)</span> family of packages from the R programming language, the above code should be quite relatively easy to follow. If you are more familiar with <code>pandas</code>, I believe that reading the code above should be easy. But in any case, rembemer that this book is not about Python per se, but about building reproducible pipelines. The focus will be on other things.</p>
-<p>Running this code results in a neat data set:</p>
+<p>The code above downloads the Excel file, saves it in a temporary folder and returns the path to the file. We can now use temp_file_path to read the data using <code>pl.read_excel()</code>.</p>
+<p>Next, I will write a function to read all the sheets of the Excel workbook. Ideally, this wouldn’t be needed, because <code>polars</code> can read all the sheets of an Excel workbook in one go and return a list of sheets, but I want to add a column with the year. So I write this function that reads one sheet and adds the year column, and then I map this function over a list of sheet names.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>raw_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> read_excel(excel_file, sheet):</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    out <span class="op">=</span> pl.read_excel(</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>            source <span class="op">=</span> excel_file,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>            sheet_name <span class="op">=</span> sheet,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>            schema_overrides <span class="op">=</span> {<span class="st">"Nombre d'offres"</span>: pl.String},</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>            read_csv_options <span class="op">=</span> {</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>            <span class="st">"skip_rows"</span>: <span class="dv">6</span>,</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>            <span class="st">"has_header"</span>: <span class="va">True</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>            }</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>          ).with_columns(pl.lit(sheet).alias(<span class="st">"year"</span>))</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> out</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>I now need a little helper function that I will use to map over the sheet names. This function sets the <code>excel_file</code> argument of the previously defined <code>read_excel()</code> function we wrote to ‘temp_file_path’ which points to the Excel file. I will then map over its ‘sheet’ argument.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> wrap_read_excel(sheet):</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    out <span class="op">=</span> read_excel(excel_file <span class="op">=</span> temp_file_path,</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>                          sheet <span class="op">=</span> sheet)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> out</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Let’s now create the list of sheet names:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>sheets <span class="op">=</span> <span class="bu">list</span>(<span class="bu">map</span>(<span class="bu">str</span>, <span class="bu">range</span>(<span class="dv">2010</span>, <span class="dv">2022</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>I can now map the function over the list of sheets and concatenate them into a single polars data frame using <code>pl.concat()</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>raw_data <span class="op">=</span> pl.concat(<span class="bu">list</span>(<span class="bu">map</span>(wrap_read_excel, sheets)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;string&gt;:2: DeprecationWarning: `the argument read_csv_options` for `read_excel` is deprecated. It has been renamed to `read_options`.</code></pre>
+</div>
+</div>
+<p>In the preface, I mentioned that the Python code in this book would have a very distinct R-like accent. Mapping over a list instead of writing a for-loop is an example of this.</p>
+<p>The next function will be used below to clean the column names. For example, a column called something like “House prices in €” would get changed to “house_prices_in_”, removing the “€” sign, replacing spaces with “_” setting the string to lower case. If I was using <code>pandas</code>, I could have used <code>clean_columns()</code> from the <code>skimpy</code> package, but unfortunately this function doesn’t work with <code>polars</code> data frames. So I wrote this little function to clean the column names instead, partly inspired by the <code>clean_names()</code> function from the <code>{janitor}</code> R package.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> clean_names(string):</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># inspired by https://nadeauinnovations.com/post/2020/11/python-tricks-replace-all-non-alphanumeric-characters-in-a-string/</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    clean_string <span class="op">=</span> [s <span class="cf">for</span> s <span class="kw">in</span> string <span class="cf">if</span> s.isalnum() <span class="kw">or</span> s.isspace()]</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    out <span class="op">=</span> <span class="st">""</span>.join(clean_string).lower()</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    out <span class="op">=</span> re.sub(<span class="vs">r"\s+"</span>, <span class="st">"_"</span>, out)</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    out <span class="op">=</span> out.encode(<span class="st">"ascii"</span>, <span class="st">"ignore"</span>).decode(<span class="st">"utf-8"</span>)</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> out</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We need to map <code>clean_names()</code> to each column. We can select all the columns using <code>pl.all()</code> and map the function to the column’s <code>name</code> attribute.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>raw_data <span class="op">=</span> raw_data.select(pl.<span class="bu">all</span>().name.<span class="bu">map</span>(clean_names))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Finally, let’s rename some columns and do some more cleaning: - converting column types - ensuring consistent names for the communes (for example, sometimes the commune of Luxembourg is spelled “Luxembourg”, sometimes “Luxembourg-Ville” - converting columns to their right types (but not the <code>n_offers</code> column yet…)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>raw_data <span class="op">=</span> (</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    raw_data</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    .rename(</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>      {</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>        <span class="st">"commune"</span>: <span class="st">"locality"</span>,</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">"nombre_doffres"</span>: <span class="st">"n_offers"</span>,</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">"prix_moyen_annonc_en_courant"</span>: <span class="st">"average_price_nominal_euros"</span>,</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">"prix_moyen_annonc_au_m_en_courant"</span>: <span class="st">"average_price_m2_nominal_euros"</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>    .with_columns(</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>      cs.<span class="bu">all</span>().<span class="bu">str</span>.strip_chars()</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>    .with_columns(</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>      cs.contains(<span class="st">"average"</span>).cast(pl.Float64, strict <span class="op">=</span> <span class="va">False</span>)</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>    .with_columns(</span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>      <span class="co"># In some sheets it's "Luxembourg", in others it's "Luxembourg-Ville"</span></span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>      pl.col(<span class="st">"locality"</span>).<span class="bu">str</span>.replace_all(<span class="st">"Luxembourg.*"</span>, <span class="st">"Luxembourg"</span>)</span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>    .with_columns(</span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>      <span class="co"># In some sheets it's "Pétange", in others it's "Petange"</span></span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>      pl.col(<span class="st">"locality"</span>).<span class="bu">str</span>.replace_all(<span class="st">"P.*tange"</span>, <span class="st">"Pétange"</span>)</span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>In practice, it is unlikely that you would have written the above code in one go. Instead you would have checked the data, done something on it, then checked it again, etc. But as I mentioned this is not learning how to clean data, so let’s just take this code as-is.</p>
+<p>If you are familiar with the <code>{tidyverse}</code> <span class="citation" data-cites="wickham2019b">(<a href="references.html#ref-wickham2019b" role="doc-biblioref">Wickham et al. 2019</a>)</span> family of packages from the R programming language, the above code should be quite relatively easy to follow. If you are more familiar with <code>pandas</code>, I believe that reading the code above should still be easy. What might be more difficult if you were brought up on Python exclusively is mapping functions to elements of lists instead of using for-loops. Don’t worry about it too much, and use for-loops if you wish. Just remember that this book is not about Python per se, but about building reproducible pipelines. The focus will be on other things.</p>
+<p>Running this code results in a tidy data set:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>raw_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div><style>
 .dataframe > thead > tr,
@@ -476,7 +463,7 @@ An Excel file meant for human eyes.
   white-space: pre-wrap;
 }
 </style>
-<small>shape: (1_285, 5)</small>
+<small>shape: (1_313, 5)</small>
 <table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
 <thead>
 <tr class="header">
@@ -488,7 +475,7 @@ An Excel file meant for human eyes.
 </tr>
 <tr class="odd">
 <th>str</th>
-<th>i64</th>
+<th>str</th>
 <th>f64</th>
 <th>f64</th>
 <th>str</th>
@@ -497,35 +484,35 @@ An Excel file meant for human eyes.
 <tbody>
 <tr class="odd">
 <td>"Bascharage"</td>
-<td>192</td>
+<td>"192"</td>
 <td>593698.31</td>
 <td>3603.57</td>
 <td>"2010"</td>
 </tr>
 <tr class="even">
 <td>"Beaufort"</td>
-<td>266</td>
+<td>"266"</td>
 <td>461160.29</td>
 <td>2902.76</td>
 <td>"2010"</td>
 </tr>
 <tr class="odd">
 <td>"Bech"</td>
-<td>65</td>
+<td>"65"</td>
 <td>621760.22</td>
 <td>3280.51</td>
 <td>"2010"</td>
 </tr>
 <tr class="even">
 <td>"Beckerich"</td>
-<td>176</td>
+<td>"176"</td>
 <td>444498.68</td>
 <td>2867.88</td>
 <td>"2010"</td>
 </tr>
 <tr class="odd">
 <td>"Berdorf"</td>
-<td>111</td>
+<td>"111"</td>
 <td>504040.85</td>
 <td>3055.99</td>
 <td>"2010"</td>
@@ -538,36 +525,36 @@ An Excel file meant for human eyes.
 <td>…</td>
 </tr>
 <tr class="odd">
-<td>"Wiltz"</td>
-<td>182</td>
-<td>764486.69</td>
-<td>3969.513</td>
-<td>"2021"</td>
-</tr>
-<tr class="even">
-<td>"Wincrange"</td>
-<td>153</td>
-<td>685889.39</td>
-<td>3997.182</td>
-<td>"2021"</td>
-</tr>
-<tr class="odd">
 <td>"Winseler"</td>
-<td>41</td>
+<td>"41"</td>
 <td>979696.17</td>
 <td>3921.98</td>
 <td>"2021"</td>
 </tr>
 <tr class="even">
 <td>"Wormeldange"</td>
-<td>50</td>
+<td>"50"</td>
 <td>1052340.8</td>
 <td>6391.339</td>
 <td>"2021"</td>
 </tr>
 <tr class="odd">
+<td>"Moyenne nation…</td>
+<td>null</td>
+<td>1317473.9</td>
+<td>6743.722</td>
+<td>"2021"</td>
+</tr>
+<tr class="even">
 <td>"Total d'offres…</td>
-<td>11925</td>
+<td>"11925"</td>
+<td>null</td>
+<td>null</td>
+<td>"2021"</td>
+</tr>
+<tr class="odd">
+<td>"Source : Minis…</td>
+<td>null</td>
 <td>null</td>
 <td>null</td>
 <td>"2021"</td>
@@ -577,12 +564,12 @@ An Excel file meant for human eyes.
 </div>
 </div>
 </div>
-<p>Now this is interesting – converting the <code>average</code> columns to numeric resulted in some <code>NA</code> values. Let’s see what happened:</p>
+<p>But as you can see at the bottom, we still have some stuff that doesn’t beloing in the <code>locality</code> column. Let’s also check for missing values in the <code>"average_price_nominal_euros"</code> column:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>(</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>raw_data</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>.<span class="bu">filter</span>(pl.col(<span class="st">"average_price_nominal_euros"</span>).is_null())</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>raw_data</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  .<span class="bu">filter</span>(pl.col(<span class="st">"average_price_nominal_euros"</span>).is_null())</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div><style>
 .dataframe > thead > tr,
@@ -591,7 +578,7 @@ An Excel file meant for human eyes.
   white-space: pre-wrap;
 }
 </style>
-<small>shape: (170, 5)</small>
+<small>shape: (186, 5)</small>
 <table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
 <thead>
 <tr class="header">
@@ -603,7 +590,7 @@ An Excel file meant for human eyes.
 </tr>
 <tr class="odd">
 <th>str</th>
-<th>i64</th>
+<th>str</th>
 <th>f64</th>
 <th>f64</th>
 <th>str</th>
@@ -612,35 +599,35 @@ An Excel file meant for human eyes.
 <tbody>
 <tr class="odd">
 <td>"Consthum"</td>
-<td>29</td>
+<td>"29"</td>
 <td>null</td>
 <td>null</td>
 <td>"2010"</td>
 </tr>
 <tr class="even">
 <td>"Esch-sur-Sûre"</td>
-<td>7</td>
+<td>"7"</td>
 <td>null</td>
 <td>null</td>
 <td>"2010"</td>
 </tr>
 <tr class="odd">
 <td>"Heiderscheid"</td>
-<td>29</td>
+<td>"29"</td>
 <td>null</td>
 <td>null</td>
 <td>"2010"</td>
 </tr>
 <tr class="even">
 <td>"Hoscheid"</td>
-<td>26</td>
+<td>"26"</td>
 <td>null</td>
 <td>null</td>
 <td>"2010"</td>
 </tr>
 <tr class="odd">
 <td>"Saeul"</td>
-<td>14</td>
+<td>"14"</td>
 <td>null</td>
 <td>null</td>
 <td>"2010"</td>
@@ -653,36 +640,36 @@ An Excel file meant for human eyes.
 <td>…</td>
 </tr>
 <tr class="odd">
-<td>"Waldbillig"</td>
-<td>27</td>
-<td>null</td>
-<td>null</td>
-<td>"2021"</td>
-</tr>
-<tr class="even">
 <td>"Waldbredimus"</td>
-<td>25</td>
-<td>null</td>
-<td>null</td>
-<td>"2021"</td>
-</tr>
-<tr class="odd">
-<td>"Weiler-la-Tour…</td>
-<td>28</td>
+<td>"25"</td>
 <td>null</td>
 <td>null</td>
 <td>"2021"</td>
 </tr>
 <tr class="even">
-<td>"Weiswampach"</td>
-<td>28</td>
+<td>"Weiler-la-Tour…</td>
+<td>"28"</td>
 <td>null</td>
 <td>null</td>
 <td>"2021"</td>
 </tr>
 <tr class="odd">
+<td>"Weiswampach"</td>
+<td>"28"</td>
+<td>null</td>
+<td>null</td>
+<td>"2021"</td>
+</tr>
+<tr class="even">
 <td>"Total d'offres…</td>
-<td>11925</td>
+<td>"11925"</td>
+<td>null</td>
+<td>null</td>
+<td>"2021"</td>
+</tr>
+<tr class="odd">
+<td>"Source : Minis…</td>
+<td>null</td>
 <td>null</td>
 <td>null</td>
 <td>"2021"</td>
@@ -699,80 +686,211 @@ An Excel file meant for human eyes.
 Always look at your data.
 </figcaption>
 </figure>
-<p>So it turns out that there are some rows that we need to remove. We can start by removing rows where <code>locality</code> is missing. Then we have a row where <code>locality</code> is equal to “Total d’offres”. This is simply the total of every offer from every commune. We could keep that in a separate data frame, or even remove it. The very last row states the source of the data and we can also remove it. Finally, in the screenshot above, we see another row that we don’t see in our filtered data frame: one where <code>n_offers</code> is missing. This row gives the national average for columns <code>average_prince_nominal_euros</code> and <code>average_price_m2_nominal_euros</code>. What we are going to do is create two datasets: one with data on communes, and the other on national prices. Let’s first remove the rows stating the sources:</p>
+<p>So it turns out that there are some rows that we need to remove. We can start by removing rows where <code>locality</code> is missing. Then we have a row where <code>locality</code> is equal to “Total d’offres”. This is simply the total of every offer from every commune. We could keep that in a separate data frame, or even remove it. The very last row states the source of the data and we can also remove it. Finally, in the screenshot above, we see another row that we don’t see in our filtered data frame: one where <code>n_offers</code> would be missing. This row gives the national average for columns <code>average_prince_nominal_euros</code> and <code>average_price_m2_nominal_euros</code>. What we are going to do is create two datasets: one with data on communes, and the other on national prices. Let’s first remove the rows stating the sources:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>raw_data <span class="ot">&lt;-</span> raw_data <span class="sc">|&gt;</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">grepl</span>(<span class="st">"Source"</span>, locality))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>raw_data <span class="op">=</span> (</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    raw_data</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    .<span class="bu">filter</span>(<span class="op">~</span>pl.col(<span class="st">"locality"</span>).<span class="bu">str</span>.contains(<span class="st">"Source"</span>))</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Let’s now only keep the communes in our data:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>commune_level_data <span class="ot">&lt;-</span> raw_data <span class="sc">|&gt;</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">grepl</span>(<span class="st">"nationale|offres"</span>, locality),</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>           <span class="sc">!</span><span class="fu">is.na</span>(locality))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>commune_level_data <span class="op">=</span> (</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    raw_data</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    .<span class="bu">filter</span>(<span class="op">~</span>pl.col(<span class="st">"locality"</span>).<span class="bu">str</span>.contains(<span class="st">"nationale|offres"</span>))</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    .<span class="bu">filter</span>(pl.col(<span class="st">"locality"</span>).is_not_null())</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># This is needed on Windows...</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    .with_columns(</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>        pl.col(<span class="st">"locality"</span>).<span class="bu">str</span>.replace_all(<span class="st">"</span><span class="ch">\351</span><span class="st">"</span>, <span class="st">"é"</span>)</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>    .with_columns(</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>        pl.col(<span class="st">"locality"</span>).<span class="bu">str</span>.replace_all(<span class="st">"</span><span class="ch">\373</span><span class="st">"</span>, <span class="st">"û"</span>)</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>    .with_columns(</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>        pl.col(<span class="st">"locality"</span>).<span class="bu">str</span>.replace_all(<span class="st">"</span><span class="ch">\344</span><span class="st">"</span>, <span class="st">"ä"</span>)</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>And let’s create a dataset with the national data as well:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>country_level <span class="ot">&lt;-</span> raw_data <span class="sc">|&gt;</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">grepl</span>(<span class="st">"nationale"</span>, locality)) <span class="sc">|&gt;</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>n_offers)</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>offers_country <span class="ot">&lt;-</span> raw_data <span class="sc">|&gt;</span></span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">grepl</span>(<span class="st">"Total d.offres"</span>, locality)) <span class="sc">|&gt;</span></span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(year, n_offers)</span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>country_level_data <span class="ot">&lt;-</span> <span class="fu">full_join</span>(country_level, offers_country) <span class="sc">|&gt;</span></span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(year, locality, n_offers, <span class="fu">everything</span>()) <span class="sc">|&gt;</span></span>
-<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">locality =</span> <span class="st">"Grand-Duchy of Luxembourg"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>country_level <span class="op">=</span> (</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    raw_data</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    .<span class="bu">filter</span>(pl.col(<span class="st">"locality"</span>).<span class="bu">str</span>.contains(<span class="st">"nationale"</span>))</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    .select(cs.exclude(<span class="st">"n_offers"</span>))</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>offers_country <span class="op">=</span> (</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>    raw_data</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>    .<span class="bu">filter</span>(pl.col(<span class="st">"locality"</span>).<span class="bu">str</span>.contains(<span class="st">"Total d.offres"</span>))</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>    .select([<span class="st">"year"</span>, <span class="st">"n_offers"</span>])</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>country_level_data <span class="op">=</span> (</span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>    country_level.join(offers_country, on <span class="op">=</span> <span class="st">"year"</span>)</span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>    .with_columns(pl.lit(<span class="st">"Grand-Duchy of Luxembourg"</span>).alias(<span class="st">"locality"</span>))</span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Let’s take a look at it:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>country_level_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (12, 5)</small>
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">locality</th>
+<th data-quarto-table-cell-role="th">average_price_nominal_euros</th>
+<th data-quarto-table-cell-role="th">average_price_m2_nominal_euros</th>
+<th data-quarto-table-cell-role="th">year</th>
+<th data-quarto-table-cell-role="th">n_offers</th>
+</tr>
+<tr class="odd">
+<th>str</th>
+<th>f64</th>
+<th>f64</th>
+<th>str</th>
+<th>str</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>"Grand-Duchy of…</td>
+<td>569216.0</td>
+<td>3251.0</td>
+<td>"2010"</td>
+<td>"19278"</td>
+</tr>
+<tr class="even">
+<td>"Grand-Duchy of…</td>
+<td>597784.711711</td>
+<td>3375.088978</td>
+<td>"2011"</td>
+<td>"21253"</td>
+</tr>
+<tr class="odd">
+<td>"Grand-Duchy of…</td>
+<td>596347.972382</td>
+<td>3408.711732</td>
+<td>"2012"</td>
+<td>"14773"</td>
+</tr>
+<tr class="even">
+<td>"Grand-Duchy of…</td>
+<td>644884.979694</td>
+<td>3589.790108</td>
+<td>"2013"</td>
+<td>"13298"</td>
+</tr>
+<tr class="odd">
+<td>"Grand-Duchy of…</td>
+<td>663639.733049</td>
+<td>3647.123608</td>
+<td>"2014"</td>
+<td>"9852"</td>
+</tr>
+<tr class="even">
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+</tr>
+<tr class="odd">
+<td>"Grand-Duchy of…</td>
+<td>812919.0678</td>
+<td>4274.039466</td>
+<td>"2017"</td>
+<td>"16055"</td>
+</tr>
+<tr class="even">
+<td>"Grand-Duchy of…</td>
+<td>874685.96</td>
+<td>4562.288</td>
+<td>"2018"</td>
+<td>"13534"</td>
+</tr>
+<tr class="odd">
+<td>"Grand-Duchy of…</td>
+<td>970589.13</td>
+<td>5038.614</td>
+<td>"2019"</td>
+<td>"12171"</td>
+</tr>
+<tr class="even">
+<td>"Grand-Duchy of…</td>
+<td>1180466.6</td>
+<td>6364.361</td>
+<td>"2020"</td>
+<td>"11757"</td>
+</tr>
+<tr class="odd">
+<td>"Grand-Duchy of…</td>
+<td>1317473.9</td>
+<td>6743.722</td>
+<td>"2021"</td>
+<td>"11925"</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <p>Now the data looks clean, and we can start the actual analysis… or can we? Before proceeding, it would be nice to make sure that we got every commune in there. For this, we need a list of communes from Luxembourg. <a href="https://en.wikipedia.org/wiki/List_of_communes_of_Luxembourg">Thankfully, Wikipedia has such a list</a><a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a>.</p>
 <p>An issue with scraping tables off the web is that they might change in the future. It is therefore a good idea to save the page by right clicking on it and then selecting save as, and then re-hosting it. I use Github pages to re-host the Wikipedia page above <a href="https://b-rodrigues.github.io/list_communes/">here</a><a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a>. I now have full control of this page, and won’t get any bad surprises if someone decides to eventually update it. Instead of re-hosting it, you could simply save it as any other file of your project.</p>
 <p>So let’s scrape and save this list:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>current_communes <span class="ot">&lt;-</span> <span class="st">"https://is.gd/lux_communes"</span> <span class="sc">|&gt;</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  rvest<span class="sc">::</span><span class="fu">read_html</span>() <span class="sc">|&gt;</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  rvest<span class="sc">::</span><span class="fu">html_table</span>() <span class="sc">|&gt;</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  purrr<span class="sc">::</span><span class="fu">pluck</span>(<span class="dv">2</span>) <span class="sc">|&gt;</span></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  janitor<span class="sc">::</span><span class="fu">clean_names</span>() <span class="sc">|&gt;</span></span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(name_2 <span class="sc">!=</span> <span class="st">"Name"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">rename</span>(<span class="at">commune =</span> name_2) <span class="sc">|&gt;</span></span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">commune =</span> stringr<span class="sc">::</span><span class="fu">str_remove</span>(commune, <span class="st">" .$"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>current_communes <span class="ot">&lt;-</span> <span class="st">"https://is.gd/lux_communes"</span> <span class="sc">|&gt;</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  rvest<span class="sc">::</span><span class="fu">read_html</span>() <span class="sc">|&gt;</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  rvest<span class="sc">::</span><span class="fu">html_table</span>() <span class="sc">|&gt;</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  purrr<span class="sc">::</span><span class="fu">pluck</span>(<span class="dv">2</span>) <span class="sc">|&gt;</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  janitor<span class="sc">::</span><span class="fu">clean_names</span>() <span class="sc">|&gt;</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(name_2 <span class="sc">!=</span> <span class="st">"Name"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">rename</span>(<span class="at">commune =</span> name_2) <span class="sc">|&gt;</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">commune =</span> stringr<span class="sc">::</span><span class="fu">str_remove</span>(commune, <span class="st">" .$"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We scrape the table from the re-hosted Wikipedia page using <code>{rvest}</code>. <code>rvest::html_table()</code> returns a list of tables from the Wikipedia table, and then we use <code>purrr::pluck()</code> to keep the second table from the website, which is what we need (I made the calls to the packages explicit, because you might not be familiar with these packages). <code>janitor::clean_names()</code> transforms column names written for human eyes into machine-friendly names (for example <code>Growth rate in %</code> would be transformed to <code>growth_rate_in_percent</code>) and then I use the <code>{dplyr}</code> package for some further cleaning and renaming; the very last step removes a dagger symbol next to certain communes names, in other words it turns “Commune †” into “Commune”.</p>
 <p>Let’s see if we have all the communes in our data:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">setdiff</span>(<span class="fu">unique</span>(commune_level_data<span class="sc">$</span>locality),</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>        current_communes<span class="sc">$</span>commune)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">setdiff</span>(<span class="fu">unique</span>(commune_level_data<span class="sc">$</span>locality),</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>        current_communes<span class="sc">$</span>commune)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We see many communes that are in our <code>commune_level_data</code>, but not in <code>current_communes</code>. There’s one obvious reason: differences in spelling, for example, “Kaerjeng” in our data, but “Käerjeng” in the table from Wikipedia. But there’s also a less obvious reason; since 2010, several communes have merged into new ones. So there are communes that are in our data in 2010 and 2011, but disappear from 2012 onwards. So we need to do several things: first, get a list of all existing communes from 2010 onwards, and then, harmonise spelling. Here again, we can use a list from Wikipedia, and here again, I decide to re-host it on Github pages to avoid problems in the future:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>former_communes <span class="ot">&lt;-</span> <span class="st">"https://is.gd/lux_former_communes"</span> <span class="sc">|&gt;</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  rvest<span class="sc">::</span><span class="fu">read_html</span>() <span class="sc">|&gt;</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  rvest<span class="sc">::</span><span class="fu">html_table</span>() <span class="sc">|&gt;</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  purrr<span class="sc">::</span><span class="fu">pluck</span>(<span class="dv">3</span>) <span class="sc">|&gt;</span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  janitor<span class="sc">::</span><span class="fu">clean_names</span>() <span class="sc">|&gt;</span></span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(year_dissolved <span class="sc">&gt;</span> <span class="dv">2009</span>)</span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>former_communes</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>former_communes <span class="ot">&lt;-</span> <span class="st">"https://is.gd/lux_former_communes"</span> <span class="sc">|&gt;</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  rvest<span class="sc">::</span><span class="fu">read_html</span>() <span class="sc">|&gt;</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  rvest<span class="sc">::</span><span class="fu">html_table</span>() <span class="sc">|&gt;</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  purrr<span class="sc">::</span><span class="fu">pluck</span>(<span class="dv">3</span>) <span class="sc">|&gt;</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  janitor<span class="sc">::</span><span class="fu">clean_names</span>() <span class="sc">|&gt;</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(year_dissolved <span class="sc">&gt;</span> <span class="dv">2009</span>)</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>former_communes</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>As you can see, since 2010 many communes have merged to form new ones. We can now combine the list of current and former communes, as well as harmonise their names:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>communes <span class="ot">&lt;-</span> <span class="fu">unique</span>(<span class="fu">c</span>(former_communes<span class="sc">$</span>name,</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>                     current_communes<span class="sc">$</span>commune))</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co"># we need to rename some communes</span></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Different spelling of these communes between wikipedia and the data</span></span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>communes[<span class="fu">which</span>(communes <span class="sc">==</span> <span class="st">"Clemency"</span>)] <span class="ot">&lt;-</span> <span class="st">"Clémency"</span></span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>communes[<span class="fu">which</span>(communes <span class="sc">==</span> <span class="st">"Redange"</span>)] <span class="ot">&lt;-</span> <span class="st">"Redange-sur-Attert"</span></span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>communes[<span class="fu">which</span>(communes <span class="sc">==</span> <span class="st">"Erpeldange-sur-Sûre"</span>)] <span class="ot">&lt;-</span> <span class="st">"Erpeldange"</span></span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>communes[<span class="fu">which</span>(communes <span class="sc">==</span> <span class="st">"Luxembourg City"</span>)] <span class="ot">&lt;-</span> <span class="st">"Luxembourg"</span></span>
-<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>communes[<span class="fu">which</span>(communes <span class="sc">==</span> <span class="st">"Käerjeng"</span>)] <span class="ot">&lt;-</span> <span class="st">"Kaerjeng"</span></span>
-<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>communes[<span class="fu">which</span>(communes <span class="sc">==</span> <span class="st">"Petange"</span>)] <span class="ot">&lt;-</span> <span class="st">"Pétange"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>communes <span class="ot">&lt;-</span> <span class="fu">unique</span>(<span class="fu">c</span>(former_communes<span class="sc">$</span>name,</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>                     current_communes<span class="sc">$</span>commune))</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="co"># we need to rename some communes</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Different spelling of these communes between wikipedia and the data</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>communes[<span class="fu">which</span>(communes <span class="sc">==</span> <span class="st">"Clemency"</span>)] <span class="ot">&lt;-</span> <span class="st">"Clémency"</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>communes[<span class="fu">which</span>(communes <span class="sc">==</span> <span class="st">"Redange"</span>)] <span class="ot">&lt;-</span> <span class="st">"Redange-sur-Attert"</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>communes[<span class="fu">which</span>(communes <span class="sc">==</span> <span class="st">"Erpeldange-sur-Sûre"</span>)] <span class="ot">&lt;-</span> <span class="st">"Erpeldange"</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>communes[<span class="fu">which</span>(communes <span class="sc">==</span> <span class="st">"Luxembourg City"</span>)] <span class="ot">&lt;-</span> <span class="st">"Luxembourg"</span></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>communes[<span class="fu">which</span>(communes <span class="sc">==</span> <span class="st">"Käerjeng"</span>)] <span class="ot">&lt;-</span> <span class="st">"Kaerjeng"</span></span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>communes[<span class="fu">which</span>(communes <span class="sc">==</span> <span class="st">"Petange"</span>)] <span class="ot">&lt;-</span> <span class="st">"Pétange"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Let’s run our test again:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">setdiff</span>(<span class="fu">unique</span>(commune_level_data<span class="sc">$</span>locality),</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>        communes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">setdiff</span>(<span class="fu">unique</span>(commune_level_data<span class="sc">$</span>locality),</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>        communes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Great! When we compare the communes that are in our data with every commune that has existed since 2010, we don’t have any commune that is unaccounted for. So are we done with cleaning the data? Yes, we can now start with analysing the data. Take a look <a href="https://raw.githubusercontent.com/b-rodrigues/rap4all/master/scripts/save_data.R">here</a><a href="#fn8" class="footnote-ref" id="fnref8" role="doc-noteref"><sup>8</sup></a> to see the finalised script. Also read some of the comments that I’ve added. This is a typical R script, and at first glance, one might wonder what is wrong with it. Actually, not much, but the problem if you leave this script as it is, is that it is very likely that we will have problems rerunning it in the future. As it turns out, this script is not reproducible. But we will discuss this in much more detail later on. For now, let’s analyse our cleaned data.</p>
 </section>
