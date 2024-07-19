@@ -201,114 +201,116 @@ I will be using the `polars` package to manipulate data.
 
 Next, the code below downloads the data, and puts it in a data frame:
 
-```{r, warning = FALSE, message = FALSE, eval = F}
+```{python, python.reticulate=FALSE}
 # The url below points to an Excel file
 # hosted on the book’s github repository
 url <- "https://is.gd/1vvBAc"
 
-raw_data <- tempfile(fileext = ".xlsx")
+# Polars can read all the sheets of an Excel workbook
+# in one go and return a list of sheets, but I want to
+# add a column with the year. So I write this function
+# that reads the sheet and adds the column. I then
+# map this function over a list of sheet names.
+def read_excel(excel_file, sheet):
+    out = pl.read_excel(
+            source = excel_file,
+            sheet_name = sheet,
+            read_options = {
+            "skip_rows": 6,
+            "has_header": True
+            }
+          ).with_columns(pl.lit(sheet).alias("year"))
+    return out
 
-download.file(url, raw_data,
-              method = "auto",
-              mode = "wb")
+# This function sets the excel_file argument to 'url'
+# which points to the Excel file. I will then
+# map over 'sheet'
+def wrap_read_excel(sheet):
+    out = read_excel(excel_file = url,
+                          sheet = sheet)
+    return out
 
-sheets <- excel_sheets(raw_data)
+# This creates a list of sheet names to map over
+sheets = list(map(str, range(2010, 2022)))
 
-read_clean <- function(..., sheet){
-  read_excel(..., sheet = sheet) |>
-    mutate(year = sheet)
-}
+# I can now map the function over the list of sheets
+# and concatenate them into a single polars data frame
+# using pl.concat.
+raw_data = pl.concat(list(map(wrap_read_excel, sheets)))
 
-raw_data <- map(
-  sheets,
-  ~read_clean(raw_data,
-              skip = 10,
-              sheet = .)
-                   ) |>
-  bind_rows() |>
-  clean_names()
+# This function will be used below to clean the column names
+# If I was using Pandas, I could have used clean_columns from skimpy
+# but unfortunately this function doesn't work with Polars DFs.
+# So I write this little function to clean the column names instead.
+# Inspired by the `clean_names()` function from the `{janitor}` R package.
+def clean_names(string):
+    # inspired by https://nadeauinnovations.com/post/2020/11/python-tricks-replace-all-non-alphanumeric-characters-in-a-string/
+    clean_string = [s for s in string if s.isalnum() or s.isspace()]
+    out = "".join(clean_string).lower()
+    out = re.sub(r"\s+", "_", out)
+    out = out.encode("ascii", "ignore").decode("utf-8")
+    return out
 
-raw_data <- raw_data |>
-  rename(
-    locality = commune,
-    n_offers = nombre_doffres,
-    average_price_nominal_euros = prix_moyen_annonce_en_courant,
-    average_price_m2_nominal_euros = prix_moyen_annonce_au_m2_en_courant,
-    average_price_m2_nominal_euros = prix_moyen_annonce_au_m2_en_courant
-  ) |>
-  mutate(locality = str_trim(locality)) |>
-  select(year, locality, n_offers, starts_with("average"))
+# This row-binds all the datasets (first converting the dict to a list), and
+# then renames the columns using the above defined function
+# Not as nice as skimpy.clean_columns, but works on Polars DataFrames
+raw_data = raw_data.select(pl.all().name.map(clean_names))
+
+# Finally, let's rename some columns and do some more cleaning
+# - converting column types
+# - ensuring consistent names for the communes (for example, sometimes 
+#   the commune of Luxembourg is spelled "Luxembourg", sometimes "Luxembourg-Ville"
+raw_data = (
+    raw_data
+    .rename(
+      {
+        "commune": "locality",
+        "nombre_doffres": "n_offers",
+        "prix_moyen_annonc_en_courant": "average_price_nominal_euros",
+        "prix_moyen_annonc_au_m_en_courant": "average_price_m2_nominal_euros"
+      }
+    )
+    .with_columns(
+        cs.contains("average").cast(pl.Float64, strict = False)
+    )
+    .with_columns(
+        # In some sheets it's "Luxembourg", in others it's "Luxembourg-Ville"
+      pl.col("locality").str.replace_all("Luxembourg.*", "Luxembourg")
+    )
+    .with_columns(
+        # In some sheets it's "Pétange", in others it's "Petange"
+      pl.col("locality").str.replace_all("P.*tange", "Pétange")
+    )
+    .with_columns(
+      pl.col("locality").str.strip_chars()
+    )
+)
+
+
 ```
 
-If you are familiar with the `{tidyverse}` [@wickham2019b] the above code should
-be quite easy to follow. We start by downloading the raw Excel file and saving
-the sheet names into a variable. We then use a function called `read_clean()`,
-which takes the path to the Excel file and the sheet names as an argument to
-read the required sheet into a data frame. We use `skip = 10` to skip the first
-10 lines in each Excel sheet because the first 10 lines contain a header. The
-last thing this function does is add a new column called `year` which contains
-the year of the data. We’re lucky because the sheet names are the years: "2010",
-"2011" and so on. We then map this function to the list of sheet names, thus
-reading in all the data from all the sheets into one list of data frames. We
-then use `bind_rows()`, to bind each data frame into a single data frame, by
-row. Finally, we rename the columns (by translating their names from French to
-English) and only select the required columns. If you don’t understand each step
-of what is going on, don’t worry too much about it; this book is not about
-learning how to use R.
+If you are familiar with the `{tidyverse}` [@wickham2019b] family of packages
+from the R programming language, the above code should
+be quite relatively easy to follow. If you are more familiar with `pandas`, I
+believe that reading the code above should be easy. But in any case,
+rembemer that this book is not about Python per se, but about building
+reproducible pipelines. The focus will be on other things.
 
 Running this code results in a neat data set:
 
-```{r, eval = F}
+```{python, python.reticulate=FALSE}
 raw_data
-```
-
-But there’s a problem: columns that should be of type numeric are of type
-character instead (`average_price_nominal_euros` and
-`average_price_m2_nominal_euros`). There's also another issue, which you would
-eventually catch as you’ll explore the data: the naming of the communes is not
-consistent. Let's take a look:
-
-```{r, eval = F}
-raw_data |>
-  filter(grepl("Luxembourg", locality)) |>
-  count(locality)
-
-```
-
-We can see that the city of Luxembourg is spelled in two different ways. It's
-the same with another commune, Pétange:
-
-```{r, eval = F}
-raw_data |>
-  filter(grepl("P.tange", locality)) |>
-  count(locality)
-
-```
-
-So sometimes it is spelled correctly, with an "é", sometimes not. Let's write
-some code to correct both these issues:
-
-```{r, eval = F}
-raw_data <- raw_data |>
-  mutate(
-    locality = ifelse(grepl("Luxembourg-Ville", locality),
-                      "Luxembourg",
-                      locality),
-         locality = ifelse(grepl("P.tange", locality),
-                           "Pétange",
-                           locality)
-         ) |>
-  mutate(across(starts_with("average"),
-         as.numeric))
-
 ```
 
 Now this is interesting -- converting the `average` columns to numeric resulted
 in some `NA` values. Let's see what happened:
 
-```{r, eval = F}
-raw_data |>
-  filter(is.na(average_price_nominal_euros))
+```{python, python.reticulate=FALSE}
+(
+raw_data
+.filter(pl.col("average_price_nominal_euros").is_null())
+)
+
 ```
 
 It turns out that there are no prices for certain communes, but that we also
