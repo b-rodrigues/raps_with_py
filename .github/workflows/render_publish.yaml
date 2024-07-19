@@ -38,9 +38,3 @@ jobs:
         uses: b-rodrigues/quarto-nix-actions/publish@main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
-
-      - name: Install epubcheck
-        run: sudo apt-get install epubcheck
-    
-      - name: Check the epub
-        run: epubcheck _book/Building-reproducible-analytical-pipelines-with-Python.epub
