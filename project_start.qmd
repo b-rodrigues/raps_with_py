@@ -203,15 +203,17 @@ Next, the code below downloads the data, and puts it in a data frame:
 
 ```{python}
 # The url below points to an Excel file
-# hosted on the book’s github repository
+# hosted on the book's github repository
 url = "https://is.gd/1vvBAc"
 
+# Let's first download the file
 from tempfile import NamedTemporaryFile
-from urllib.request import urlopen
+from requests import get
 
-with NamedTemporaryFile(delete=False) as temp_file:
-    with urlopen(url) as response:
-        temp_file.write(response.read())
+response = get(url)
+
+with NamedTemporaryFile(delete=False, suffix = '.xlsx') as temp_file:
+    temp_file.write(response.content)
     temp_file_path = temp_file.name
 
 # Polars can read all the sheets of an Excel workbook
