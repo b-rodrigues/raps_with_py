@@ -433,7 +433,7 @@ And let's create a dataset with the national data as well:
 country_level = (
     raw_data
     .filter(pl.col("locality").str.contains("nationale"))
-    .select(cs.excludes("n_offers"))
+    .select(cs.exclude("n_offers"))
 )
 
 offers_country = (
