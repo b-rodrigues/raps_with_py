@@ -189,7 +189,7 @@ Each sheet contains a dataset with the following columns:
 
 For ease of presentation, I'm going to show you each step of the analysis here
 separately, but I'll be putting everything together in a single script once
-I'm done explaining each step. So first, let's load some packages:
+I'm done explaining each step. So first, let's import some packages:
 
 ```{python}
 import polars as pl
@@ -197,7 +197,9 @@ import polars.selectors as cs
 import re
 ```
 
-I will be using the `polars` package to manipulate data.
+I will be using the `polars` package to manipulate data, `polars.selectors` contains
+handy functions to refer to columns and `re` is for regular expressions which
+I will need below.
 
 Next, the code below downloads the data, and puts it in a data frame:
 
@@ -206,21 +208,32 @@ Next, the code below downloads the data, and puts it in a data frame:
 # hosted on the book's github repository
 url = "https://is.gd/1vvBAc"
 
-# Let's first download the file
+# Let's first download the file into a temporary file and then 
+# return its path
 from tempfile import NamedTemporaryFile
 from requests import get
 
 response = get(url)
 
-with NamedTemporaryFile(delete=False, suffix = '.xlsx') as temp_file:
+with NamedTemporaryFile(delete = False, suffix = '.xlsx') as temp_file:
     temp_file.write(response.content)
     temp_file_path = temp_file.name
+```
 
-# Polars can read all the sheets of an Excel workbook
-# in one go and return a list of sheets, but I want to
-# add a column with the year. So I write this function
-# that reads the sheet and adds the column. I then
-# map this function over a list of sheet names.
+The code above downloads the Excel file, saves it in
+a temporary folder and returns the path to the file.
+We can now use temp_file_path to read the data using
+`pl.read_excel()`.
+
+Next, I will write a function to read all the sheets of the
+Excel workbook. Ideally, this wouldn't be needed, because
+`polars` can read all the sheets of an Excel workbook
+in one go and return a list of sheets, but I want to
+add a column with the year. So I write this function
+that reads one sheet and adds the year column, and then
+I map this function over a list of sheet names.
+
+```{python}
 def read_excel(excel_file, sheet):
     out = pl.read_excel(
             source = excel_file,
@@ -232,28 +245,49 @@ def read_excel(excel_file, sheet):
             }
           ).with_columns(pl.lit(sheet).alias("year"))
     return out
+```
 
-# This function sets the excel_file argument to 'url'
-# which points to the Excel file. I will then
-# map over 'sheet'
+I now need a little helper function that I will use to map
+over the sheet names. This function sets the `excel_file` argument of
+the previously defined `read_excel()` function we wrote to 'temp_file_path'
+which points to the Excel file. I will then map over its 'sheet' argument.
+
+```{python}
 def wrap_read_excel(sheet):
     out = read_excel(excel_file = temp_file_path,
                           sheet = sheet)
     return out
+```
 
-# This creates a list of sheet names to map over
+Let's now create the list of sheet names:
+
+```{python}
 sheets = list(map(str, range(2010, 2022)))
+```
 
-# I can now map the function over the list of sheets
-# and concatenate them into a single polars data frame
-# using pl.concat.
+I can now map the function over the list of sheets
+and concatenate them into a single polars data frame
+using `pl.concat()`:
+
+```{python}
 raw_data = pl.concat(list(map(wrap_read_excel, sheets)))
+```
 
-# This function will be used below to clean the column names
-# If I was using Pandas, I could have used clean_columns from skimpy
-# but unfortunately this function doesn't work with Polars DFs.
-# So I write this little function to clean the column names instead.
-# Inspired by the `clean_names()` function from the `{janitor}` R package.
+In the preface, I mentioned that the Python code in this
+book would have a very distinct R-like accent. Mapping
+over a list instead of writing a for-loop is an example
+of this.
+
+The next function will be used below to clean the column names. For example,
+a column called something like "House prices in €" would get changed to
+"house_prices_in_", removing the "€" sign, replacing spaces with "_"
+setting the string to lower case.
+If I was using `pandas`, I could have used `clean_columns()` from the 
+`skimpy` package, but unfortunately this function doesn't work with `polars` data frames.
+So I wrote this little function to clean the column names instead, 
+partly inspired by the `clean_names()` function from the `{janitor}` R package.
+
+```{python}
 def clean_names(string):
     # inspired by https://nadeauinnovations.com/post/2020/11/python-tricks-replace-all-non-alphanumeric-characters-in-a-string/
     clean_string = [s for s in string if s.isalnum() or s.isspace()]
@@ -261,18 +295,22 @@ def clean_names(string):
     out = re.sub(r"\s+", "_", out)
     out = out.encode("ascii", "ignore").decode("utf-8")
     return out
+```
 
-# This row-binds all the datasets (first converting the dict to a list), and
-# then renames the columns using the above defined function
-# Not as nice as skimpy.clean_columns, but works on Polars DataFrames
+We need to map `clean_names()` to each column. We can select all the columns
+using `pl.all()` and map the function to the column’s `name` attribute.
+
+```{python}
 raw_data = raw_data.select(pl.all().name.map(clean_names))
+```
 
-# Finally, let's rename some columns and do some more cleaning
-# - converting column types
-# - ensuring consistent names for the communes (for example, sometimes 
-#   the commune of Luxembourg is spelled "Luxembourg", sometimes "Luxembourg-Ville"
-# - converting columns to their right types
-# - filtering out rows with irrelevant text
+Finally, let's rename some columns and do some more cleaning:
+  - converting column types
+  - ensuring consistent names for the communes (for example, sometimes 
+    the commune of Luxembourg is spelled "Luxembourg", sometimes "Luxembourg-Ville"
+  - converting columns to their right types (but not the `n_offers` column yet...)
+
+```{python}
 raw_data = (
     raw_data
     .rename(
@@ -297,37 +335,37 @@ raw_data = (
       # In some sheets it's "Pétange", in others it's "Petange"
       pl.col("locality").str.replace_all("P.*tange", "Pétange")
     )
-    .filter(
-      pl.col("n_offers") != "Nombre d'offres"
-    )
-    .with_columns(
-      pl.col("n_offers").cast(pl.Int64)
-    )
 )
-
-
 ```
+
+In practice, it is unlikely that you would have written the above code in one go.
+Instead you would have checked the data, done something on it, then checked it again,
+etc. But as I mentioned this is not learning how to clean data, so let's just
+take this code as-is.
 
 If you are familiar with the `{tidyverse}` [@wickham2019b] family of packages
 from the R programming language, the above code should
 be quite relatively easy to follow. If you are more familiar with `pandas`, I
-believe that reading the code above should be easy. But in any case,
-rembemer that this book is not about Python per se, but about building
-reproducible pipelines. The focus will be on other things.
+believe that reading the code above should still be easy. What might be more 
+difficult if you were brought up on Python exclusively is mapping functions to 
+elements of lists instead of using for-loops. Don't worry about it too much, and
+use for-loops if you wish. Just remember that this book is not about Python per se, 
+but about building reproducible pipelines. The focus will be on other things.
 
-Running this code results in a neat data set:
+Running this code results in a tidy data set:
 
 ```{python}
 raw_data
 ```
 
-Now this is interesting -- converting the `average` columns to numeric resulted
-in some `NA` values. Let's see what happened:
+But as you can see at the bottom, we still have some stuff that doesn't beloing in the
+`locality` column. Let's also check for missing values in the
+`"average_price_nominal_euros"` column:
 
 ```{python}
 (
 raw_data
-.filter(pl.col("average_price_nominal_euros").is_null())
+  .filter(pl.col("average_price_nominal_euros").is_null())
 )
 
 ```
@@ -357,39 +395,53 @@ is equal to "Total d'offres". This is simply the total of every offer from every
 commune. We could keep that in a separate data frame, or even remove it. The
 very last row states the source of the data and we can also remove it. Finally,
 in the screenshot above, we see another row that we don't see in our filtered
-data frame: one where `n_offers` is missing. This row gives the national average
+data frame: one where `n_offers` would be missing. This row gives the national average
 for columns `average_prince_nominal_euros` and `average_price_m2_nominal_euros`.
 What we are going to do is create two datasets: one with data on communes, and
 the other on national prices. Let's first remove the rows stating the sources:
 
-```{r, eval = F}
-raw_data <- raw_data |>
-  filter(!grepl("Source", locality))
+```{python}
+raw_data = (
+    raw_data
+    .filter(~pl.col("locality").str.contains("Source"))
+)
 ```
 
 Let's now only keep the communes in our data:
 
-```{r, eval = F}
-commune_level_data <- raw_data |>
-    filter(!grepl("nationale|offres", locality),
-           !is.na(locality))
+```{python}
+commune_level_data = (
+    raw_data
+    .filter(~pl.col("locality").str.contains("nationale|offres"))
+    .filter(pl.col("locality").is_not_null())
+)
 ```
 
 And let's create a dataset with the national data as well:
 
-```{r, eval = F}
-country_level <- raw_data |>
-  filter(grepl("nationale", locality)) |>
-  select(-n_offers)
+```{python}
+country_level = (
+    raw_data
+    .filter(pl.col("locality").str.contains("nationale"))
+    .select(cs.exclude("n_offers"))
+)
 
-offers_country <- raw_data |>
-  filter(grepl("Total d.offres", locality)) |>
-  select(year, n_offers)
+offers_country = (
+    raw_data
+    .filter(pl.col("locality").str.contains("Total.*offres"))
+    .select(pl.col("year", "n_offers"))
+)
 
-country_level_data <- full_join(country_level, offers_country) |>
-  select(year, locality, n_offers, everything()) |>
-  mutate(locality = "Grand-Duchy of Luxembourg")
+country_level_data = country_level.join(offers_country, on = "year", how = "left").with_columns(
+      pl.col("locality").str.replace_all(".*", "Grand-Duchy of Luxembourg")
+)
 
+```
+
+Let's take a look at it:
+
+```{python}
+counry_level_data
 ```
 
 Now the data looks clean, and we can start the actual analysis... or can we?
