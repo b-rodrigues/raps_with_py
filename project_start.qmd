@@ -225,7 +225,8 @@ def read_excel(excel_file, sheet):
     out = pl.read_excel(
             source = excel_file,
             sheet_name = sheet,
-            read_options = {
+            schema_overrides = {"Nombre d'offres": pl.String},
+            read_csv_options = {
             "skip_rows": 6,
             "has_header": True
             }
@@ -270,6 +271,8 @@ raw_data = raw_data.select(pl.all().name.map(clean_names))
 # - converting column types
 # - ensuring consistent names for the communes (for example, sometimes 
 #   the commune of Luxembourg is spelled "Luxembourg", sometimes "Luxembourg-Ville"
+# - converting columns to their right types
+# - filtering out rows with irrelevant text
 raw_data = (
     raw_data
     .rename(
@@ -281,18 +284,24 @@ raw_data = (
       }
     )
     .with_columns(
-        cs.contains("average").cast(pl.Float64, strict = False)
+      cs.all().str.strip_chars()
     )
     .with_columns(
-        # In some sheets it's "Luxembourg", in others it's "Luxembourg-Ville"
+      cs.contains("average").cast(pl.Float64, strict = False)
+    )
+    .with_columns(
+      # In some sheets it's "Luxembourg", in others it's "Luxembourg-Ville"
       pl.col("locality").str.replace_all("Luxembourg.*", "Luxembourg")
     )
     .with_columns(
-        # In some sheets it's "Pétange", in others it's "Petange"
+      # In some sheets it's "Pétange", in others it's "Petange"
       pl.col("locality").str.replace_all("P.*tange", "Pétange")
     )
+    .filter(
+      pl.col("n_offers") != "Nombre d'offres"
+    )
     .with_columns(
-      pl.col("locality").str.strip_chars()
+      pl.col("n_offers").cast(pl.Int64)
     )
 )
 
