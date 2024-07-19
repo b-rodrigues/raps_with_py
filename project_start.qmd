@@ -204,7 +204,7 @@ Next, the code below downloads the data, and puts it in a data frame:
 ```{python, python.reticulate=FALSE}
 # The url below points to an Excel file
 # hosted on the book’s github repository
-url <- "https://is.gd/1vvBAc"
+url = "https://is.gd/1vvBAc"
 
 # Polars can read all the sheets of an Excel workbook
 # in one go and return a list of sheets, but I want to
