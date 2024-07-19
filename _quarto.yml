@@ -1,6 +1,8 @@
 project:
   type: book
 
+engine: jupyter
+
 book:
   title: "Building reproducible analytical pipelines with Python"
   author: "Bruno Rodrigues"
