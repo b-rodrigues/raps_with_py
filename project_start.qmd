@@ -414,6 +414,16 @@ commune_level_data = (
     raw_data
     .filter(~pl.col("locality").str.contains("nationale|offres"))
     .filter(pl.col("locality").is_not_null())
+    # This is needed on Windows...
+    .with_columns(
+        pl.col("locality").str.replace_all("\351", "é")
+    )
+    .with_columns(
+        pl.col("locality").str.replace_all("\373", "û")
+    )
+    .with_columns(
+        pl.col("locality").str.replace_all("\344", "ä")
+    )
 )
 ```
 
@@ -423,17 +433,18 @@ And let's create a dataset with the national data as well:
 country_level = (
     raw_data
     .filter(pl.col("locality").str.contains("nationale"))
-    .select(cs.exclude("n_offers"))
+    .select(cs.excludes("n_offers"))
 )
 
 offers_country = (
     raw_data
-    .filter(pl.col("locality").str.contains("Total.*offres"))
-    .select(pl.col("year", "n_offers"))
+    .filter(pl.col("locality").str.contains("Total d.offres"))
+    .select(["year", "n_offers"])
 )
 
-country_level_data = country_level.join(offers_country, on = "year", how = "left").with_columns(
-      pl.col("locality").str.replace_all(".*", "Grand-Duchy of Luxembourg")
+country_level_data = (
+    country_level.join(offers_country, on = "year")
+    .with_columns(pl.lit("Grand-Duchy of Luxembourg").alias("locality"))
 )
 
 ```
@@ -441,7 +452,7 @@ country_level_data = country_level.join(offers_country, on = "year", how = "left
 Let's take a look at it:
 
 ```{python}
-counry_level_data
+country_level_data
 ```
 
 Now the data looks clean, and we can start the actual analysis... or can we?
