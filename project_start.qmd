@@ -209,7 +209,7 @@ url = "https://is.gd/1vvBAc"
 from tempfile import NamedTemporaryFile
 from urllib.request import urlopen
 
-with NamedTemporaryFile(delete=FALSE) as temp_file:
+with NamedTemporaryFile(delete=False) as temp_file:
     with request.urlopen(url) as response:
         temp_file.write(response.read())
     temp_file_path = temp_file.name
