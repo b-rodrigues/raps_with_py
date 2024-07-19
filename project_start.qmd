@@ -206,6 +206,14 @@ Next, the code below downloads the data, and puts it in a data frame:
 # hosted on the book’s github repository
 url = "https://is.gd/1vvBAc"
 
+from tempfile import NamedTemporaryFile
+from urllib.request import urlopen read
+
+with tempfile.NamedTemporaryFile(delete=FALSE) as temp_file:
+    with urllib.request.urlopen(url) as response:
+        temp_file.write(response.read())
+    temp_file_path = temp_file.name
+
 # Polars can read all the sheets of an Excel workbook
 # in one go and return a list of sheets, but I want to
 # add a column with the year. So I write this function
@@ -226,7 +234,7 @@ def read_excel(excel_file, sheet):
 # which points to the Excel file. I will then
 # map over 'sheet'
 def wrap_read_excel(sheet):
-    out = read_excel(excel_file = url,
+    out = read_excel(excel_file = temp_file_path,
                           sheet = sheet)
     return out
 
