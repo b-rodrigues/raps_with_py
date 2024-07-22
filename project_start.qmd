@@ -655,7 +655,7 @@ communes_clean = (
 
 Let’s run our test again:
 
-```{r, eval = F}
+```{python}
 commune_level_data
  .filter(~pl.col("locality").is_in(communes_clean))
  .get_column("locality")
