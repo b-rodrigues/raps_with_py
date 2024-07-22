@@ -154,7 +154,7 @@ environment. First, create a folder called `housing`, which will contain our
 analysis scripts. Then, from that folder, run the following command:
 
 ```bash
-micromamba run -n housing pipenv install polars==1.1.0 plotnine beautifulsoup4 pandas plotnine skimpy
+micromamba run -n housing pipenv install polars==1.1.0 plotnine beautifulsoup4 pandas plotnine lxml pyarrow
 ```
 
 As you can see, I chose to install specific versions of `polars`. This is
@@ -163,6 +163,10 @@ could remove the `==x.y.z` string from the command above to install the latest
 versions of `polars` available if you prefer, but then there would be no
 guarantee that you would find the same results as I do in the remainder of the
 book. You could also specify versions for the other packages if you wish.
+A little sidnote: some of these packages we are not really going to be using,
+but they're needed either as dependencies for `polars` or because we need
+one single function from them. The packages in question are 
+`pandas`, `lxml` and `pyarrow`.
 
 You should now see two new files in the `housing` folder, `Pipfile` and
 `Pipfile.lock`. Start by opening `Pipfile`, it should look like this:
@@ -282,10 +286,11 @@ specyifing their versions, like so:
 micromamba create -n project_name python=X.YY.Z pipenv
 ```
 
-then, use this environment in a fresh folder to install the packages you need:
+then, use this environment in a fresh folder to install the packages you need, for
+instance:
 
 ```
-micromamba run -n housing pipenv install beautifulsoup4==4.12.2 pandas==2.1.4 plotnine==0.12.4 skimpy==0.0.11
+micromamba run -n housing pipenv install beautifulsoup4==4.12.2 polars==1.1.0 plotnine==0.12.4
 ```
 
 (Replace the versions of Python and packages by the latest, or those you need.)
