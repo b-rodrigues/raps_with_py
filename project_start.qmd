@@ -682,7 +682,7 @@ are we done with cleaning the data? Yes, we can now start with analysing the
 data. Take a look
 [here](https://raw.githubusercontent.com/b-rodrigues/rap4all/master/scripts/save_data.R)^[https://is.gd/7PhUjd]
 to see the finalised script. Also read some of the comments that I’ve added. This
-is a typical R script, and at first glance, one might wonder what is wrong with
+is a typical Python script, and at first glance, one might wonder what is wrong with
 it. Actually, not much, but the problem if you leave this script as it is, is
 that it is very likely that we will have problems rerunning it in the future. As
 it turns out, this script is not reproducible. But we will discuss this in much
@@ -726,7 +726,7 @@ Let’s answer these questions one by one.
 
 ### How easy would it be for someone else to rerun the analysis?
 
-The analysis is composed of two R scripts, one to prepare the data, and another
+The analysis is composed of two Python scripts, one to prepare the data, and another
 to actually run the analysis proper. Performing the analysis might seem quite
 easy, because each script contains comments as to what is going on, and the code
 is not that complicated. However, we are missing any project-level documentation
