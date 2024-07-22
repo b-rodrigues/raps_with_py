@@ -605,11 +605,11 @@ communes = (
 
 (
 commune_level_data
- .filter(~pl.col("locality").is_in(communes))
- .get_column("locality")
- .unique()
- .sort()
- .to_list()
+    .filter(~pl.col("locality").is_in(communes))
+    .get_column("locality")
+    .unique()
+    .sort()
+    .to_list()
 )
 
 
@@ -628,23 +628,22 @@ communes_clean = (
     .with_columns(
         pl.when(pl.col("commune").str.contains("Erpeldange"))
           .then(pl.lit("Erpeldange"))
-          .otherwise(pl.col("commune")).alias("commune"),
-
+          .otherwise(pl.col("commune")).alias("commune")
     )
     .with_columns(
         pl.when(pl.col("commune").str.contains("City"))
           .then(pl.lit("Luxembourg"))
-          .otherwise(pl.col("commune")).alias("commune"),
+          .otherwise(pl.col("commune")).alias("commune")
     )
     .with_columns(
         pl.when(pl.col("commune").str.contains("K.*jeng"))
           .then(pl.lit("Kaerjeng"))
-          .otherwise(pl.col("commune")).alias("commune"),
+          .otherwise(pl.col("commune")).alias("commune")
     )
     .with_columns(
         pl.when(pl.col("commune").str.contains("P.*tange"))
           .then(pl.lit("Pétange"))
-          .otherwise(pl.col("commune")).alias("commune"),
+          .otherwise(pl.col("commune")).alias("commune")
     )
     .get_column("commune")
     .unique()
@@ -657,11 +656,11 @@ Let’s run our test again:
 
 ```{python}
 commune_level_data
- .filter(~pl.col("locality").is_in(communes_clean))
- .get_column("locality")
- .unique()
- .sort()
- .to_list()
+    .filter(~pl.col("locality").is_in(communes_clean))
+    .get_column("locality")
+    .unique()
+    .sort()
+    .to_list()
 )
 ```
 
