@@ -473,6 +473,8 @@ it as any other file of your project.
 So let's scrape and save this list. Let's first load the required packages:
 
 ```{python}
+#| label: Scraping communes
+
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
 from pandas import read_html
@@ -503,6 +505,7 @@ the `pandas` package we can get that table into a data frame.
 We can now use `polars` to clean the table:
 
 ```{python}
+#| label: Cleaning communes
 # current_communes has a MultiIndex, so drop it
 current_communes_raw.columns = current_communes_raw.columns.droplevel()
 
@@ -557,6 +560,8 @@ spelling. Here again, we can use a list from Wikipedia, and here again, I decide
 to re-host it on Github pages to avoid problems in the future:
 
 ```{python}
+#| label: Scraping former communes
+
 # Need to also check former communes
 url = 'https://b-rodrigues.github.io/former_communes/#Former_communes/'
 
@@ -588,10 +593,11 @@ former_communes_pl
 ```
 
 As you can see, since 2010 many communes have merged to form new ones. We can
-now combine the list of current and former communes, as well as harmonise their
-names:
+now combine the list of current and former communes:
 
 ```{python}
+#| label: Combining communes
+
 # Combine former and current communes
 
 communes = (
@@ -611,7 +617,12 @@ commune_level_data
     .sort()
     .to_list()
 )
+```
 
+And now we can harmonize the spelling:
+
+```{python}
+#| label: Harmonising spelling
 
 # There's certain communes with different spelling between
 # wikipedia and our data, so let's correct the spelling
