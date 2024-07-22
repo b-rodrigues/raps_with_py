@@ -470,35 +470,80 @@ I now have full control of this page, and won't get any bad surprises if someone
 decides to eventually update it. Instead of re-hosting it, you could simply save
 it as any other file of your project.
 
-So let's scrape and save this list:
+So let's scrape and save this list. Let's first load the required packages:
 
-```{r, eval = F}
-current_communes <- "https://is.gd/lux_communes" |>
-  rvest::read_html() |>
-  rvest::html_table() |>
-  purrr::pluck(2) |>
-  janitor::clean_names() |>
-  dplyr::filter(name_2 != "Name") |>
-  dplyr::rename(commune = name_2) |>
-  dplyr::mutate(commune = stringr::str_remove(commune, " .$"))
+```{python}
+from urllib.request import urlopen
+from bs4 import BeautifulSoup
+from pandas import read_html
+from io import StringIO
 ```
 
-We scrape the table from the re-hosted Wikipedia page using `{rvest}`.
-`rvest::html_table()` returns a list of tables from the Wikipedia table, and
-then we use `purrr::pluck()` to keep the second table from the website, which is
-what we need (I made the calls to the packages explicit, because you might not
-be familiar with these packages). `janitor::clean_names()` transforms column
-names written for human eyes into machine-friendly names (for example `Growth
-rate in %` would be transformed to `growth_rate_in_percent`) and then I use
-the `{dplyr}` package for some further cleaning and renaming; the very last
-step removes a dagger symbol next to certain communes names, in other words
-it turns "Commune †" into "Commune".
+and let's get the raw data:
 
-Let’s see if we have all the communes in our data:
+```{python}
+url = 'https://b-rodrigues.github.io/list_communes/'
 
-```{r, eval = F}
-setdiff(unique(commune_level_data$locality),
-        current_communes$commune)
+html = urlopen(url)
+
+tables = (
+    BeautifulSoup(html, 'html.parser')
+    .find_all("table")
+)
+
+current_communes_raw = read_html(StringIO(str(tables[1])))[0]
+```
+
+I won't go into much details, but the using `Beautifoulsoup()` it is
+possible to parse the `html` from the web page and get the tables out
+using the `.find_all()` method. The first table from that list is
+the one we're interested in, and using the `read_html()` function from
+the `pandas` package we can get that table into a data frame.
+
+We can now use `polars` to clean the table:
+
+```{python}
+# current_communes has a MultiIndex, so drop it
+current_communes_raw.columns = current_communes_raw.columns.droplevel()
+
+current_communes_pl = (
+    pl.DataFrame(current_communes_raw)
+    .select(pl.col("Name.1").alias("commune"))
+    .with_columns(
+        pl.col("commune").str.replace_all("\351", "é")
+    )
+    .with_columns(
+        pl.col("commune").str.replace_all("\373", "û")
+    )
+    .with_columns(
+        pl.col("commune").str.replace_all("\344", "ä")
+    )
+    .with_columns(
+    # This removes the dagger symbol next to certain communes names
+    # in other words it turns "Commune †" into "Commune".
+        pl.col("commune").str.replace_all(" .$", "")
+    )
+)
+```
+
+Finally, we can save the communes into a simple list:
+
+```{python}
+current_communes = list(current_communes_pl["commune"])
+```
+
+Let's see if we have all the communes in our data, if the 
+code below results in an empty list, then we're good:
+
+```{python}
+(
+commune_level_data
+ .filter(~pl.col("locality").is_in(current_communes))
+ .get_column("locality")
+ .unique()
+ .sort()
+ .to_list()
+)
 ```
 
 We see many communes that are in our `commune_level_data`, but not in
@@ -511,46 +556,117 @@ get a list of all existing communes from 2010 onwards, and then, harmonise
 spelling. Here again, we can use a list from Wikipedia, and here again, I decide
 to re-host it on Github pages to avoid problems in the future:
 
-```{r, eval = F}
-former_communes <- "https://is.gd/lux_former_communes" |>
-  rvest::read_html() |>
-  rvest::html_table() |>
-  purrr::pluck(3) |>
-  janitor::clean_names() |>
-  dplyr::filter(year_dissolved > 2009)
+```{python}
+# Need to also check former communes
+url = 'https://b-rodrigues.github.io/former_communes/#Former_communes/'
 
-former_communes
+html = urlopen(url)
 
+tables = (
+    BeautifulSoup(html, 'html.parser')
+    .find_all("table")
+)
+
+# The third table (...hence the '2' in tables[2]...) is the one we need
+former_communes_raw = read_html(StringIO(str(tables[2])))[0]
+
+former_communes_pl = (
+    pl.DataFrame(former_communes_raw)
+    .with_columns(
+        pl.col("Name").str.replace_all("\351", "é")
+    )
+    .with_columns(
+        pl.col("Name").str.replace_all("\373", "û")
+    )
+    .with_columns(
+        pl.col("Name").str.replace_all("\344", "ä")
+    )
+    .select(pl.col("Name").alias("commune"))
+)
+
+former_communes_pl
 ```
 
 As you can see, since 2010 many communes have merged to form new ones. We can
 now combine the list of current and former communes, as well as harmonise their
 names:
 
-```{r, eval = F}
-communes <- unique(c(former_communes$name,
-                     current_communes$commune))
-# we need to rename some communes
+```{python}
+# Combine former and current communes
 
-# Different spelling of these communes between wikipedia and the data
+communes = (
+    pl.concat([former_communes_pl, current_communes_pl])
+    .get_column("commune")
+    .unique()
+    .sort()
+    .to_list()
+)
 
-communes[which(communes == "Clemency")] <- "Clémency"
-communes[which(communes == "Redange")] <- "Redange-sur-Attert"
-communes[which(communes == "Erpeldange-sur-Sûre")] <- "Erpeldange"
-communes[which(communes == "Luxembourg City")] <- "Luxembourg"
-communes[which(communes == "Käerjeng")] <- "Kaerjeng"
-communes[which(communes == "Petange")] <- "Pétange"
+
+(
+commune_level_data
+ .filter(~pl.col("locality").is_in(communes))
+ .get_column("locality")
+ .unique()
+ .sort()
+ .to_list()
+)
+
+
+# There's certain communes with different spelling between
+# wikipedia and our data, so let's correct the spelling
+# on the wikipedia ones
+# ['Clémency', 'Erpeldange', 'Kaerjeng', 'Luxembourg', 'Pétange']
+
+communes_clean = (
+    pl.concat([former_communes_pl, current_communes_pl])
+    .with_columns(
+        pl.when(pl.col("commune").str.contains("Cl.mency"))
+          .then(pl.lit("Clémency"))
+          .otherwise(pl.col("commune")).alias("commune")
+    )
+    .with_columns(
+        pl.when(pl.col("commune").str.contains("Erpeldange"))
+          .then(pl.lit("Erpeldange"))
+          .otherwise(pl.col("commune")).alias("commune"),
+
+    )
+    .with_columns(
+        pl.when(pl.col("commune").str.contains("City"))
+          .then(pl.lit("Luxembourg"))
+          .otherwise(pl.col("commune")).alias("commune"),
+    )
+    .with_columns(
+        pl.when(pl.col("commune").str.contains("K.*jeng"))
+          .then(pl.lit("Kaerjeng"))
+          .otherwise(pl.col("commune")).alias("commune"),
+    )
+    .with_columns(
+        pl.when(pl.col("commune").str.contains("P.*tange"))
+          .then(pl.lit("Pétange"))
+          .otherwise(pl.col("commune")).alias("commune"),
+    )
+    .get_column("commune")
+    .unique()
+    .sort()
+    .to_list()
+)
 ```
 
 Let’s run our test again:
 
 ```{r, eval = F}
-setdiff(unique(commune_level_data$locality),
-        communes)
+commune_level_data
+ .filter(~pl.col("locality").is_in(communes_clean))
+ .get_column("locality")
+ .unique()
+ .sort()
+ .to_list()
+)
 ```
 
 Great! When we compare the communes that are in our data with every commune that
-has existed since 2010, we don’t have any commune that is unaccounted for. So
+has existed since 2010, we don't have any commune that is unaccounted for. So
 are we done with cleaning the data? Yes, we can now start with analysing the
 data. Take a look
 [here](https://raw.githubusercontent.com/b-rodrigues/rap4all/master/scripts/save_data.R)^[https://is.gd/7PhUjd]
