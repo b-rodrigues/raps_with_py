@@ -9,7 +9,7 @@ commune_level_data = (
     commune_level_data
     .with_columns(
         pl.when(pl.col("year") == 2010)
-          .then(pl.col("average_price_nominal_euros")).over(null).alias("p0"),
+          .then(pl.col("average_price_nominal_euros")).over("locality").alias("p0"),
         pl.when(pl.col("year") == 2010)
           .then(pl.col("average_price_m2_nominal_euros")).over("locality").alias("p0_m2")
     )
