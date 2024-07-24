@@ -154,7 +154,7 @@ environment. First, create a folder called `housing`, which will contain our
 analysis scripts. Then, from that folder, run the following command:
 
 ```bash
-micromamba run -n housing pipenv install polars==1.1.0 plotnine beautifulsoup4 pandas plotnine lxml pyarrow
+micromamba run -n housing pipenv install polars==1.1.0 plotnine beautifulsoup4 pandas plotnine lxml pyarrow requests xlsx2csv
 ```
 
 As you can see, I chose to install specific versions of `polars`. This is
