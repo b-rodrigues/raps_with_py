@@ -19,6 +19,7 @@ with NamedTemporaryFile(delete = False, suffix = '.xlsx') as temp_file:
 	
 def read_excel(excel_file, sheet):
     out = pl.read_excel(
+	    engine = 'xlsx2csv',
             source = excel_file,
             sheet_name = sheet,
             schema_overrides = {"Nombre d'offres": pl.String},
