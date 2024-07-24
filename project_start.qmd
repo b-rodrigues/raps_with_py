@@ -239,7 +239,7 @@ def read_excel(excel_file, sheet):
             source = excel_file,
             sheet_name = sheet,
             schema_overrides = {"Nombre d'offres": pl.String},
-            read_csv_options = {
+            read_options = {
             "skip_rows": 6,
             "has_header": True
             }
