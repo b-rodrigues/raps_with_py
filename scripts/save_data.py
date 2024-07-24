@@ -82,7 +82,7 @@ raw_data = (
 
 commune_level_data = (
     raw_data
-    .filter(~pl.col("locality").str.contains("nationale|offres"))
+    .filter(~pl.col("locality").str.contains("nationale|offres|Commune"))
     .filter(pl.col("locality").is_not_null())
     # This is needed on Windows...
     .with_columns(
