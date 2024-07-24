@@ -107,7 +107,7 @@ of prices in the housing market, among other useful services like the
 identification of vacant lots). The advantage of their data when compared to
 Eurostat's data is that the data is disaggregated by commune. The disadvantage
 is that they only supply nominal prices, and no index (and the data is trapped
-inside Excel and not ready for analysis with R). Nominal prices are the prices
+inside Excel and not ready for analysis with Python). Nominal prices are the prices
 that you read on price tags in shops. The problem with nominal prices is that it
 is difficult to compare them through time. Ask yourself the following question:
 would you prefer to have had 500€ (or USDs) in 2003 or in 2023? You probably
@@ -701,7 +701,7 @@ to compute the index at all periods).
 
 For this section, I will perform a rather simple analysis. I will immediately
 show you the R script: take a look at it
-[here](https://raw.githubusercontent.com/b-rodrigues/rap4all/master/scripts/analysis.R)^[https://is.gd/qCJEbi].
+[here](https://raw.githubusercontent.com/b-rodrigues/raps_with_py/master/scripts/analysis.py)^[https://is.gd/7MqLjX].
 For the analysis I selected 5 communes and plotted the evolution of prices
 compared to the national average.
 
