@@ -732,8 +732,8 @@ to actually run the analysis proper. Performing the analysis might seem quite
 easy, because each script contains comments as to what is going on, and the code
 is not that complicated. However, we are missing any project-level documentation
 that would provide clear instructions as to how to run the analysis. This might
-seem simple for us who wrote these scripts, but we are familiar with R, and this
-is still fresh in our brains. Should someone less familiar with R have to run
+seem simple for us who wrote these scripts, but we are familiar with Python, and this
+is still fresh in our brains. Should someone less familiar with Python have to run
 the script, there is no clue for them as to how they should do it. And of
 course, should the analysis be more complex (suppose it’s composed of dozens of
 scripts), this gets even worse. It might not even be easy for you to remember
@@ -741,8 +741,9 @@ how to run this in 5 months!
 
 And what about the required dependencies? Many packages were used in the
 analysis. How should these get installed? Ideally, the same versions of the
-packages you used and the same version of R should get used by that person to
-rerun the analysis.
+packages you used and the same version of Python should get used by that person to
+rerun the analysis. Thankfully, you can share the `Pipfile` and the `Pipfile.lock`
+files from the previous chapters to make it easier for them!
 
 All of this still needs to be documented, but listing the packages that were
 used for an analysis and their versions takes quite some time. Thankfully, in
@@ -784,9 +785,9 @@ writing functions, even when simply reusing them inside the same project.
 
 Now this might seem weird: after all, if we start from the same dataset, does it
 matter *when* we run the scripts? We should be getting the same result if we
-build the project today, in 5 months or in 5 years. Well, not necessarily. While
-it is true that R is quite stable, this cannot necessarily be said of the
-packages that we use. There is no guarantee that the authors of the packages
+build the project today, in 5 months or in 5 years. Well, not necessarily. 
+Programming languages such as Python evolve quickly, and packages even more so.
+There is no guarantee that the authors of the packages
 will not change the package’s functions to work differently, or take arguments
 in a different order, or even that the packages will all be available at all in
 5 years. And even if the packages are still available and function the same,
