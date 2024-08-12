@@ -6,7 +6,7 @@ engine: jupyter
 book:
   title: "Building reproducible analytical pipelines with Python"
   author: "Bruno Rodrigues"
-  date: "2024-07-18"
+  date: "2024-08-12"
   search: true
   repo-url: "https://github.com/b-rodrigues/raps_with_py"
   repo-actions: [edit, issue]

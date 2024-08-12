@@ -43,19 +43,19 @@ knitr::include_graphics("images/lux_rhode_island.png")
 ```
 :::
 
-What you should also know is that the population is about 672,050 people as of
-writing (July 2024), half of which are foreigners. Around 400,000 persons
-work in Luxembourg, of which half do not live in Luxembourg; so every morning
-from Monday to Friday, 200,000 people enter the country to work and then leave
-in the evening to go back to either Belgium, France or Germany, the neighbouring
+What you should also know is that the population is about 672'050 people as of
+writing (July 2024), half of which are foreigners. Around 400'000 persons work
+in Luxembourg, of which half do not live in Luxembourg; so every morning from
+Monday to Friday, 200'000 people enter the country to work and then leave in the
+evening to go back to either Belgium, France or Germany, the neighbouring
 countries. As you can imagine, this puts enormous pressure on the transportation
 system and on the roads, but also on the housing market; everyone wants to live
 in Luxembourg to avoid the horrible daily commute, and everyone wants to live
 either in the capital city, or in the second largest urban area in the south, in
 a city called Esch-sur-Alzette.
 
-The plot below shows the value of the House Price Index over time for Luxembourg
-and the European Union:
+The plot below shows the value of the House Price Index (HPI) over time for
+Luxembourg and the European Union:
 
 ```{r, echo = F}
 #https://ec.europa.eu/eurostat/databrowser/bookmark/21530d9a-c423-4ab7-998a-7170326136cd?lang=en
@@ -75,11 +75,12 @@ withr::with_package("ggplot2",
 
 ```
 
-If you want to download the data, click
+If you want to download the data and follow along, click
 [here](https://github.com/b-rodrigues/rap4all/raw/master/datasets/prc_hpi_a__custom_4705395_page_linear.csv.gz)^[https://is.gd/AET0ir].
 
-Let us paste the definition of the HPI in here (taken from the HPI's
-[metadata](https://archive.is/OrQwA)^[https://archive.is/OrQwA, archived link for posterity.] page):
+Let us take a look at the definition of the HPI (taken from the HPI's
+[metadata](https://archive.is/OrQwA)^[https://archive.is/OrQwA, archived link
+for posterity.] page):
 
 *The House Price Index (HPI) measures inflation in the residential property
 market. The HPI captures price changes of all types of dwellings purchased by
@@ -107,19 +108,19 @@ of prices in the housing market, among other useful services like the
 identification of vacant lots). The advantage of their data when compared to
 Eurostat's data is that the data is disaggregated by commune. The disadvantage
 is that they only supply nominal prices, and no index (and the data is trapped
-inside Excel and not ready for analysis with Python). Nominal prices are the prices
-that you read on price tags in shops. The problem with nominal prices is that it
-is difficult to compare them through time. Ask yourself the following question:
-would you prefer to have had 500€ (or USDs) in 2003 or in 2023? You probably
-would have preferred them in 2003, as you could purchase a lot more with $500
-then than now. In fact, according to a random inflation calculator I googled, to
-match the purchasing power of $500 in 2003, you'd need to have $793 in 2023 (and
-I'd say that we find very similar values for €). But it doesn't really matter if
-that calculation is 100% correct: what matters is that the value of money
-changes, and comparisons through time are difficult, hence why an index is quite
-useful. So we are going to convert these nominal prices to real prices. Real
-prices take inflation into account and so allow us to compare prices through
-time.
+inside Excel and not ready for analysis with Python). Nominal prices are the
+prices that you read on price tags in shops. The problem with nominal prices is
+that it is difficult to compare them through time. Ask yourself the following
+question: would you prefer to have had 500€ (or USDs) in 2003 or in 2023? You
+probably would have preferred them in 2003, as you could purchase a lot more
+with $500 then than now. In fact, according to a random inflation calculator I
+googled, to match the purchasing power of $500 in 2003, you'd need to have $793
+in 2023 (and I'd say that we find very similar values for €). But it doesn't
+really matter if that calculation is 100% correct: what matters is that the
+value of money changes, and comparisons through time are difficult, hence why an
+index is quite useful. So we are going to convert these nominal prices to real
+prices. Real prices take inflation into account and so allow us to compare
+prices through time.
 
 So to summarise; our goal is to:
 
@@ -140,7 +141,7 @@ Getting data from Excel into a tidy data frame can be very tricky. This is
 because very often, Excel is used as some kind of dashboard or presentation
 tool. So data is made human-readable, in contrast to machine-readable. Let us
 quickly discuss this topic as it is essential to grasp the difference between
-the two (and in our experience, a lot of collective pain inflicted to
+the two (and in my experience, a lot of collective pain inflicted to
 statisticians and researchers could have been avoided if this concept was more
 well-known). The picture below shows an Excel file made for human consumption:
 
@@ -161,9 +162,10 @@ knitr::include_graphics("images/obs_hab_xlsx_overview.png")
 
 So why is this file not machine-readable? Here are some issues:
 
-- The table does not start in the top-left corner of the spreadsheet, which is where most importing tools expect it to be;
+- The table does not start in the top-left corner of the spreadsheet, which is
+  where most importing tools expect it to be;
 - The spreadsheet starts with a header that contains an image and some text;
-- Numbers are text and use "," as the thousands separator;
+- Numbers are actually text and use "," as the thousands separator;
 - You don't see it in the screenshot, but each year is in a separate sheet.
 
 That being said, this Excel file is still very tame, and going from this Excel
@@ -189,7 +191,8 @@ Each sheet contains a dataset with the following columns:
 
 For ease of presentation, I'm going to show you each step of the analysis here
 separately, but I'll be putting everything together in a single script once
-I'm done explaining each step. So first, let's import some packages:
+I'm done explaining each step. So first, let's import the main packages I'll
+be using for the analysis (I'll need to import some others as I go):
 
 ```{python}
 import polars as pl
@@ -197,9 +200,9 @@ import polars.selectors as cs
 import re
 ```
 
-I will be using the `polars` package to manipulate data, `polars.selectors` contains
-handy functions to refer to columns and `re` is for regular expressions which
-I will need below.
+I will be using the `polars` package to manipulate data and `polars.selectors`
+contains handy functions to refer to columns while `re` is for regular
+expressions which I will need below.
 
 Next, the code below downloads the data, and puts it in a data frame:
 
@@ -208,7 +211,7 @@ Next, the code below downloads the data, and puts it in a data frame:
 # hosted on the book's github repository
 url = "https://is.gd/1vvBAc"
 
-# Let's first download the file into a temporary file and then 
+# Let's first download the file into a temporary file and then
 # return its path
 from tempfile import NamedTemporaryFile
 from requests import get
@@ -220,18 +223,15 @@ with NamedTemporaryFile(delete = False, suffix = '.xlsx') as temp_file:
     temp_file_path = temp_file.name
 ```
 
-The code above downloads the Excel file, saves it in
-a temporary folder and returns the path to the file.
-We can now use temp_file_path to read the data using
-`pl.read_excel()`.
+The code above downloads the Excel file, saves it in a temporary folder and
+returns the path to the file. We can now use `temp_file_path` to read the data
+using `pl.read_excel()`.
 
-Next, I will write a function to read all the sheets of the
-Excel workbook. Ideally, this wouldn't be needed, because
-`polars` can read all the sheets of an Excel workbook
-in one go and return a list of sheets, but I want to
-add a column with the year. So I write this function
-that reads one sheet and adds the year column, and then
-I map this function over a list of sheet names.
+Next, I will write a function to read all the sheets of the Excel workbook.
+Ideally, this wouldn't be needed, because `polars` can read all the sheets of an
+Excel workbook in one go and return a list of sheets, but I want to add a column
+with the year. So I write this function that reads one sheet and adds the year
+column, and then I map this function over a list of sheet names:
 
 ```{python}
 def read_excel(excel_file, sheet):
@@ -248,10 +248,14 @@ def read_excel(excel_file, sheet):
     return out
 ```
 
-I now need a little helper function that I will use to map
-over the sheet names. This function sets the `excel_file` argument of
-the previously defined `read_excel()` function we wrote to 'temp_file_path'
-which points to the Excel file. I will then map over its 'sheet' argument.
+I set some options in the `pl.read_excel()` function to correctly read the file.
+I'll let you play around with these options to see what happens if you don't set
+them.
+
+I now need a little helper function that I will use to map over the sheet names.
+This function sets the `excel_file` argument of the previously defined
+`read_excel()` function we wrote to `temp_file_path` which points to the Excel
+file. I will then map over its `sheet` argument.
 
 ```{python}
 def wrap_read_excel(sheet):
@@ -266,27 +270,26 @@ Let's now create the list of sheet names:
 sheets = list(map(str, range(2010, 2022)))
 ```
 
-I can now map the function over the list of sheets
-and concatenate them into a single polars data frame
-using `pl.concat()`:
+I can now map the function over the list of sheets and concatenate them into a
+single polars data frame using `pl.concat()`:
 
 ```{python}
 raw_data = pl.concat(list(map(wrap_read_excel, sheets)))
 ```
 
-In the preface, I mentioned that the Python code in this
-book would have a very distinct R-like accent. Mapping
-over a list instead of writing a for-loop is an example
-of this.
+In the preface, I mentioned that the Python code in this book would have a very
+distinct R-like accent. Mapping over a list instead of writing a for-loop is an
+example of this. Feel free to use a for-loop if you're more comfortable with
+them!
 
-The next function will be used below to clean the column names. For example,
-a column called something like "House prices in €" would get changed to
-"house_prices_in_", removing the "€" sign, replacing spaces with "_"
-setting the string to lower case.
-If I was using `pandas`, I could have used `clean_columns()` from the 
-`skimpy` package, but unfortunately this function doesn't work with `polars` data frames.
-So I wrote this little function to clean the column names instead, 
-partly inspired by the `clean_names()` function from the `{janitor}` R package.
+The next function will be used below to clean the column names. For example, a
+column called something like `"House prices in €"` would get changed to
+`"house_prices_in_"`, removing the `"€"` sign, replacing spaces with `"_"`
+setting the string to lower case. If I was using `pandas`, I could have used
+`clean_columns()` from the `skimpy` package, but unfortunately this function
+doesn't work with `polars` data frames. So I wrote this little function to clean
+the column names instead, partly inspired by the `clean_names()` function from
+the `{janitor}` R package.
 
 ```{python}
 def clean_names(string):
@@ -307,9 +310,12 @@ raw_data = raw_data.select(pl.all().name.map(clean_names))
 
 Finally, let's rename some columns and do some more cleaning:
   - converting column types
-  - ensuring consistent names for the communes (for example, sometimes 
-    the commune of Luxembourg is spelled "Luxembourg", sometimes "Luxembourg-Ville"
-  - converting columns to their right types (but not the `n_offers` column yet...)
+  - ensuring consistent names for the communes (for example, sometimes the
+    commune of Luxembourg is spelled "Luxembourg", sometimes "Luxembourg-Ville"
+  - converting columns to their right types (but not the `n_offers` column
+    yet...)
+
+This is all done in the snippet below:
 
 ```{python}
 raw_data = (
@@ -339,19 +345,19 @@ raw_data = (
 )
 ```
 
-In practice, it is unlikely that you would have written the above code in one go.
-Instead you would have checked the data, done something on it, then checked it again,
-etc. But as I mentioned this is not learning how to clean data, so let's just
-take this code as-is.
+In practice, it is unlikely that you would have written the above code in one
+go. Instead you would have checked the data, done something on it, then checked
+it again, etc. But as I mentioned this is not a book about learning how to clean
+data, so let's just take this code as-is.
 
 If you are familiar with the `{tidyverse}` [@wickham2019b] family of packages
-from the R programming language, the above code should
-be quite relatively easy to follow. If you are more familiar with `pandas`, I
-believe that reading the code above should still be easy. What might be more 
-difficult if you were brought up on Python exclusively is mapping functions to 
-elements of lists instead of using for-loops. Don't worry about it too much, and
-use for-loops if you wish. Just remember that this book is not about Python per se, 
-but about building reproducible pipelines. The focus will be on other things.
+from the R programming language, the above code should be quite relatively easy
+to follow. If you are more familiar with `pandas`, I believe that reading the
+code above should still be easy as well. What might be more difficult if you
+were brought up on Python exclusively is mapping functions to elements of lists
+instead of using for-loops. Don't worry about it too much, and use for-loops if
+you wish. Just remember that this book is not about Python per se, but about
+building reproducible pipelines. The focus will be on other things.
 
 Running this code results in a tidy data set:
 
@@ -359,8 +365,8 @@ Running this code results in a tidy data set:
 raw_data
 ```
 
-But as you can see at the bottom, we still have some stuff that doesn't beloing in the
-`locality` column. Let's also check for missing values in the
+But as you can see at the bottom, we still have some stuff that doesn't belong
+in the `locality` column. Let's also check for missing values in the
 `"average_price_nominal_euros"` column:
 
 ```{python}
@@ -396,10 +402,11 @@ is equal to "Total d'offres". This is simply the total of every offer from every
 commune. We could keep that in a separate data frame, or even remove it. The
 very last row states the source of the data and we can also remove it. Finally,
 in the screenshot above, we see another row that we don't see in our filtered
-data frame: one where `n_offers` would be missing. This row gives the national average
-for columns `average_prince_nominal_euros` and `average_price_m2_nominal_euros`.
-What we are going to do is create two datasets: one with data on communes, and
-the other on national prices. Let's first remove the rows stating the sources:
+data frame: one where `n_offers` would be missing. This row gives the national
+average for columns `average_prince_nominal_euros` and
+`average_price_m2_nominal_euros`. What we are going to do is create two
+datasets: one with data on communes, and the other on national prices. Let's
+first remove the rows stating the sources:
 
 ```{python}
 raw_data = (
@@ -497,16 +504,18 @@ tables = (
 current_communes_raw = read_html(StringIO(str(tables[1])))[0]
 ```
 
-I won't go into much details, but the using `Beautifoulsoup()` it is
-possible to parse the `html` from the web page and get the tables out
-using the `.find_all()` method. The first table from that list is
-the one we're interested in, and using the `read_html()` function from
-the `pandas` package we can get that table into a data frame.
+I won't go into much details, but the using `Beautifoulsoup()` it is possible to
+parse the `html` from the web page and get the tables out using the
+`.find_all()` method. The first table from that list is the one we're interested
+in, and using the `read_html()` function from the `pandas` package we can get
+that table into a data frame (turns out we can't completely avoid using
+`pandas`!).
 
 We can now use `polars` to clean the table:
 
 ```{python}
 #| label: Cleaning communes
+
 # current_communes has a MultiIndex, so drop it
 current_communes_raw.columns = current_communes_raw.columns.droplevel()
 
@@ -554,11 +563,11 @@ We see many communes that are in our `commune_level_data`, but not in
 `current_communes`. There’s one obvious reason: differences in spelling, for
 example, "Kaerjeng" in our data, but "Käerjeng" in the table from Wikipedia. But
 there’s also a less obvious reason; since 2010, several communes have merged
-into new ones. So there are communes that are in our data in 2010 and
-2011, but disappear from 2012 onwards. So we need to do several things: first,
-get a list of all existing communes from 2010 onwards, and then, harmonise
-spelling. Here again, we can use a list from Wikipedia, and here again, I decide
-to re-host it on Github pages to avoid problems in the future:
+into new ones. So there are communes that are in our data in 2010 and 2011, but
+disappear from 2012 onwards. So we need to do several things: first, get a list
+of all existing communes from 2010 onwards, and then, harmonise spelling. Here
+again, we can use a list from Wikipedia, and here again, I decide to re-host it
+on Github pages to avoid problems in the future:
 
 ```{python}
 #| label: Scraping former communes
@@ -682,12 +691,12 @@ has existed since 2010, we don't have any commune that is unaccounted for. So
 are we done with cleaning the data? Yes, we can now start with analysing the
 data. Take a look
 [here](https://raw.githubusercontent.com/b-rodrigues/raps_with_py/master/scripts/save_data.py)^[https://is.gd/bGvNKG]
-to see the finalised script. Also read some of the comments that I’ve added. This
-is a typical Python script, and at first glance, one might wonder what is wrong with
-it. Actually, not much, but the problem if you leave this script as it is, is
-that it is very likely that we will have problems rerunning it in the future. As
-it turns out, this script is not reproducible. But we will discuss this in much
-more detail later on. For now, let’s analyse our cleaned data.
+to see the finalised script. Also read some of the comments that I’ve added.
+This is a typical Python script, and at first glance, one might wonder what is
+wrong with it. Actually, not much, but the problem if you leave this script as
+it is, is that it is very likely that we will have problems rerunning it in the
+future. As it turns out, this script is not reproducible. But we will discuss
+this in much more detail later on. For now, let’s analyse our cleaned data.
 
 ## Analysing the data
 
@@ -701,7 +710,7 @@ compute: it is nothing but the prices at year *t* divided by the prices in 2010
 to compute the index at all periods).
 
 For this section, I will perform a rather simple analysis. I will immediately
-show you the R script: take a look at it
+show you the script: take a look at it
 [here](https://raw.githubusercontent.com/b-rodrigues/raps_with_py/master/scripts/analysis.py)^[https://is.gd/7MqLjX].
 For the analysis I selected 5 communes and plotted the evolution of prices
 compared to the national average.
@@ -727,28 +736,19 @@ Let’s answer these questions one by one.
 
 ### How easy would it be for someone else to rerun the analysis?
 
-The analysis is composed of two Python scripts, one to prepare the data, and another
-to actually run the analysis proper. Performing the analysis might seem quite
-easy, because each script contains comments as to what is going on, and the code
-is not that complicated. However, we are missing any project-level documentation
-that would provide clear instructions as to how to run the analysis. This might
-seem simple for us who wrote these scripts, but we are familiar with Python, and this
-is still fresh in our brains. Should someone less familiar with Python have to run
-the script, there is no clue for them as to how they should do it. And of
-course, should the analysis be more complex (suppose it’s composed of dozens of
-scripts), this gets even worse. It might not even be easy for you to remember
-how to run this in 5 months!
+The analysis is composed of two Python scripts, one to prepare the data, and
+another to actually run the analysis proper. Performing the analysis might seem
+quite easy, because each script contains comments as to what is going on, and
+the code is not that complicated. However, we are missing any project-level
+documentation that would provide clear instructions as to how to run the
+analysis. This might seem simple for us who wrote these scripts, but we are
+familiar with Python, and this is still fresh in our brains. Should someone less
+familiar with Python have to run the script, there is no clue for them as to how
+they should do it. And of course, should the analysis be more complex (suppose
+it’s composed of dozens of scripts), this gets even worse. It might not even be
+easy for you to remember how to run this in 5 months!
 
-And what about the required dependencies? Many packages were used in the
-analysis. How should these get installed? Ideally, the same versions of the
-packages you used and the same version of Python should get used by that person to
-rerun the analysis. Thankfully, you can share the `Pipfile` and the `Pipfile.lock`
-files from the previous chapters to make it easier for them!
-
-All of this still needs to be documented, but listing the packages that were
-used for an analysis and their versions takes quite some time. Thankfully, in
-part 2, we will learn about the `{renv}` package to deal with this in a couple
-lines of code.
+And what about the required dependencies? Many packages were used in the analysis. How should these get installed? Ideally, the same versions of the packages you used and the same version of Python should get used by that person to rerun the analysis. Thankfully, you can share the `Pipfile` and the `Pipfile.lock` files from the previous chapters to make it easier for them, so by setting up our development environment, we also made it easier for future you or replicators to install the required dependencies!
 
 ### How easy would it be to update the project?
 
@@ -776,7 +776,7 @@ package them. We are going to learn just that in future chapters of this book.
 But sometimes you might not be interested in reusing code for another project:
 however, even if that’s the case, structuring your code into functions and
 packaging them makes it easy to reuse code even inside the same project. Look at
-the last part of the `analysis.R` script: we copied and pasted the same code 5
+the last part of the `analysis.py` script: we copied and pasted the same code 5
 times and only slightly changed it. We are going to learn how not to repeat
 ourselves by using functions and you will immediately see the benefits of
 writing functions, even when simply reusing them inside the same project.
@@ -785,17 +785,17 @@ writing functions, even when simply reusing them inside the same project.
 
 Now this might seem weird: after all, if we start from the same dataset, does it
 matter *when* we run the scripts? We should be getting the same result if we
-build the project today, in 5 months or in 5 years. Well, not necessarily. 
+build the project today, in 5 months or in 5 years. Well, not necessarily.
 Programming languages such as Python evolve quickly, and packages even more so.
-There is no guarantee that the authors of the packages
-will not change the package’s functions to work differently, or take arguments
-in a different order, or even that the packages will all be available at all in
-5 years. And even if the packages are still available and function the same,
-bugs in the packages might get corrected which could alter the result. This
-might seem like a non-problem; after all, if bugs get corrected, shouldn’t you
-be happy to update your results as well? But this depends on what it is we’re
-talking about. Sometimes it is necessary to reproduce results exactly as they
-were, even if they were wrong, for example in the context of an audit.
+There is no guarantee that the authors of the packages will not change the
+package’s functions to work differently, or take arguments in a different order,
+or even that the packages will all be available at all in 5 years. And even if
+the packages are still available and function the same, bugs in the packages
+might get corrected which could alter the result. This might seem like a
+non-problem; after all, if bugs get corrected, shouldn’t you be happy to update
+your results as well? But this depends on what it is we’re talking about.
+Sometimes it is necessary to reproduce results exactly as they were, even if
+they were wrong, for example in the context of an audit.
 
 So we also need a way to somehow snapshot and freeze the computational
 environment that was used to create the project originally.
