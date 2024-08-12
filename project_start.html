@@ -297,8 +297,8 @@ div.csl-indent {
 Luxembourg is about as big as the US State of Rhode Island.
 </figcaption>
 </figure>
-<p>What you should also know is that the population is about 672,050 people as of writing (July 2024), half of which are foreigners. Around 400,000 persons work in Luxembourg, of which half do not live in Luxembourg; so every morning from Monday to Friday, 200,000 people enter the country to work and then leave in the evening to go back to either Belgium, France or Germany, the neighbouring countries. As you can imagine, this puts enormous pressure on the transportation system and on the roads, but also on the housing market; everyone wants to live in Luxembourg to avoid the horrible daily commute, and everyone wants to live either in the capital city, or in the second largest urban area in the south, in a city called Esch-sur-Alzette.</p>
-<p>The plot below shows the value of the House Price Index over time for Luxembourg and the European Union:</p>
+<p>What you should also know is that the population is about 672’050 people as of writing (July 2024), half of which are foreigners. Around 400’000 persons work in Luxembourg, of which half do not live in Luxembourg; so every morning from Monday to Friday, 200’000 people enter the country to work and then leave in the evening to go back to either Belgium, France or Germany, the neighbouring countries. As you can imagine, this puts enormous pressure on the transportation system and on the roads, but also on the housing market; everyone wants to live in Luxembourg to avoid the horrible daily commute, and everyone wants to live either in the capital city, or in the second largest urban area in the south, in a city called Esch-sur-Alzette.</p>
+<p>The plot below shows the value of the House Price Index (HPI) over time for Luxembourg and the European Union:</p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -308,8 +308,8 @@ Luxembourg is about as big as the US State of Rhode Island.
 </div>
 </div>
 </div>
-<p>If you want to download the data, click <a href="https://github.com/b-rodrigues/rap4all/raw/master/datasets/prc_hpi_a__custom_4705395_page_linear.csv.gz">here</a><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>.</p>
-<p>Let us paste the definition of the HPI in here (taken from the HPI’s <a href="https://archive.is/OrQwA">metadata</a><a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> page):</p>
+<p>If you want to download the data and follow along, click <a href="https://github.com/b-rodrigues/rap4all/raw/master/datasets/prc_hpi_a__custom_4705395_page_linear.csv.gz">here</a><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>.</p>
+<p>Let us take a look at the definition of the HPI (taken from the HPI’s <a href="https://archive.is/OrQwA">metadata</a><a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> page):</p>
 <p><em>The House Price Index (HPI) measures inflation in the residential property market. The HPI captures price changes of all types of dwellings purchased by households (flats, detached houses, terraced houses, etc.). Only transacted dwellings are considered, self-build dwellings are excluded. The land component of the dwelling is included.</em></p>
 <p>So from the plot, we can see that the price of dwellings more than doubled between 2010 and 2021; the value of the index is 214.81 in 2021 for Luxembourg, and 138.92 for the European Union as a whole.</p>
 <p>There is a lot of heterogeneity though; the capital and the communes right next to the capital are much more expensive than communes from the less densely populated north, for example. The south of the country is also more expensive than the north, but not as much as the capital and surrounding communes. Not only is price driven by demand, but also by scarcity; in 2021, 0.5% of residents owned 50% of the buildable land for housing purposes (Source: <em>Observatoire de l’Habitat, Note 29</em>, <a href="https://archive.org/download/note-29/note-29.pdf">archived download link</a><a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>).</p>
@@ -324,7 +324,7 @@ Luxembourg is about as big as the US State of Rhode Island.
 </section>
 <section id="saving-trapped-data-from-excel" class="level2" data-number="3.2">
 <h2 data-number="3.2" class="anchored" data-anchor-id="saving-trapped-data-from-excel"><span class="header-section-number">3.2</span> Saving trapped data from Excel</h2>
-<p>Getting data from Excel into a tidy data frame can be very tricky. This is because very often, Excel is used as some kind of dashboard or presentation tool. So data is made human-readable, in contrast to machine-readable. Let us quickly discuss this topic as it is essential to grasp the difference between the two (and in our experience, a lot of collective pain inflicted to statisticians and researchers could have been avoided if this concept was more well-known). The picture below shows an Excel file made for human consumption:</p>
+<p>Getting data from Excel into a tidy data frame can be very tricky. This is because very often, Excel is used as some kind of dashboard or presentation tool. So data is made human-readable, in contrast to machine-readable. Let us quickly discuss this topic as it is essential to grasp the difference between the two (and in my experience, a lot of collective pain inflicted to statisticians and researchers could have been avoided if this concept was more well-known). The picture below shows an Excel file made for human consumption:</p>
 <figure class="figure">
 <img src="images/obs_hab_xlsx_overview.png" alt="An Excel file meant for human eyes." class="figure-img">
 <figcaption>
@@ -335,7 +335,7 @@ An Excel file meant for human eyes.
 <ul>
 <li>The table does not start in the top-left corner of the spreadsheet, which is where most importing tools expect it to be;</li>
 <li>The spreadsheet starts with a header that contains an image and some text;</li>
-<li>Numbers are text and use “,” as the thousands separator;</li>
+<li>Numbers are actually text and use “,” as the thousands separator;</li>
 <li>You don’t see it in the screenshot, but each year is in a separate sheet.</li>
 </ul>
 <p>That being said, this Excel file is still very tame, and going from this Excel to a tidy data frame will not be too difficult. In fact, we suspect that whoever made this Excel file is well aware of the contradicting requirements of human and machine-readable formatting of data, and strove to find a compromise. Because more often than not, getting human-readable data into a machine-readable format is a nightmare. We could call data like this <em>machine-friendly</em> data.</p>
@@ -347,20 +347,20 @@ An Excel file meant for human eyes.
 <li><em>Prix moyen annoncé en Euros courants</em>: Average selling price in nominal Euros;</li>
 <li><em>Prix moyen annoncé au m2 en Euros courants</em>: Average selling price in square meters in nominal Euros.</li>
 </ul>
-<p>For ease of presentation, I’m going to show you each step of the analysis here separately, but I’ll be putting everything together in a single script once I’m done explaining each step. So first, let’s import some packages:</p>
+<p>For ease of presentation, I’m going to show you each step of the analysis here separately, but I’ll be putting everything together in a single script once I’m done explaining each step. So first, let’s import the main packages I’ll be using for the analysis (I’ll need to import some others as I go):</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> polars <span class="im">as</span> pl</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> polars.selectors <span class="im">as</span> cs</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> re</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>I will be using the <code>polars</code> package to manipulate data, <code>polars.selectors</code> contains handy functions to refer to columns and <code>re</code> is for regular expressions which I will need below.</p>
+<p>I will be using the <code>polars</code> package to manipulate data and <code>polars.selectors</code> contains handy functions to refer to columns while <code>re</code> is for regular expressions which I will need below.</p>
 <p>Next, the code below downloads the data, and puts it in a data frame:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The url below points to an Excel file</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># hosted on the book's github repository</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://is.gd/1vvBAc"</span></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Let's first download the file into a temporary file and then </span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Let's first download the file into a temporary file and then</span></span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># return its path</span></span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> tempfile <span class="im">import</span> NamedTemporaryFile</span>
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> requests <span class="im">import</span> get</span>
@@ -374,8 +374,8 @@ An Excel file meant for human eyes.
 <pre><code>220016</code></pre>
 </div>
 </div>
-<p>The code above downloads the Excel file, saves it in a temporary folder and returns the path to the file. We can now use temp_file_path to read the data using <code>pl.read_excel()</code>.</p>
-<p>Next, I will write a function to read all the sheets of the Excel workbook. Ideally, this wouldn’t be needed, because <code>polars</code> can read all the sheets of an Excel workbook in one go and return a list of sheets, but I want to add a column with the year. So I write this function that reads one sheet and adds the year column, and then I map this function over a list of sheet names.</p>
+<p>The code above downloads the Excel file, saves it in a temporary folder and returns the path to the file. We can now use <code>temp_file_path</code> to read the data using <code>pl.read_excel()</code>.</p>
+<p>Next, I will write a function to read all the sheets of the Excel workbook. Ideally, this wouldn’t be needed, because <code>polars</code> can read all the sheets of an Excel workbook in one go and return a list of sheets, but I want to add a column with the year. So I write this function that reads one sheet and adds the year column, and then I map this function over a list of sheet names:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> read_excel(excel_file, sheet):</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    out <span class="op">=</span> pl.read_excel(</span>
@@ -390,7 +390,8 @@ An Excel file meant for human eyes.
 <span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>          ).with_columns(pl.lit(sheet).alias(<span class="st">"year"</span>))</span>
 <span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> out</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>I now need a little helper function that I will use to map over the sheet names. This function sets the <code>excel_file</code> argument of the previously defined <code>read_excel()</code> function we wrote to ‘temp_file_path’ which points to the Excel file. I will then map over its ‘sheet’ argument.</p>
+<p>I set some options in the <code>pl.read_excel()</code> function to correctly read the file. I’ll let you play around with these options to see what happens if you don’t set them.</p>
+<p>I now need a little helper function that I will use to map over the sheet names. This function sets the <code>excel_file</code> argument of the previously defined <code>read_excel()</code> function we wrote to <code>temp_file_path</code> which points to the Excel file. I will then map over its <code>sheet</code> argument.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> wrap_read_excel(sheet):</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    out <span class="op">=</span> read_excel(excel_file <span class="op">=</span> temp_file_path,</span>
@@ -405,8 +406,8 @@ An Excel file meant for human eyes.
 <div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>raw_data <span class="op">=</span> pl.concat(<span class="bu">list</span>(<span class="bu">map</span>(wrap_read_excel, sheets)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>In the preface, I mentioned that the Python code in this book would have a very distinct R-like accent. Mapping over a list instead of writing a for-loop is an example of this.</p>
-<p>The next function will be used below to clean the column names. For example, a column called something like “House prices in €” would get changed to “house_prices_in_”, removing the “€” sign, replacing spaces with “_” setting the string to lower case. If I was using <code>pandas</code>, I could have used <code>clean_columns()</code> from the <code>skimpy</code> package, but unfortunately this function doesn’t work with <code>polars</code> data frames. So I wrote this little function to clean the column names instead, partly inspired by the <code>clean_names()</code> function from the <code>{janitor}</code> R package.</p>
+<p>In the preface, I mentioned that the Python code in this book would have a very distinct R-like accent. Mapping over a list instead of writing a for-loop is an example of this. Feel free to use a for-loop if you’re more comfortable with them!</p>
+<p>The next function will be used below to clean the column names. For example, a column called something like <code>"House prices in €"</code> would get changed to <code>"house_prices_in_"</code>, removing the <code>"€"</code> sign, replacing spaces with <code>"_"</code> setting the string to lower case. If I was using <code>pandas</code>, I could have used <code>clean_columns()</code> from the <code>skimpy</code> package, but unfortunately this function doesn’t work with <code>polars</code> data frames. So I wrote this little function to clean the column names instead, partly inspired by the <code>clean_names()</code> function from the <code>{janitor}</code> R package.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> clean_names(string):</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># inspired by https://nadeauinnovations.com/post/2020/11/python-tricks-replace-all-non-alphanumeric-characters-in-a-string/</span></span>
@@ -421,6 +422,7 @@ An Excel file meant for human eyes.
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>raw_data <span class="op">=</span> raw_data.select(pl.<span class="bu">all</span>().name.<span class="bu">map</span>(clean_names))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Finally, let’s rename some columns and do some more cleaning: - converting column types - ensuring consistent names for the communes (for example, sometimes the commune of Luxembourg is spelled “Luxembourg”, sometimes “Luxembourg-Ville” - converting columns to their right types (but not the <code>n_offers</code> column yet…)</p>
+<p>This is all done in the snippet below:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>raw_data <span class="op">=</span> (</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    raw_data</span>
@@ -448,8 +450,8 @@ An Excel file meant for human eyes.
 <span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>    )</span>
 <span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>In practice, it is unlikely that you would have written the above code in one go. Instead you would have checked the data, done something on it, then checked it again, etc. But as I mentioned this is not learning how to clean data, so let’s just take this code as-is.</p>
-<p>If you are familiar with the <code>{tidyverse}</code> <span class="citation" data-cites="wickham2019b">(<a href="references.html#ref-wickham2019b" role="doc-biblioref">Wickham et al. 2019</a>)</span> family of packages from the R programming language, the above code should be quite relatively easy to follow. If you are more familiar with <code>pandas</code>, I believe that reading the code above should still be easy. What might be more difficult if you were brought up on Python exclusively is mapping functions to elements of lists instead of using for-loops. Don’t worry about it too much, and use for-loops if you wish. Just remember that this book is not about Python per se, but about building reproducible pipelines. The focus will be on other things.</p>
+<p>In practice, it is unlikely that you would have written the above code in one go. Instead you would have checked the data, done something on it, then checked it again, etc. But as I mentioned this is not a book about learning how to clean data, so let’s just take this code as-is.</p>
+<p>If you are familiar with the <code>{tidyverse}</code> <span class="citation" data-cites="wickham2019b">(<a href="references.html#ref-wickham2019b" role="doc-biblioref">Wickham et al. 2019</a>)</span> family of packages from the R programming language, the above code should be quite relatively easy to follow. If you are more familiar with <code>pandas</code>, I believe that reading the code above should still be easy as well. What might be more difficult if you were brought up on Python exclusively is mapping functions to elements of lists instead of using for-loops. Don’t worry about it too much, and use for-loops if you wish. Just remember that this book is not about Python per se, but about building reproducible pipelines. The focus will be on other things.</p>
 <p>Running this code results in a tidy data set:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>raw_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -562,7 +564,7 @@ An Excel file meant for human eyes.
 </div>
 </div>
 </div>
-<p>But as you can see at the bottom, we still have some stuff that doesn’t beloing in the <code>locality</code> column. Let’s also check for missing values in the <code>"average_price_nominal_euros"</code> column:</p>
+<p>But as you can see at the bottom, we still have some stuff that doesn’t belong in the <code>locality</code> column. Let’s also check for missing values in the <code>"average_price_nominal_euros"</code> column:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>(</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>raw_data</span>
@@ -862,7 +864,7 @@ Always look at your data.
 <span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>current_communes_raw <span class="op">=</span> read_html(StringIO(<span class="bu">str</span>(tables[<span class="dv">1</span>])))[<span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>I won’t go into much details, but the using <code>Beautifoulsoup()</code> it is possible to parse the <code>html</code> from the web page and get the tables out using the <code>.find_all()</code> method. The first table from that list is the one we’re interested in, and using the <code>read_html()</code> function from the <code>pandas</code> package we can get that table into a data frame.</p>
+<p>I won’t go into much details, but the using <code>Beautifoulsoup()</code> it is possible to parse the <code>html</code> from the web page and get the tables out using the <code>.find_all()</code> method. The first table from that list is the one we’re interested in, and using the <code>read_html()</code> function from the <code>pandas</code> package we can get that table into a data frame (turns out we can’t completely avoid using <code>pandas</code>!).</p>
 <p>We can now use <code>polars</code> to clean the table:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># current_communes has a MultiIndex, so drop it</span></span>
@@ -1076,7 +1078,7 @@ Always look at your data.
 <section id="analysing-the-data" class="level2" data-number="3.3">
 <h2 data-number="3.3" class="anchored" data-anchor-id="analysing-the-data"><span class="header-section-number">3.3</span> Analysing the data</h2>
 <p>We are now going to analyse the data. The first thing we are going to do is compute a Laspeyeres price index. This price index allows us to make comparisons through time; for example, the index at year 2012 measures how much more expensive (or cheaper) housing became relative to the base year (2010). However, since we only have one ‘good’ (housing), this index becomes quite simple to compute: it is nothing but the prices at year <em>t</em> divided by the prices in 2010 (if we had a basket of goods, we would need to use the Laspeyeres index formula to compute the index at all periods).</p>
-<p>For this section, I will perform a rather simple analysis. I will immediately show you the R script: take a look at it <a href="https://raw.githubusercontent.com/b-rodrigues/raps_with_py/master/scripts/analysis.py">here</a><a href="#fn9" class="footnote-ref" id="fnref9" role="doc-noteref"><sup>9</sup></a>. For the analysis I selected 5 communes and plotted the evolution of prices compared to the national average.</p>
+<p>For this section, I will perform a rather simple analysis. I will immediately show you the script: take a look at it <a href="https://raw.githubusercontent.com/b-rodrigues/raps_with_py/master/scripts/analysis.py">here</a><a href="#fn9" class="footnote-ref" id="fnref9" role="doc-noteref"><sup>9</sup></a>. For the analysis I selected 5 communes and plotted the evolution of prices compared to the national average.</p>
 <p>This analysis might seem trivially simple, but it contains all the needed ingredients to illustrate everything else that I’m going to teach you in this book.</p>
 <p>Most analyses would stop here: after all, we have what we need; our goal was to get the plots for the 5 communes of Luxembourg, Esch-sur-Alzette, Mamer, Schengen (which gave its name to the <a href="https://en.wikipedia.org/wiki/Schengen_Area">Schengen Area</a><a href="#fn10" class="footnote-ref" id="fnref10" role="doc-noteref"><sup>10</sup></a>) and Wincrange. However, let’s ask ourselves the following important questions:</p>
 <ul>
@@ -1092,8 +1094,7 @@ Always look at your data.
 <section id="how-easy-would-it-be-for-someone-else-to-rerun-the-analysis" class="level3" data-number="3.4.1">
 <h3 data-number="3.4.1" class="anchored" data-anchor-id="how-easy-would-it-be-for-someone-else-to-rerun-the-analysis"><span class="header-section-number">3.4.1</span> How easy would it be for someone else to rerun the analysis?</h3>
 <p>The analysis is composed of two Python scripts, one to prepare the data, and another to actually run the analysis proper. Performing the analysis might seem quite easy, because each script contains comments as to what is going on, and the code is not that complicated. However, we are missing any project-level documentation that would provide clear instructions as to how to run the analysis. This might seem simple for us who wrote these scripts, but we are familiar with Python, and this is still fresh in our brains. Should someone less familiar with Python have to run the script, there is no clue for them as to how they should do it. And of course, should the analysis be more complex (suppose it’s composed of dozens of scripts), this gets even worse. It might not even be easy for you to remember how to run this in 5 months!</p>
-<p>And what about the required dependencies? Many packages were used in the analysis. How should these get installed? Ideally, the same versions of the packages you used and the same version of Python should get used by that person to rerun the analysis. Thankfully, you can share the <code>Pipfile</code> and the <code>Pipfile.lock</code> files from the previous chapters to make it easier for them!</p>
-<p>All of this still needs to be documented, but listing the packages that were used for an analysis and their versions takes quite some time. Thankfully, in part 2, we will learn about the <code>{renv}</code> package to deal with this in a couple lines of code.</p>
+<p>And what about the required dependencies? Many packages were used in the analysis. How should these get installed? Ideally, the same versions of the packages you used and the same version of Python should get used by that person to rerun the analysis. Thankfully, you can share the <code>Pipfile</code> and the <code>Pipfile.lock</code> files from the previous chapters to make it easier for them, so by setting up our development environment, we also made it easier for future you or replicators to install the required dependencies!</p>
 </section>
 <section id="how-easy-would-it-be-to-update-the-project" class="level3" data-number="3.4.2">
 <h3 data-number="3.4.2" class="anchored" data-anchor-id="how-easy-would-it-be-to-update-the-project"><span class="header-section-number">3.4.2</span> How easy would it be to update the project?</h3>
@@ -1103,7 +1104,7 @@ Always look at your data.
 <section id="how-easy-would-it-be-to-reuse-this-code-for-another-project" class="level3" data-number="3.4.3">
 <h3 data-number="3.4.3" class="anchored" data-anchor-id="how-easy-would-it-be-to-reuse-this-code-for-another-project"><span class="header-section-number">3.4.3</span> How easy would it be to reuse this code for another project?</h3>
 <p>Said plainly, not very easy. With code in this state you have no choice but to copy and paste it into a new script and change it adequately. For re-usability, nothing beats structuring your code into functions and ideally you would even package them. We are going to learn just that in future chapters of this book.</p>
-<p>But sometimes you might not be interested in reusing code for another project: however, even if that’s the case, structuring your code into functions and packaging them makes it easy to reuse code even inside the same project. Look at the last part of the <code>analysis.R</code> script: we copied and pasted the same code 5 times and only slightly changed it. We are going to learn how not to repeat ourselves by using functions and you will immediately see the benefits of writing functions, even when simply reusing them inside the same project.</p>
+<p>But sometimes you might not be interested in reusing code for another project: however, even if that’s the case, structuring your code into functions and packaging them makes it easy to reuse code even inside the same project. Look at the last part of the <code>analysis.py</code> script: we copied and pasted the same code 5 times and only slightly changed it. We are going to learn how not to repeat ourselves by using functions and you will immediately see the benefits of writing functions, even when simply reusing them inside the same project.</p>
 </section>
 <section id="what-guarantee-do-we-have-that-the-output-is-stable-through-time" class="level3" data-number="3.4.4">
 <h3 data-number="3.4.4" class="anchored" data-anchor-id="what-guarantee-do-we-have-that-the-output-is-stable-through-time"><span class="header-section-number">3.4.4</span> What guarantee do we have that the output is stable through time?</h3>
